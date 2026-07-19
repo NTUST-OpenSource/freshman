@@ -12,7 +12,8 @@
 - Astro 7（SSG）＋ unified/remark 管線＋View Transitions（ClientRouter）
 - 開發：`./node_modules/.bin/astro dev`（daemon 型，stop 指令同路徑）；建置：`npm run build`
 - **鐵則**：改 `astro.config.mjs`、`src/plugins/`、content schema 後必須
-  「stop → `rm -rf .astro node_modules/.vite` → 重啟」，content layer 會吃舊管線快取（踩過三次）
+  「stop → `rm -rf .astro node_modules/.astro node_modules/.vite` → 重啟」，
+  content layer 快取實體在 `node_modules/.astro`，漏清連 build 都吃舊輸出（踩過四次）
 - 驗證習慣：改完 build ＋ curl dev 頁面 grep markup（不開瀏覽器，使用者禁止操作其瀏覽器）
 - headless 檢查工具：puppeteer-core（devDep）＋系統 Chrome，但目前約定不啟動瀏覽器
 
@@ -53,4 +54,4 @@
 2. qa 區塊輸出 FAQPage JSON-LD（SPEC 已承諾）
 3. og-image 1200×630 資產（現暫用 logo.png）
 4. Cloudflare Pages 部署與 DNS（使用者操作，Search Console 提交 sitemap）
-5. 延後項：行動裝置自適應、dark mode、非首頁新動畫（等使用者指示）
+5. 延後項：dark mode、非首頁新動畫（等使用者指示）；行動裝置自適應已完成並驗收

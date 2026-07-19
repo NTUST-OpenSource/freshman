@@ -23,11 +23,11 @@
 
 - 網站 UI 文案、內容、註解、文件一律**繁體中文**
 - 例外：程式碼識別字、網址、無慣用中文譯名的專有名詞（NTUST、GPA、Moodle）
-- 內容文字規範：標點符號全形、數字與英文字母半形、CJK 與數字交界加半形空白
+- 內容文字規範：標點符號全形、數字與英文字母半形、CJK 與數字或英文字母交界加半形空白
 
 ## 禁止事項
 
-- **全站禁止 emoji**：UI、內容、commit 訊息皆不得出現。圖示一律使用 `public/icons/` 下的 SVG（Solar linear 風格：24×24、stroke 1.5、round cap/join），以 CSS mask 上色
+- **全站禁止 emoji**：UI、內容、commit 訊息皆不得出現。圖示一律使用 `public/icons/` 下的 SVG（svgrepo stroke-width 2 版、24×24、round cap/join，來源 `docs/svg2/`），以 CSS mask 上色
 - 不引入未討論過的執行期依賴；優先原生平台能力
 
 ## Git 規範
@@ -41,7 +41,7 @@
 ## 設計語言
 
 - 現階段**僅 white mode**（dark mode 未來再做）
-- **桌面版優先**（≥1280px）；行動裝置已有 320px 起的自適應基線，驗收待使用者確認
+- **桌面版優先**（≥1280px）；行動裝置自適應基線已完成並經使用者驗收（320px 起）
 - **圓角**為核心設計語言（radius tokens 見 `src/styles/tokens.css`）
 - 品牌色：臺科深紅；分類色：北捷路線色（選課綠、生活藍、資訊橘、其他棕）
 - 動畫：**首頁**進場與互動動畫已依使用者指示實作（進場上浮、路線描線、hover 微互動）；其他頁面新增動畫仍待指示
@@ -71,7 +71,7 @@
 
 ## 工作流程
 
-- **修改 `astro.config.mjs` 或 `src/plugins/` 後必須：停 dev server → `rm -rf .astro node_modules/.vite` → 重啟**。content layer 以內容 digest 快取渲染結果，舊管線 sync 過的頁面重啟後仍會吃快取（已踩過三次）
+- **修改 `astro.config.mjs` 或 `src/plugins/` 後必須：停 dev server → `rm -rf .astro node_modules/.astro node_modules/.vite` → 重啟**。content layer 以內容 digest 快取渲染結果，快取實體在 `node_modules/.astro`（漏清它連 `npm run build` 都會吃舊 serializer 輸出，已踩過四次）
 - 全站使用 ClientRouter（View Transitions）：**所有 client script 必須掛 `astro:page-load`**，persist 元素（如 site-header）要用 `dataset.bound` 防重複綁定
 - 待補資料與待決事項記錄於 `TODO.md`，補齊後刪除該項
 - 內容與 md style 的調整以使用者指示為準，不自行擴充語法
