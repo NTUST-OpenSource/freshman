@@ -189,9 +189,19 @@ const updatedLines = calendars
     if (target) scroller.scrollTo({ top: target.offsetTop - scroller.offsetTop, behavior });
   }
   scrollToMonth(todayKey.slice(0, 7));
-  document.getElementById('cal-today')!.addEventListener('click', () => {
+  const todayBtn = document.getElementById('cal-today')!;
+  todayBtn.addEventListener('click', () => {
     scrollToMonth(todayKey.slice(0, 7), 'smooth');
   });
+
+  // 今天已在視窗內時隱藏「回到今天」
+  const todayCell = document.querySelector<HTMLElement>('.cal__cell--today');
+  if (todayCell) {
+    new IntersectionObserver(
+      ([entry]) => todayBtn.classList.toggle('cal__today-btn--hidden', entry.isIntersecting),
+      { root: scroller, threshold: 1 },
+    ).observe(todayCell);
+  }
 
   // ---- hover 顯示事件 popup ----
   let hideTimer: number | undefined;
@@ -462,7 +472,18 @@ const updatedLines = calendars
     padding: 0.45em 1em;
     cursor: pointer;
     box-shadow: 0 2px 10px rgb(0 0 0 / 0.07);
-    transition: background var(--dur) var(--ease);
+    transition:
+      background var(--dur) var(--ease),
+      opacity var(--dur) var(--ease),
+      transform var(--dur) var(--ease),
+      visibility var(--dur);
+  }
+
+  .cal__today-btn--hidden {
+    opacity: 0;
+    transform: translateY(0.5rem);
+    visibility: hidden;
+    pointer-events: none;
   }
 
   .cal__today-btn:hover {
