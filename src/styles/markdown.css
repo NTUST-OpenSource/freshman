@@ -23,13 +23,13 @@
   background: var(--cat, var(--brand));
 }
 
-.md h3 {
+.md h3:not(.qa__q) {
   font-size: var(--text-h3);
   font-weight: 700;
   margin-top: 1.9em;
 }
 
-.md h3::before {
+.md h3:not(.qa__q)::before {
   content: '';
   display: inline-block;
   width: 0.5em;
@@ -49,8 +49,25 @@
   color: color-mix(in oklab, var(--ink) 72%, var(--cat, var(--brand)));
 }
 
-.md :is(h2, h3) {
-  scroll-margin-top: 1.5rem;
+.md :is(h2, h3, h4),
+.md sup[id],
+.md .footnotes li[id] {
+  scroll-margin-top: 34vh; /* 跳轉後落在畫面中段 */
+}
+
+.md :target {
+  animation: target-flash 1.4s var(--ease) 0.15s both;
+  border-radius: 6px;
+}
+
+@keyframes target-flash {
+  0%,
+  30% {
+    background-color: color-mix(in oklab, var(--clr-warning) 26%, transparent);
+  }
+  100% {
+    background-color: transparent;
+  }
 }
 
 .md ul,
@@ -104,20 +121,6 @@
   padding: 0.12em 0.4em;
 }
 
-/* 外部連結：chevron 圖示旋轉 45 度作為出框箭頭 */
-.md a[target='_blank']::after {
-  content: '';
-  display: inline-block;
-  width: 0.72em;
-  height: 0.72em;
-  margin-left: 0.16em;
-  background: currentColor;
-  mask: url('/icons/chevron.svg') no-repeat center / contain;
-  -webkit-mask: url('/icons/chevron.svg') no-repeat center / contain;
-  rotate: -45deg;
-  vertical-align: -0.02em;
-}
-
 /* ---- 圖片 ---- */
 .md img {
   border-radius: var(--radius);
@@ -166,6 +169,26 @@
   border-bottom: none;
 }
 
+.md :is(th, td)[align='center'] {
+  text-align: center;
+}
+
+.md :is(th, td)[align='right'] {
+  text-align: right;
+}
+
+.table--vlines :is(th, td) {
+  border-inline: 1px solid var(--line);
+}
+
+.table--vlines :is(th, td):first-child {
+  border-left: none;
+}
+
+.table--vlines :is(th, td):last-child {
+  border-right: none;
+}
+
 /* ---- 任務清單 ---- */
 .md li:has(> input[type='checkbox']) {
   list-style: none;
@@ -204,7 +227,7 @@
   --callout-icon: url('/icons/danger.svg');
 }
 
-.callout--new {
+.callout--fatal {
   --clr: var(--clr-new);
   --callout-icon: url('/icons/new.svg');
 }
@@ -319,6 +342,7 @@
   font-family: var(--font-mono);
   font-size: 0.85em;
   font-weight: 700;
+  line-height: 1; /* 蓋掉繼承的 1.85，讓字符置中於圓 */
   color: var(--paper);
   background: var(--cat, var(--brand));
   width: 1.35em;
@@ -544,10 +568,6 @@
   border: 1px solid var(--line);
 }
 
-.md a.linkcard::after {
-  content: none;
-}
-
 /* ---- YouTube facade ---- */
 .yt {
   position: relative;
@@ -604,10 +624,6 @@
   font-size: var(--text-small);
   font-weight: 650;
   background: linear-gradient(transparent, rgb(0 0 0 / 0.75));
-}
-
-.md a.yt::after {
-  content: none;
 }
 
 .yt__iframe {
@@ -738,6 +754,19 @@ html:not([data-dept='csie']) [data-dept-only='csie'] {
 .code-copy:hover {
   color: var(--brand);
   border-color: var(--brand);
+}
+
+.code-copy--done {
+  opacity: 1;
+  color: var(--clr-tip);
+  border-color: var(--clr-tip);
+  animation: copy-pop 0.35s var(--ease);
+}
+
+@keyframes copy-pop {
+  40% {
+    scale: 1.14;
+  }
 }
 
 /* ---- Mermaid ---- */
