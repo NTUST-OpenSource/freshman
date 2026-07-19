@@ -1,59 +1,49 @@
 ---
-import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Calendar from '../components/Calendar.astro';
-import { CATEGORIES } from '../content.config';
-
-const articles = await getCollection('articles', (e) => import.meta.env.DEV || !e.data.draft);
-const byCategory = Object.entries(CATEGORIES).map(([key, meta]) => ({
-  key,
-  ...meta,
-  items: articles
-    .filter((a) => a.data.category === key)
-    .sort((a, b) => a.data.order - b.data.order),
-}));
 ---
 
 <Base chrome={false}>
-  <div class="home">
-    <div class="home__main">
-      <header class="home__brand">
+  <div class="landing">
+    <div class="landing__stage">
+      <header class="landing__brand landing-rise" style="--d: 0">
         <img src="/logo.svg" alt="" width="34" height="35" />
         <span>台科新生懶人包</span>
       </header>
 
-      <section class="hero">
-        <p class="hero__eyebrow">開學前指南</p>
-        <h1 class="hero__title">開學前，把台科<br />摸得一清二楚</h1>
-        <p class="hero__desc">
+      <div class="landing__hero">
+        <p class="landing__eyebrow landing-rise" style="--d: 1">開學前指南</p>
+        <h1 class="landing__title landing-rise" style="--d: 2">
+          開學前，把台科<br />摸得一清二楚
+        </h1>
+        <p class="landing__desc landing-rise" style="--d: 3">
           選課怎麼抽、宿舍怎麼住、哪裡有好吃的——學長姐把四年的坑都踩過了，這裡是活下來的筆記。
         </p>
-      </section>
+        <a class="landing__cta landing-rise" style="--d: 4" href="/article/start/">
+          進入懶人包
+          <span class="landing__cta-arrow" aria-hidden="true"></span>
+        </a>
+      </div>
 
-      {
-        byCategory.map(
-          ({ key, label, items }) =>
-            items.length > 0 && (
-              <section class={`shelf cat-${key}`} aria-labelledby={`shelf-${key}`}>
-                <h2 class="shelf__title" id={`shelf-${key}`}>
-                  <span class="shelf__dot" aria-hidden="true" />
-                  {label}
-                </h2>
-                <div class="shelf__grid">
-                  {items.map((a) => (
-                    <a class="card" href={`/article/${a.data.slug}/`}>
-                      <span class="card__title">
-                        {a.data.title}
-                        {a.data.draft && <span class="chip chip--draft">草稿</span>}
-                      </span>
-                      <span class="card__desc">{a.data.description}</span>
-                    </a>
-                  ))}
-                </div>
-              </section>
-            ),
-        )
-      }
+      <svg
+        class="landing__route"
+        viewBox="0 0 560 120"
+        fill="none"
+        aria-hidden="true"
+      >
+        <path
+          class="landing__route-line"
+          pathLength="1"
+          d="M8 96 C 120 96 150 24 260 24 S 420 96 552 96"
+          stroke="var(--brand)"
+          stroke-width="5"
+          stroke-linecap="round"
+        ></path>
+        <circle class="landing__station" style="--s: 1" cx="96" cy="72" r="9" fill="var(--paper)" stroke="var(--c-course)" stroke-width="5"></circle>
+        <circle class="landing__station" style="--s: 2" cx="260" cy="24" r="9" fill="var(--paper)" stroke="var(--c-life)" stroke-width="5"></circle>
+        <circle class="landing__station" style="--s: 3" cx="424" cy="72" r="9" fill="var(--paper)" stroke="var(--c-info)" stroke-width="5"></circle>
+        <rect class="landing__station" style="--s: 4" x="540" y="84" width="24" height="24" rx="7" fill="var(--brand)"></rect>
+      </svg>
     </div>
 
     <Calendar />
