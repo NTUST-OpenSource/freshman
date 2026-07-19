@@ -7,6 +7,8 @@
 
 ## 待辦
 
+- [ ] 住宿篇待補（文內有 FIXME／TODO 標記）：冷氣卡 115 學年價格驗證、宿舍報修新管道（舊表單回 401）、一宿三宿門禁刷卡位置、Dcard 行李文有效性
+- [ ] 住宿篇圖片（使用者提供：冷氣卡、洗衣房、宿舍外觀等）
 - [ ] contribute 頁補完貢獻流程與聯絡方式（現為佔位稿，header 直連）
 - [ ] DNS 綁定後：Cloudflare 設 `*.pages.dev` → `freshman.ntust.org` 301（`_redirects` 不支援跨網域比對，需在 dashboard 設 redirect rule）
 - [ ] prototype 恢復 `draft: true`（現為臨時公開＋noindex，使用者指示之後取消註解）
