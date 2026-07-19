@@ -12,29 +12,29 @@ const { article } = Astro.props;
 const { Content, headings } = await render(article);
 const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
 const cat = CATEGORIES[article.data.category];
-const updated = article.data.updated.toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric' });
+const updated = article.data.updated.toLocaleDateString('zh-TW');
 ---
 
 <Base title={article.data.title} description={article.data.description}>
   <div class={`article-layout cat-${article.data.category}`}>
     <article class="article">
-      <header class="article__header">
-        <p class="article__eyebrow article-rise" style="--d: 0">
+      <header class="article__header" transition:name="article-head">
+        <p class="article__eyebrow">
           <span class="chip chip--cat">{cat.label}</span>
           {article.data.year && <span class="chip">{article.data.year} 學年</span>}
           {article.data.draft && <span class="chip chip--draft">草稿</span>}
+          <span class="article__meta">更新 {updated}</span>
         </p>
-        <h1 class="article__title article-rise" style="--d: 1">{article.data.title}</h1>
-        <p class="article__meta article-rise" style="--d: 2">最後更新 {updated}</p>
+        <h1 class="article__title">{article.data.title}</h1>
       </header>
-      <div class="md article-rise" style="--d: 3">
+      <div class="md">
         <Content />
       </div>
     </article>
 
     {
       toc.length > 0 && (
-        <nav class="toc toc-in" aria-label="本頁目錄">
+        <nav class="toc" aria-label="本頁目錄" transition:name="article-toc">
           <p class="toc__label">本頁目錄</p>
           <ol class="toc__line">
             {toc.map((h) => (
@@ -49,29 +49,29 @@ const updated = article.data.updated.toLocaleDateString('zh-TW', { year: 'numeri
   </div>
 
   <script>
-    // 內容區塊捲動顯示（class 由 JS 加，無 JS 時內容直接可見）
-    const blocks = document.querySelectorAll('.md > *');
-    if ('IntersectionObserver' in window && blocks.length) {
-      const io = new IntersectionObserver(
-        (entries) => {
-          for (const entry of entries) {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('md-reveal--in');
-              io.unobserve(entry.target);
-            }
-          }
-        },
-        { rootMargin: '0px 0px -6% 0px' },
-      );
+    // 內容一口氣逐塊淡入（不等捲動），與註腳 hover 預覽；掛 astro:page-load
+    function initCascade() {
+      const blocks = document.querySelectorAll<HTMLElement>('.md > *');
+      let i = 0;
       for (const block of blocks) {
-        block.classList.add('md-reveal');
-        io.observe(block);
+        if (block.classList.contains('md-cascade')) continue;
+        block.classList.add('md-cascade');
+        block.style.transitionDelay = `${Math.min(i * 35, 500)}ms`;
+        i++;
       }
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => {
+          for (const block of blocks) block.classList.add('md-cascade--in');
+          setTimeout(() => {
+            for (const block of blocks) block.style.transitionDelay = '';
+          }, 1100);
+        }),
+      );
     }
 
-    // 註腳 hover 即時預覽
-    const refs = document.querySelectorAll<HTMLAnchorElement>('.md sup a[data-footnote-ref]');
-    if (refs.length) {
+    function initFootnotePreview() {
+      const refs = document.querySelectorAll<HTMLAnchorElement>('.md sup a[data-footnote-ref]');
+      if (!refs.length) return;
       const fnPop = document.createElement('div');
       fnPop.className = 'fn-pop';
       fnPop.hidden = true;
@@ -114,5 +114,11 @@ const updated = article.data.updated.toLocaleDateString('zh-TW', { year: 'numeri
       fnPop.addEventListener('pointerenter', () => clearTimeout(fnTimer));
       fnPop.addEventListener('pointerleave', hide);
     }
+
+    document.addEventListener('astro:page-load', () => {
+      if (!document.querySelector('.article-layout')) return;
+      initCascade();
+      initFootnotePreview();
+    });
   </script>
 </Base>

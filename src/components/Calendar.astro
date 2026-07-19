@@ -143,6 +143,10 @@ const updatedLines = calendars
 </aside>
 
 <script>
+  function initCalendar() {
+  const calRoot = document.getElementById('cal');
+  if (!calRoot || calRoot.dataset.bound) return;
+  calRoot.dataset.bound = '1';
   try {
   const data: Record<string, { t: string; n: string; l: string[] }[]> = JSON.parse(
     document.getElementById('cal-data')!.textContent!,
@@ -279,6 +283,8 @@ const updatedLines = calendars
   } catch (err) {
     console.error('[行事曆] 初始化失敗，互動功能停用：', err);
   }
+  }
+  document.addEventListener('astro:page-load', initCalendar);
 </script>
 
 <style is:global>

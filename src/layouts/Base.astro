@@ -1,4 +1,5 @@
 ---
+import { ClientRouter } from 'astro:transitions';
 import '../styles/tokens.css';
 import '../styles/global.css';
 import '../styles/markdown.css';
@@ -26,6 +27,7 @@ const pageTitle = title ? `${title}｜台科新生懶人包` : '台科新生懶�
     <meta property="og:description" content={description} />
     <link rel="icon" href="/logo.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/logo.png" />
+    <ClientRouter />
     <script is:inline>
       document.documentElement.dataset.dept = localStorage.getItem('dept') || 'all';
     </script>
@@ -34,23 +36,34 @@ const pageTitle = title ? `${title}｜台科新生懶人包` : '台科新生懶�
     <a class="skip-link" href="#main">跳到主要內容</a>
     {
       chrome && (
-        <header class="site-header">
+        <header class="site-header" transition:persist="site-header">
           <nav class="site-header__inner" aria-label="主選單">
             <a class="brand" href="/">
               <img class="brand__logo" src="/logo.svg" alt="" width="30" height="31" />
               <span class="brand__text">台科新生懶人包</span>
             </a>
             <div class="site-header__links">
-              <a href="https://www.ntust.edu.tw" target="_blank" rel="noopener noreferrer">NTUST</a>
-              <a href="https://i.ntust.edu.tw" target="_blank" rel="noopener noreferrer">學生資訊系統</a>
-              <label class="dept-picker">
-                <span class="dept-picker__label">系別</span>
-                <select id="dept-select" class="dept-picker__select">
+              <a class="nav-pill" href="/article/start/">目錄</a>
+              <a class="nav-pill" href="/article/contribute/">如何貢獻</a>
+              <div class="dept-picker" id="dept-picker">
+                <button
+                  class="dept-picker__btn"
+                  id="dept-btn"
+                  type="button"
+                  aria-haspopup="listbox"
+                  aria-expanded="false"
+                >
+                  <span id="dept-btn-label">全部</span>
+                  <span class="dept-picker__chev" aria-hidden="true"></span>
+                </button>
+                <ul class="dept-picker__menu" id="dept-menu" role="listbox" aria-label="系別" hidden>
                   {DEPTS.map((d) => (
-                    <option value={d.code}>{d.label}</option>
+                    <li role="option" data-code={d.code} tabindex="-1">
+                      {d.label}
+                    </li>
                   ))}
-                </select>
-              </label>
+                </ul>
+              </div>
             </div>
           </nav>
         </header>
@@ -68,47 +81,96 @@ const pageTitle = title ? `${title}｜台科新生懶人包` : '台科新生懶�
     }
 
     <script>
-      // 系別選擇：同步 select 與 localStorage 及 html[data-dept]
-      const deptSelect = document.getElementById('dept-select') as HTMLSelectElement | null;
-      if (deptSelect) {
-        deptSelect.value = document.documentElement.dataset.dept ?? 'all';
-        deptSelect.addEventListener('change', () => {
-          localStorage.setItem('dept', deptSelect.value);
-          document.documentElement.dataset.dept = deptSelect.value;
+      // ClientRouter 導航後 module script 不會重跑，全部掛在 astro:page-load
+      function initDeptPicker() {
+        const deptBtn = document.getElementById('dept-btn');
+        const deptMenu = document.getElementById('dept-menu');
+        const deptLabel = document.getElementById('dept-btn-label');
+        if (!deptBtn || !deptMenu || !deptLabel) return;
+        if (deptBtn.dataset.bound) return; // header 為 persist 元素，避免重複綁定
+        deptBtn.dataset.bound = '1';
+
+        const options = [...deptMenu.querySelectorAll<HTMLElement>('[role="option"]')];
+        const sync = () => {
+          const code = document.documentElement.dataset.dept ?? 'all';
+          for (const opt of options) {
+            const selected = opt.dataset.code === code;
+            opt.setAttribute('aria-selected', String(selected));
+            if (selected) deptLabel.textContent = opt.textContent?.trim() ?? '全部';
+          }
+        };
+        let closeTimer: number | undefined;
+        const close = () => {
+          deptMenu.classList.remove('dept-picker__menu--open');
+          deptBtn.setAttribute('aria-expanded', 'false');
+          closeTimer = window.setTimeout(() => (deptMenu.hidden = true), 170);
+        };
+        const open = () => {
+          clearTimeout(closeTimer);
+          deptMenu.hidden = false;
+          requestAnimationFrame(() => deptMenu.classList.add('dept-picker__menu--open'));
+          deptBtn.setAttribute('aria-expanded', 'true');
+        };
+        deptBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          deptBtn.getAttribute('aria-expanded') === 'true' ? close() : open();
         });
-      }
-
-      // 程式碼區塊複製按鈕
-      for (const pre of document.querySelectorAll('pre.astro-code')) {
-        const btn = document.createElement('button');
-        btn.className = 'code-copy';
-        btn.type = 'button';
-        btn.textContent = '複製';
-        btn.addEventListener('click', async () => {
-          await navigator.clipboard.writeText(pre.textContent ?? '');
-          btn.textContent = '已複製';
-          setTimeout(() => (btn.textContent = '複製'), 1500);
+        for (const opt of options) {
+          opt.addEventListener('click', () => {
+            const code = opt.dataset.code ?? 'all';
+            localStorage.setItem('dept', code);
+            document.documentElement.dataset.dept = code;
+            sync();
+            close();
+          });
+        }
+        document.addEventListener('click', (e) => {
+          if (!deptMenu.hidden && !deptMenu.contains(e.target as Node)) close();
         });
-        pre.appendChild(btn);
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && !deptMenu.hidden) close();
+        });
+        sync();
       }
 
-      // YouTube facade：點擊時才載入 iframe（未載入前是普通外連）
-      for (const a of document.querySelectorAll('a.yt[data-yt-id]')) {
-        a.addEventListener('click', (e) => {
-          e.preventDefault();
-          const id = (a as HTMLElement).dataset.ytId;
-          const iframe = document.createElement('iframe');
-          iframe.className = 'yt__iframe';
-          iframe.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1`;
-          iframe.allow = 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture';
-          iframe.allowFullscreen = true;
-          iframe.title = a.querySelector('.yt__title')?.textContent ?? 'YouTube';
-          a.replaceWith(iframe);
-        }, { once: true });
+      function initCodeCopy() {
+        for (const pre of document.querySelectorAll('pre.astro-code')) {
+          if (pre.querySelector('.code-copy')) continue;
+          const btn = document.createElement('button');
+          btn.className = 'code-copy';
+          btn.type = 'button';
+          btn.textContent = '複製';
+          btn.addEventListener('click', async () => {
+            await navigator.clipboard.writeText(pre.textContent ?? '');
+            btn.textContent = '已複製';
+            btn.classList.add('code-copy--done');
+            setTimeout(() => {
+              btn.textContent = '複製';
+              btn.classList.remove('code-copy--done');
+            }, 1400);
+          });
+          pre.appendChild(btn);
+        }
       }
 
-      // Mermaid：頁面上有圖才動態載入
-      if (document.querySelector('pre.mermaid')) {
+      function initYt() {
+        for (const a of document.querySelectorAll('a.yt[data-yt-id]')) {
+          a.addEventListener('click', (e) => {
+            e.preventDefault();
+            const id = (a as HTMLElement).dataset.ytId;
+            const iframe = document.createElement('iframe');
+            iframe.className = 'yt__iframe';
+            iframe.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1`;
+            iframe.allow = 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture';
+            iframe.allowFullscreen = true;
+            iframe.title = a.querySelector('.yt__title')?.textContent ?? 'YouTube';
+            a.replaceWith(iframe);
+          }, { once: true });
+        }
+      }
+
+      async function initMermaid() {
+        if (!document.querySelector('pre.mermaid')) return;
         try {
           const { default: mermaid } = await import('mermaid');
           mermaid.initialize({ startOnLoad: false, theme: 'neutral', fontFamily: 'inherit' });
@@ -117,6 +179,13 @@ const pageTitle = title ? `${title}｜台科新生懶人包` : '台科新生懶�
           console.error('[mermaid] 渲染失敗：', err);
         }
       }
+
+      document.addEventListener('astro:page-load', () => {
+        initDeptPicker();
+        initCodeCopy();
+        initYt();
+        initMermaid();
+      });
     </script>
   </body>
 </html>

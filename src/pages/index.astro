@@ -47,9 +47,11 @@ import Calendar from '../components/Calendar.astro';
   </div>
 
   <script>
+    function initTrain() {
     const train = document.getElementById('landing-train');
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (train && !reduced) {
+    if (train && !train.dataset.bound && !reduced) {
+      train.dataset.bound = '1';
       const ease = 'cubic-bezier(0.4, 0, 0.2, 1)';
       const ride = async () => {
         train.style.opacity = '1';
@@ -77,5 +79,7 @@ import Calendar from '../components/Calendar.astro';
       };
       setTimeout(ride, 1750); // 等路線描線完成
     }
+    }
+    document.addEventListener('astro:page-load', initTrain);
   </script>
 </Base>
