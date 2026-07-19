@@ -1,14 +1,24 @@
 ---
-// 學年行事曆：build 時渲染整學年月曆流，client 只負責今天標記、捲動與 popup
-import cal from '../data/calendar-115.json';
+// 行事曆：涵蓋兩個學年的資料，client 依今天計算「當學期＋前一學期」窗口，
+// 其餘月份隱藏。hover 顯示事件 popup、i 按鈕顯示更新時間卡。
+import cal114 from '../data/calendar-114.json';
+import cal115 from '../data/calendar-115.json';
 
-type CalEvent = (typeof cal.events)[number];
+interface CalEvent {
+  start: string;
+  end: string;
+  title: string;
+  titleDisplay: string;
+  note: string;
+  link: string[];
+}
 
-const meta = cal.meta;
+const calendars = [cal114, cal115];
+const events = calendars.flatMap((c) => c.events as CalEvent[]);
 
 // 事件依日期分組（跨日事件展開至每一天）
 const byDay = new Map<string, CalEvent[]>();
-for (const ev of cal.events) {
+for (const ev of events) {
   const start = new Date(`${ev.start}T00:00:00Z`);
   const end = new Date(`${ev.end}T00:00:00Z`);
   for (let d = new Date(start); d <= end; d.setUTCDate(d.getUTCDate() + 1)) {
@@ -20,13 +30,15 @@ for (const ev of cal.events) {
 
 // popup 用的精簡資料
 const payload: Record<string, { t: string; n: string; l: string[] }[]> = {};
-for (const [day, events] of byDay) {
-  payload[day] = events.map((e) => ({ t: e.titleDisplay || e.title, n: e.note, l: e.link }));
+for (const [day, dayEvents] of byDay) {
+  payload[day] = dayEvents.map((e) => ({ t: e.titleDisplay || e.title, n: e.note, l: e.link }));
 }
 
-// 學年涵蓋月份（calendarEnd 為排他月初）
-const [sy, sm] = meta.calendarStart!.split('-').map(Number);
-const [ey, em] = meta.calendarEnd!.split('-').map(Number);
+// 兩學年合併的月份範圍（calendarEnd 為排他月初）；顯示窗口由 client 決定
+const starts = calendars.map((c) => c.meta.calendarStart!).sort();
+const ends = calendars.map((c) => c.meta.calendarEnd!).sort();
+const [sy, sm] = starts[0].split('-').map(Number);
+const [ey, em] = ends[ends.length - 1].split('-').map(Number);
 const months: { y: number; m: number }[] = [];
 for (let y = sy, m = sm; y < ey || (y === ey && m < em); m === 12 ? ((m = 1), y++) : m++) {
   months.push({ y, m });
@@ -46,17 +58,33 @@ function monthCells(y: number, m: number): (number | null)[] {
   return cells;
 }
 
-const updatedText = new Date(meta.parsedAt).toLocaleDateString('zh-TW', {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric',
-});
+const updatedLines = calendars
+  .map((c) => ({
+    year: c.meta.academicYear,
+    text: new Date(c.meta.parsedAt).toLocaleDateString('zh-TW', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    }),
+  }))
+  .sort((a, b) => (b.year ?? 0) - (a.year ?? 0));
 ---
 
-<aside class="cal" id="cal" aria-label="學年行事曆">
+<aside class="cal" id="cal" aria-label="行事曆">
   <header class="cal__head">
-    <h2 class="cal__title">{meta.academicYear} 學年行事曆</h2>
-    <p class="cal__updated">行事曆更新於 {updatedText}</p>
+    <h2 class="cal__title">行事曆</h2>
+    <button
+      class="cal__info-btn"
+      id="cal-info-btn"
+      type="button"
+      aria-label="資料更新時間"
+      aria-expanded="false"
+    >
+      <span aria-hidden="true"></span>
+    </button>
+    <div class="cal__info-card" id="cal-info-card" hidden>
+      {updatedLines.map((u) => <p>{u.year} 學年：更新於 {u.text}</p>)}
+    </div>
   </header>
 
   <div class="cal__scroll" id="cal-scroll" tabindex="0">
@@ -73,17 +101,17 @@ const updatedText = new Date(meta.parsedAt).toLocaleDateString('zh-TW', {
             {monthCells(y, m).map((day) => {
               if (day === null) return <span class="cal__cell cal__cell--empty" />;
               const key = `${y}-${pad(m)}-${pad(day)}`;
-              const events = byDay.get(key);
-              return events ? (
+              const dayEvents = byDay.get(key);
+              return dayEvents ? (
                 <button
                   class="cal__cell cal__cell--event"
                   type="button"
                   data-date={key}
-                  aria-label={`${m} 月 ${day} 日，${events.length} 個事件`}
+                  aria-label={`${m} 月 ${day} 日，${dayEvents.length} 個事件`}
                 >
                   <span class="cal__num">{day}</span>
                   <span class="cal__dots" aria-hidden="true">
-                    {events.slice(0, 3).map(() => (
+                    {dayEvents.slice(0, 3).map(() => (
                       <i />
                     ))}
                   </span>
@@ -105,15 +133,10 @@ const updatedText = new Date(meta.parsedAt).toLocaleDateString('zh-TW', {
     回到今天
   </button>
 
-  <dialog class="cal__dialog" id="cal-dialog">
-    <header class="cal__dialog-head">
-      <h3 class="cal__dialog-title" id="cal-dialog-title"></h3>
-      <button class="cal__dialog-close" id="cal-dialog-close" type="button" aria-label="關閉">
-        <span aria-hidden="true"></span>
-      </button>
-    </header>
-    <ul class="cal__dialog-list" id="cal-dialog-list"></ul>
-  </dialog>
+  <div class="cal__pop" id="cal-pop" hidden>
+    <p class="cal__pop-date" id="cal-pop-date"></p>
+    <ul class="cal__pop-list" id="cal-pop-list"></ul>
+  </div>
 
   <script type="application/json" id="cal-data" is:inline set:html={JSON.stringify(payload)} />
 </aside>
@@ -123,42 +146,66 @@ const updatedText = new Date(meta.parsedAt).toLocaleDateString('zh-TW', {
     document.getElementById('cal-data')!.textContent!,
   );
   const scroller = document.getElementById('cal-scroll')!;
-  const dialog = document.getElementById('cal-dialog') as HTMLDialogElement;
-  const dialogTitle = document.getElementById('cal-dialog-title')!;
-  const dialogList = document.getElementById('cal-dialog-list')!;
+  const pop = document.getElementById('cal-pop')!;
+  const popDate = document.getElementById('cal-pop-date')!;
+  const popList = document.getElementById('cal-pop-list')!;
+  const infoBtn = document.getElementById('cal-info-btn')!;
+  const infoCard = document.getElementById('cal-info-card')!;
 
-  // 今天標記與過去日期降透明度（client 判定，build 日期會過期）
+  const pad = (n: number) => String(n).padStart(2, '0');
   const now = new Date();
-  const todayKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  const todayKey = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+
+  // ---- 當學期＋前一學期窗口（第 1 學期 8~1 月、第 2 學期 2~7 月） ----
+  function semStart(d: Date): [number, number] {
+    const y = d.getFullYear();
+    const m = d.getMonth() + 1;
+    if (m >= 8) return [y, 8];
+    if (m === 1) return [y - 1, 8];
+    return [y, 2];
+  }
+  const [cy, cm] = semStart(now);
+  const [py, pm] = cm === 8 ? [cy, 2] : [cy - 1, 8];
+  const monthKey = (y: number, m: number) => `${y}-${pad(m)}`;
+  const windowFirst = monthKey(py, pm);
+  const windowLast = monthKey(cm + 5 > 12 ? cy + 1 : cy, ((cm + 5 - 1) % 12) + 1);
+
+  const sections = [...document.querySelectorAll<HTMLElement>('.cal__month')];
+  const visible = sections.filter((s) => {
+    const key = s.dataset.month!;
+    const inWindow = key >= windowFirst && key <= windowLast;
+    s.hidden = !inWindow;
+    return inWindow;
+  });
+
+  // 今天標記與過去日期降透明度
   for (const cell of document.querySelectorAll<HTMLElement>('.cal__cell[data-date]')) {
     const key = cell.dataset.date!;
     if (key < todayKey) cell.classList.add('cal__cell--past');
     else if (key === todayKey) cell.classList.add('cal__cell--today');
   }
 
-  // 捲動至目標月份（超出學年範圍時夾到首尾）
-  function scrollToMonth(monthKey: string, behavior: ScrollBehavior = 'auto') {
-    const sections = document.querySelectorAll<HTMLElement>('.cal__month');
-    let target = sections[0];
-    for (const s of sections) {
-      if (s.dataset.month! <= monthKey) target = s;
+  // 捲動至目標月份（窗口外夾到首尾）
+  function scrollToMonth(key: string, behavior: ScrollBehavior = 'auto') {
+    let target = visible[0];
+    for (const s of visible) {
+      if (s.dataset.month! <= key) target = s;
     }
-    scroller.scrollTo({ top: target.offsetTop - scroller.offsetTop, behavior });
+    if (target) scroller.scrollTo({ top: target.offsetTop - scroller.offsetTop, behavior });
   }
   scrollToMonth(todayKey.slice(0, 7));
   document.getElementById('cal-today')!.addEventListener('click', () => {
     scrollToMonth(todayKey.slice(0, 7), 'smooth');
   });
 
-  // 點擊有事件的日期開啟 popup
-  scroller.addEventListener('click', (e) => {
-    const btn = (e.target as HTMLElement).closest<HTMLElement>('.cal__cell--event');
-    if (!btn) return;
-    const key = btn.dataset.date!;
+  // ---- hover 顯示事件 popup ----
+  let hideTimer: number | undefined;
+
+  function fillPop(key: string) {
     const [y, m, d] = key.split('-').map(Number);
     const weekday = '日一二三四五六'[new Date(y, m - 1, d).getDay()];
-    dialogTitle.textContent = `${y} 年 ${m} 月 ${d} 日（週${weekday}）`;
-    dialogList.replaceChildren(
+    popDate.textContent = `${y} 年 ${m} 月 ${d} 日（週${weekday}）`;
+    popList.replaceChildren(
       ...(data[key] ?? []).map((ev) => {
         const li = document.createElement('li');
         const title = document.createElement('p');
@@ -183,32 +230,93 @@ const updatedText = new Date(meta.parsedAt).toLocaleDateString('zh-TW', {
         return li;
       }),
     );
-    dialog.showModal();
-  });
+  }
 
-  document.getElementById('cal-dialog-close')!.addEventListener('click', () => dialog.close());
-  dialog.addEventListener('click', (e) => {
-    if (e.target === dialog) dialog.close(); // 點擊背板關閉
+  function showPop(cell: HTMLElement) {
+    clearTimeout(hideTimer);
+    fillPop(cell.dataset.date!);
+    pop.hidden = false;
+    const r = cell.getBoundingClientRect();
+    const pw = pop.offsetWidth;
+    const ph = pop.offsetHeight;
+    // 優先顯示在行事曆卡片左側，空間不足時翻到右側，再夾回視窗內
+    let left = r.left - pw - 12;
+    if (left < 8) left = r.right + 12;
+    if (left + pw > innerWidth - 8) left = Math.max(8, innerWidth - pw - 8);
+    const top = Math.min(Math.max(8, r.top + r.height / 2 - ph / 2), innerHeight - ph - 8);
+    pop.style.left = `${left}px`;
+    pop.style.top = `${top}px`;
+    requestAnimationFrame(() => pop.classList.add('cal__pop--show'));
+  }
+
+  function hidePop(delay = 140) {
+    clearTimeout(hideTimer);
+    hideTimer = window.setTimeout(() => {
+      pop.classList.remove('cal__pop--show');
+      pop.hidden = true;
+    }, delay);
+  }
+
+  scroller.addEventListener('pointerover', (e) => {
+    const cell = (e.target as HTMLElement).closest<HTMLElement>('.cal__cell--event');
+    if (cell) showPop(cell);
+  });
+  scroller.addEventListener('pointerout', (e) => {
+    if ((e.target as HTMLElement).closest('.cal__cell--event')) hidePop();
+  });
+  scroller.addEventListener('focusin', (e) => {
+    const cell = (e.target as HTMLElement).closest<HTMLElement>('.cal__cell--event');
+    if (cell) showPop(cell);
+  });
+  scroller.addEventListener('focusout', () => hidePop());
+  pop.addEventListener('pointerenter', () => clearTimeout(hideTimer));
+  pop.addEventListener('pointerleave', () => hidePop());
+  scroller.addEventListener('scroll', () => hidePop(0), { passive: true });
+
+  // ---- i 提示卡：點擊切換更新時間 ----
+  infoBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const open = infoCard.hidden;
+    infoCard.hidden = !open;
+    infoBtn.setAttribute('aria-expanded', String(open));
+  });
+  document.addEventListener('click', (e) => {
+    if (!infoCard.hidden && !infoCard.contains(e.target as Node)) {
+      infoCard.hidden = true;
+      infoBtn.setAttribute('aria-expanded', 'false');
+    }
   });
 </script>
 
 <style is:global>
   .cal {
-    position: sticky;
-    top: 1.5rem;
-    align-self: start;
+    position: relative;
+    align-self: center;
     display: flex;
     flex-direction: column;
-    max-height: calc(100dvh - 3rem);
+    height: min(34rem, calc(100dvh - 4rem));
     border: 1px solid var(--line);
     border-radius: var(--radius-l);
     background: var(--paper);
     overflow: hidden;
+    box-shadow: 0 14px 44px rgb(20 18 24 / 0.06);
+    animation: cal-in 0.7s var(--ease) 0.35s both;
+  }
+
+  @keyframes cal-in {
+    from {
+      opacity: 0;
+      translate: 26px 0;
+    }
   }
 
   .cal__head {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
     padding: 1.1rem 1.3rem 0.9rem;
     border-bottom: 1px solid var(--line);
+    position: relative;
   }
 
   .cal__title {
@@ -216,10 +324,43 @@ const updatedText = new Date(meta.parsedAt).toLocaleDateString('zh-TW', {
     font-weight: 750;
   }
 
-  .cal__updated {
-    margin-top: 0.2rem;
+  .cal__info-btn {
+    width: 1.35rem;
+    height: 1.35rem;
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+    color: var(--ink-soft);
+    display: grid;
+    place-items: center;
+  }
+
+  .cal__info-btn:hover {
+    color: var(--brand);
+  }
+
+  .cal__info-btn span {
+    width: 1.05rem;
+    height: 1.05rem;
+    background: currentColor;
+    mask: url('/icons/info.svg') no-repeat center / contain;
+    -webkit-mask: url('/icons/info.svg') no-repeat center / contain;
+  }
+
+  .cal__info-card {
+    position: absolute;
+    top: calc(100% - 0.3rem);
+    left: 1.3rem;
+    z-index: 5;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 0.6rem 0.9rem;
     font-size: var(--text-tiny);
     color: var(--ink-soft);
+    line-height: 1.7;
+    box-shadow: 0 10px 28px rgb(20 18 24 / 0.12);
   }
 
   .cal__scroll {
@@ -274,14 +415,15 @@ const updatedText = new Date(meta.parsedAt).toLocaleDateString('zh-TW', {
   }
 
   .cal__cell--event {
-    cursor: pointer;
+    cursor: default;
     background: color-mix(in oklab, var(--brand) 7%, var(--paper));
     font-weight: 650;
-    transition: background var(--dur) var(--ease);
+    transition: background var(--dur) var(--ease), scale var(--dur) var(--ease);
   }
 
   .cal__cell--event:hover {
     background: color-mix(in oklab, var(--brand) 16%, var(--paper));
+    scale: 1.06;
   }
 
   .cal__cell--past {
@@ -338,76 +480,57 @@ const updatedText = new Date(meta.parsedAt).toLocaleDateString('zh-TW', {
     -webkit-mask: url('/icons/today.svg') no-repeat center / contain;
   }
 
-  .cal__dialog {
-    border: none;
-    border-radius: var(--radius-l);
-    padding: 0;
-    width: min(26rem, calc(100vw - 3rem));
-    box-shadow: 0 18px 50px rgb(0 0 0 / 0.18);
+  /* ---- hover popup ---- */
+  .cal__pop {
+    position: fixed;
+    z-index: 30;
+    width: 18rem;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: 0 16px 44px rgb(20 18 24 / 0.16);
+    padding: 0.8rem 1rem;
+    opacity: 0;
+    translate: 0 6px;
+    transition: opacity var(--dur) var(--ease), translate var(--dur) var(--ease);
+    pointer-events: auto;
   }
 
-  .cal__dialog::backdrop {
-    background: rgb(20 18 24 / 0.35);
+  .cal__pop--show {
+    opacity: 1;
+    translate: 0 0;
   }
 
-  .cal__dialog-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1rem 1.25rem;
-    border-bottom: 1px solid var(--line);
-  }
-
-  .cal__dialog-title {
-    font-size: 1rem;
-    font-weight: 750;
-  }
-
-  .cal__dialog-close {
-    width: 1.9rem;
-    height: 1.9rem;
-    border: none;
-    background: none;
-    cursor: pointer;
-    display: grid;
-    place-items: center;
-    border-radius: 50%;
+  .cal__pop-date {
+    font-size: var(--text-tiny);
+    font-weight: 700;
+    font-family: var(--font-mono);
     color: var(--ink-soft);
+    margin-bottom: 0.3rem;
   }
 
-  .cal__dialog-close:hover {
-    color: var(--brand);
-  }
-
-  .cal__dialog-close span {
-    width: 1.3rem;
-    height: 1.3rem;
-    background: currentColor;
-    mask: url('/icons/close.svg') no-repeat center / contain;
-    -webkit-mask: url('/icons/close.svg') no-repeat center / contain;
-  }
-
-  .cal__dialog-list {
+  .cal__pop-list {
     list-style: none;
     margin: 0;
-    padding: 0.6rem 1.25rem 1.1rem;
+    padding: 0;
   }
 
-  .cal__dialog-list li {
-    padding-block: 0.6rem;
+  .cal__pop-list li {
+    padding-block: 0.45rem;
   }
 
-  .cal__dialog-list li + li {
+  .cal__pop-list li + li {
     border-top: 1px solid var(--line);
   }
 
   .cal__ev-title {
+    font-size: var(--text-small);
     font-weight: 650;
     line-height: 1.55;
   }
 
   .cal__ev-note {
-    font-size: var(--text-small);
+    font-size: var(--text-tiny);
     color: var(--ink-soft);
     line-height: 1.6;
   }
@@ -417,6 +540,6 @@ const updatedText = new Date(meta.parsedAt).toLocaleDateString('zh-TW', {
     font-family: var(--font-mono);
     font-size: var(--text-tiny);
     margin-right: 0.8em;
-    margin-top: 0.2em;
+    margin-top: 0.15em;
   }
 </style>
