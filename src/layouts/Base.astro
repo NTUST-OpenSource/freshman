@@ -134,6 +134,12 @@ const ogImage = new URL('/logo.png', Astro.site);
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') closeDeptMenu();
       });
+      // 返回鍵等導航前強制收合：persist header 不得帶著展開選單進新頁
+      document.addEventListener('astro:before-swap', () => {
+        closeDeptMenu();
+        const menu = document.getElementById('dept-menu');
+        if (menu) menu.hidden = true; // 不等淡出計時，快照前立即隱藏
+      });
 
       function initDeptPicker() {
         const deptBtn = document.getElementById('dept-btn');
@@ -221,6 +227,8 @@ const ogImage = new URL('/logo.png', Astro.site);
       function initYt() {
         for (const a of document.querySelectorAll('a.yt[data-yt-id]')) {
           a.addEventListener('click', (e) => {
+            // 修飾鍵交還瀏覽器（開新分頁等）；成功替換後元素隨即消失，毋須 once
+            if (e.metaKey || e.ctrlKey || e.shiftKey) return;
             e.preventDefault();
             const id = (a as HTMLElement).dataset.ytId;
             const iframe = document.createElement('iframe');
@@ -230,7 +238,7 @@ const ogImage = new URL('/logo.png', Astro.site);
             iframe.allowFullscreen = true;
             iframe.title = a.querySelector('.yt__title')?.textContent ?? 'YouTube';
             a.replaceWith(iframe);
-          }, { once: true });
+          });
         }
       }
 
