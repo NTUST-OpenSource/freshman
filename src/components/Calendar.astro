@@ -94,14 +94,15 @@ const updatedLines = calendars
     </div>
   </header>
 
-  <div class="cal__scroll" id="cal-scroll" tabindex="0">
+  <div class="cal__scroll" id="cal-scroll" tabindex="0" role="region" aria-label="行事曆月份列表">
     {
       months.map(({ y, m }) => (
         <section class="cal__month" data-month={`${y}-${pad(m)}`}>
           <h3 class="cal__month-title">
             {y} 年 {m} 月
           </h3>
-          <div class="cal__grid" role="grid">
+          {/* 無 role="grid"：缺 row/gridcell 子結構反而違反 ARIA，語意化 button 已足 */}
+          <div class="cal__grid">
             {WEEKDAYS.map((w) => (
               <span class="cal__weekday">{w}</span>
             ))}
@@ -114,7 +115,8 @@ const updatedLines = calendars
                   class="cal__cell cal__cell--event"
                   type="button"
                   data-date={key}
-                  aria-label={`${m} 月 ${day} 日，${dayEvents.length} 個事件`}
+                  aria-label={`${y} 年 ${m} 月 ${day} 日，${dayEvents.length} 個事件`}
+                  aria-haspopup="dialog"
                 >
                   <span class="cal__num">{day}</span>
                   <span class="cal__dots" aria-hidden="true">
@@ -141,6 +143,12 @@ const updatedLines = calendars
     <p class="cal__pop-date" id="cal-pop-date"></p>
     <ul class="cal__pop-list" id="cal-pop-list"></ul>
   </div>
+
+  {/* 點擊（含 Enter）開原生 dialog：hover popup 對鍵盤與螢幕報讀器不可達 */}
+  <dialog class="cal__dialog" id="cal-dialog">
+    <p class="cal__pop-date" id="cal-dialog-date"></p>
+    <ul class="cal__pop-list" id="cal-dialog-list"></ul>
+  </dialog>
 
   {/* < 跳脫：ics 來源或人工欄位含 </script> 也不會截斷資料塊 */}
   <script type="application/json" id="cal-data" is:inline set:html={JSON.stringify(payload).replace(/</g, '\\u003c')} />
@@ -179,6 +187,13 @@ const updatedLines = calendars
     s.hidden = !inWindow;
     return inWindow;
   });
+  if (!visible.length) {
+    // 資料與顯示窗口零交集（新學年 ics 未更新）：留提示而非整片空白
+    const notice = document.createElement('p');
+    notice.className = 'cal__empty';
+    notice.textContent = '行事曆資料待更新';
+    scroller.appendChild(notice);
+  }
 
   // 今天標記與過去日期降透明度
   for (const cell of document.querySelectorAll<HTMLElement>('.cal__cell[data-date]')) {
@@ -199,7 +214,8 @@ const updatedLines = calendars
   scrollToMonth(todayKey.slice(0, 7));
   const todayBtn = document.getElementById('cal-today')!;
   todayBtn.addEventListener('click', () => {
-    scrollToMonth(todayKey.slice(0, 7), 'smooth');
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    scrollToMonth(todayKey.slice(0, 7), reduced ? 'instant' : 'smooth');
   });
 
   // 今天已在視窗內時隱藏「回到今天」
@@ -211,14 +227,15 @@ const updatedLines = calendars
     ).observe(todayCell);
   }
 
-  // ---- hover 顯示事件 popup ----
+  // ---- hover 顯示事件 popup；點擊（含 Enter）開原生 dialog ----
   let hideTimer: number | undefined;
+  let fadeTimer: number | undefined;
 
-  function fillPop(key: string) {
+  function fillPop(key: string, dateEl: HTMLElement = popDate, listEl: HTMLElement = popList) {
     const [y, m, d] = key.split('-').map(Number);
     const weekday = '日一二三四五六'[new Date(y, m - 1, d).getDay()];
-    popDate.textContent = `${y} 年 ${m} 月 ${d} 日（週${weekday}）`;
-    popList.replaceChildren(
+    dateEl.textContent = `${y} 年 ${m} 月 ${d} 日（週${weekday}）`;
+    listEl.replaceChildren(
       ...(data[key] ?? []).map((ev) => {
         const li = document.createElement('li');
         const title = document.createElement('p');
@@ -247,6 +264,7 @@ const updatedLines = calendars
 
   function showPop(cell: HTMLElement) {
     clearTimeout(hideTimer);
+    clearTimeout(fadeTimer);
     fillPop(cell.dataset.date!);
     pop.hidden = false;
     const r = cell.getBoundingClientRect();
@@ -266,17 +284,28 @@ const updatedLines = calendars
     clearTimeout(hideTimer);
     hideTimer = window.setTimeout(() => {
       pop.classList.remove('cal__pop--show');
-      pop.hidden = true;
+      fadeTimer = window.setTimeout(() => (pop.hidden = true), 170); // 等淡出跑完再 hidden
     }, delay);
   }
 
   // popup 移出 .cal，徹底避開 overflow/stacking/containing block 影響
   document.body.appendChild(pop);
+  const dialog = document.getElementById('cal-dialog') as HTMLDialogElement;
+  const dialogDate = document.getElementById('cal-dialog-date')!;
+  const dialogList = document.getElementById('cal-dialog-list')!;
+  dialog.addEventListener('click', (e) => {
+    if (e.target === dialog) dialog.close(); // backdrop 點擊關閉；Escape 為 dialog 原生行為
+  });
   for (const cell of document.querySelectorAll<HTMLElement>('.cal__cell--event')) {
     cell.addEventListener('pointerenter', () => showPop(cell));
     cell.addEventListener('pointerleave', () => hidePop());
     cell.addEventListener('focus', () => showPop(cell));
     cell.addEventListener('blur', () => hidePop());
+    cell.addEventListener('click', () => {
+      hidePop(0);
+      fillPop(cell.dataset.date!, dialogDate, dialogList);
+      dialog.showModal();
+    });
   }
   pop.addEventListener('pointerenter', () => clearTimeout(hideTimer));
   pop.addEventListener('pointerleave', () => hidePop());
@@ -294,12 +323,18 @@ const updatedLines = calendars
   }
   }
   // i 卡收合：document 監聽掛模組層一次、以 id 查當前元素，不隨每次進首頁累積
+  function closeInfoCard() {
+    const infoCard = document.getElementById('cal-info-card');
+    if (!infoCard || infoCard.hidden) return;
+    infoCard.hidden = true;
+    document.getElementById('cal-info-btn')?.setAttribute('aria-expanded', 'false');
+  }
   document.addEventListener('click', (e) => {
     const infoCard = document.getElementById('cal-info-card');
-    if (infoCard && !infoCard.hidden && !infoCard.contains(e.target as Node)) {
-      infoCard.hidden = true;
-      document.getElementById('cal-info-btn')?.setAttribute('aria-expanded', 'false');
-    }
+    if (infoCard && !infoCard.hidden && !infoCard.contains(e.target as Node)) closeInfoCard();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeInfoCard();
   });
   document.addEventListener('astro:page-load', initCalendar);
 </script>
@@ -381,9 +416,22 @@ const updatedLines = calendars
 
   .cal__scroll {
     overflow-y: auto;
-    padding: 0 1.3rem 1.2rem;
+    padding: 0 1.3rem 3.6rem; /* 底部留「回到今天」浮鈕高度，末排日格不被蓋住 */
     scroll-behavior: smooth;
     flex: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cal__scroll {
+      scroll-behavior: auto;
+    }
+  }
+
+  .cal__empty {
+    padding: 2.5rem 0;
+    text-align: center;
+    color: var(--ink-soft);
+    font-size: var(--text-small);
   }
 
   .cal__month-title {
@@ -497,6 +545,21 @@ const updatedLines = calendars
     background: color-mix(in oklab, var(--brand) 7%, var(--paper));
   }
 
+
+  /* ---- 事件 dialog（點擊開啟；樣式沿用 pop 內部類） ---- */
+  .cal__dialog {
+    width: min(22rem, calc(100vw - 2rem));
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--paper);
+    color: var(--ink);
+    padding: 1rem 1.2rem;
+    box-shadow: 0 18px 50px rgb(20 18 24 / 0.22);
+  }
+
+  .cal__dialog::backdrop {
+    background: rgb(20 18 24 / 0.28);
+  }
 
   /* ---- hover popup ---- */
   .cal__pop {
