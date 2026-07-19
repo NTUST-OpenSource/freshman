@@ -31,7 +31,19 @@ export default defineConfig({
             if (m) node.properties['data-title'] = m[1];
           },
         },
+        {
+          name: 'line-numbers',
+          pre(node) {
+            if (/(^|\s)showLineNumbers(\s|$)/.test(this.options.meta?.__raw ?? '')) {
+              node.properties['data-line-numbers'] = '';
+            }
+          },
+        },
       ],
     },
+  },
+  vite: {
+    // mermaid 預先打包，避免 dev 首次載入時 optimize dep 504
+    optimizeDeps: { include: ['mermaid'] },
   },
 });

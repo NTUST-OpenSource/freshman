@@ -97,7 +97,12 @@ export function remarkCustom() {
           },
         };
       } else if (node.name === 'steps') {
-        node.data = { hName: 'div', hProperties: { className: ['steps'] } };
+        const props = { className: ['steps'] };
+        const color = (attrs.color ?? '').trim();
+        if (/^#[0-9a-fA-F]{3,8}$/.test(color)) props.style = `--steps-clr: ${color}`;
+        const shape = (attrs.shape ?? '').trim();
+        if (shape === 'square' || shape === 'diamond') props.className.push(`steps--${shape}`);
+        node.data = { hName: 'div', hProperties: props };
       } else if (node.name === 'tabs') {
         tabs(node, tabsCounter++);
       } else if (node.name === 'tab') {
@@ -119,14 +124,25 @@ export function remarkCustom() {
           /* 保留空 domain */
         }
         const title = node.children.length ? [...node.children] : [text(domain || href)];
+        const img = (attrs.img ?? '').trim();
         node.data = {
           hName: 'a',
-          hProperties: { className: ['linkcard'], href, target: '_blank', rel: ['noopener', 'noreferrer'] },
+          hProperties: {
+            className: ['linkcard', ...(img ? ['linkcard--with-img'] : [])],
+            href,
+            target: '_blank',
+            rel: ['noopener', 'noreferrer'],
+          },
         };
         node.children = [
-          el('span', { className: ['linkcard__title'] }, title),
-          ...(attrs.desc ? [el('span', { className: ['linkcard__desc'] }, [text(attrs.desc)])] : []),
-          ...(domain ? [el('span', { className: ['linkcard__domain'] }, [text(domain)])] : []),
+          el('span', { className: ['linkcard__body'] }, [
+            el('span', { className: ['linkcard__title'] }, title),
+            ...(attrs.desc ? [el('span', { className: ['linkcard__desc'] }, [text(attrs.desc)])] : []),
+            ...(domain ? [el('span', { className: ['linkcard__domain'] }, [text(domain)])] : []),
+          ]),
+          ...(img
+            ? [el('img', { className: ['linkcard__img'], src: img, alt: '', loading: 'lazy' })]
+            : []),
         ];
       } else if (node.name === 'yt') {
         const id = attrs.id;
