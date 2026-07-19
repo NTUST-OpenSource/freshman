@@ -19,7 +19,7 @@ const updated = article.data.updated.toLocaleDateString('zh-TW');
   <div class={`article-layout cat-${article.data.category}`}>
     <article class="article">
       <header class="article__header" transition:name="article-head">
-        <p class="article__eyebrow">
+        <div class="article__eyebrow">
           <span class="chip chip--cat">{cat.label}</span>
           {article.data.draft && <span class="chip chip--draft">草稿</span>}
           <span class="article__meta">
@@ -36,19 +36,19 @@ const updated = article.data.updated.toLocaleDateString('zh-TW');
                   >
                     <span aria-hidden="true" />
                   </button>
-                  <div class="contrib__card" id="contrib-card" hidden>
+                  <span class="contrib__card" id="contrib-card" hidden>
                     {article.data.contributors.map((c) => (
                       <a href={`mailto:${c.email}`}>
                         {c.name}
                         <span class="contrib__mail">{c.email}</span>
                       </a>
                     ))}
-                  </div>
+                  </span>
                 </span>
               )
             }
           </span>
-        </p>
+        </div>
         <h1 class="article__title">{article.data.title}</h1>
       </header>
       <div class="md">

@@ -102,11 +102,33 @@ a {
   }
 }
 
-/* header 有獨立 group 且不動畫：切頁時完全靜止 */
-::view-transition-group(site-header),
-::view-transition-old(site-header),
-::view-transition-new(site-header) {
+/* header 獨立 group：兩頁都有 header 時完全靜止；
+   進出無 header 的首頁時（快照只有單邊）上滑淡出／下滑淡入 */
+::view-transition-old(site-header):not(:only-child),
+::view-transition-new(site-header):not(:only-child) {
   animation: none !important;
+}
+
+::view-transition-old(site-header):only-child {
+  animation: vt-header-out 0.32s var(--ease) both;
+}
+
+::view-transition-new(site-header):only-child {
+  animation: vt-header-in 0.4s var(--ease) both;
+}
+
+@keyframes vt-header-out {
+  to {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+}
+
+@keyframes vt-header-in {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -549,6 +571,9 @@ main {
 
 .article__meta {
   margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
   font-size: var(--text-tiny);
   font-family: var(--font-mono);
   color: var(--ink-soft);
@@ -557,8 +582,7 @@ main {
 .contrib {
   position: relative;
   display: inline-flex;
-  margin-left: 0.5em;
-  vertical-align: -0.15em;
+  align-items: center;
 }
 
 .contrib__btn {
@@ -586,6 +610,7 @@ main {
 }
 
 .contrib__card {
+  display: block;
   position: absolute;
   top: calc(100% + 0.5rem);
   right: 0;
