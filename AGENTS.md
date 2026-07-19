@@ -65,7 +65,7 @@
 ## 行事曆
 
 - 資料管線見 `.claude/skills/calendar-sync`（ics 更新時觸發）；轉換腳本 `scripts/parse_ics.py` 的 docstring 為規則唯一真相源
-- 人工編輯正本：`docs/calendar/parsed/{學年}.json`；網站副本：`src/data/calendar-115.json`
+- 人工編輯正本：`docs/calendar/parsed/{學年}.json`；網站副本：`src/data/calendar-{113,114,115}.json`（三份一律同步）
 - 首頁右側行事曆：整學年連續月曆流、可上下捲動、過去日期降透明度、「回到今天」按鈕、點擊有事件日開 popup（原生 dialog）
 - 網站需顯示行事曆資料更新時間（`meta.parsedAt`）
 

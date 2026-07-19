@@ -28,7 +28,10 @@
        digits — 標題仍含數字，需人工判讀
        period — 去除首尾「。」後仍含「。」，多敘述句需人工拆分
     9. --sync：人工欄位保留；人工改過的 title 沿用；舊檔多出的事件視為
-       人工新增（manual: true）保留，與自動複製事件重複者合併
+       人工新增（manual: true）保留，與自動複製事件重複者合併。
+       sync 前先驗證 id 對齊（同 id 的 uid／splitIndex／auto 必須相符）：
+       id 是同日流水號，ics 同日增刪事件會使序號位移、人工欄位貼錯對象，
+       偵測到錯位即中止不寫檔，交人工比對
    10. house rules（定案內容規則）：類型連結自動附加（LINK_RULES）、
        學位考試截止日去「第 N 學期」前綴、
        「本學年度開始」→「{年} 學年度開始」、節日「X（放假…）」display 縮為
@@ -304,6 +307,25 @@ def sync_manual(events: list[dict], edited_path: Path) -> dict:
     old = json_lenient(edited_path.read_text(encoding="utf-8"))
     old_by_id = {e["id"]: e for e in old.get("events", [])}
     stats = {"matched": 0, "titleKept": 0, "manualAdded": [], "merged": []}
+
+    # id 是同日流水號：ics 同日增刪事件會使序號位移，人工欄位會靜默貼錯對象。
+    # 同 id 的 uid／splitIndex／auto 任一不符即中止，交人工比對後再 sync。
+    misaligned = []
+    for rec in events:
+        o = old_by_id.get(rec["id"])
+        if not o:
+            continue
+        if (
+            (o.get("uid") and rec.get("uid") and o["uid"] != rec["uid"])
+            or o.get("splitIndex", 0) != rec.get("splitIndex", 0)
+            or bool(o.get("auto")) != bool(rec.get("auto"))
+        ):
+            misaligned.append(rec["id"])
+    if misaligned:
+        raise SystemExit(
+            f"[sync] id 對齊檢查失敗（{len(misaligned)} 筆）：{'、'.join(misaligned[:5])}"
+            "……ics 同日事件增刪造成序號位移，請人工比對舊檔後再 sync"
+        )
 
     def apply_manual_fields(rec: dict, o: dict) -> None:
         # titleDisplay 若等同舊 title 視為自動對齊，交由重新對齊；不同者為人工指定

@@ -17,7 +17,8 @@ interface CalEvent {
 const calendars = [cal113, cal114, cal115];
 const events = calendars.flatMap((c) => c.events as CalEvent[]);
 
-// 事件依日期分組（跨日事件展開至每一天）
+// 事件依日期分組（跨日事件展開至每一天）；同日同名去重——相鄰學年檔會重複收錄
+// 交界事件（如學年初的「暑假結束」）
 const byDay = new Map<string, CalEvent[]>();
 for (const ev of events) {
   const start = new Date(`${ev.start}T00:00:00Z`);
@@ -25,7 +26,9 @@ for (const ev of events) {
   for (let d = new Date(start); d <= end; d.setUTCDate(d.getUTCDate() + 1)) {
     const key = d.toISOString().slice(0, 10);
     if (!byDay.has(key)) byDay.set(key, []);
-    byDay.get(key)!.push(ev);
+    const dayEvents = byDay.get(key)!;
+    const label = ev.titleDisplay || ev.title;
+    if (!dayEvents.some((x) => (x.titleDisplay || x.title) === label)) dayEvents.push(ev);
   }
 }
 
@@ -35,11 +38,13 @@ for (const [day, dayEvents] of byDay) {
   payload[day] = dayEvents.map((e) => ({ t: e.titleDisplay || e.title, n: e.note, l: e.link }));
 }
 
-// 兩學年合併的月份範圍（calendarEnd 為排他月初）；顯示窗口由 client 決定
+// 三學年合併的月份範圍；顯示窗口由 client 決定。calendarEnd 來源有「排他月初」
+// 與「月末日」兩種慣例（如 111=2023-07-31、115=2027-08-01），末日非 1 號時該月含入
 const starts = calendars.map((c) => c.meta.calendarStart!).sort();
 const ends = calendars.map((c) => c.meta.calendarEnd!).sort();
 const [sy, sm] = starts[0].split('-').map(Number);
-const [ey, em] = ends[ends.length - 1].split('-').map(Number);
+let [ey, em, ed] = ends[ends.length - 1].split('-').map(Number);
+if (ed > 1) em === 12 ? ((em = 1), ey++) : em++;
 const months: { y: number; m: number }[] = [];
 for (let y = sy, m = sm; y < ey || (y === ey && m < em); m === 12 ? ((m = 1), y++) : m++) {
   months.push({ y, m });
