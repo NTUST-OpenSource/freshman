@@ -1,11 +1,9 @@
 # TODO（待補資料與待決事項，補齊後刪除該項）
 
-## 待使用者提供
+## 待使用者確認
 
-- [ ] SVG 圖示 11 個（規格：24×24 viewBox、stroke-width 2、round cap/join、單色 currentColor）：
-      info、tip、warning、danger、new、external、link、chevron、close、today、copy
-- [ ] 各系英文代號清單（系別選擇器用；先行：所有系 `all`、資工系）
-- [ ] 開工核准：commit 英文重寫、AGENTS.md 寫入、logo/favicon、去 emoji、全繁中、white mode、圓角、首頁改版與行事曆
+- [ ] 首頁與文章頁樣式驗收（內容與 md style 調整依使用者後續指示）
+- [ ] 系別擴充：其餘系所英文代號（現有 all、csie）
 
 ## 明確延後（使用者指示）
 
@@ -17,3 +15,5 @@
 
 - [x] 行事曆 110–115 全年份轉換、例外歸零、link 自動附加（2026-07-19）
 - [x] `.claude/skills/calendar-sync` skill 建立
+- [x] commit 英文重寫＋GPG 簽章驗證、AGENTS.md、logo/favicon、SVG 圖示去 emoji、
+      全繁中、white mode 圓角、首頁行事曆、系別選擇器（2026-07-19）
