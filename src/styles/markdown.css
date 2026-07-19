@@ -307,8 +307,13 @@
 }
 
 .spoiler > *:not(.spoiler__summary) {
-  padding-inline: 1.1rem;
+  /* 對齊 summary 文字起點（padding 1.1rem + chevron 1em + gap 0.5em） */
+  padding-inline: 2.5rem 1.3rem;
   margin-top: 0;
+}
+
+.spoiler > :is(ul, ol) {
+  padding-left: 3.9rem; /* 再保留清單彈點的懸掛空間 */
 }
 
 .spoiler > *:nth-child(2) {
