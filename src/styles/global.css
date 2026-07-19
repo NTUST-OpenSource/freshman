@@ -709,6 +709,7 @@ main {
     align-self: start;
     max-height: calc(100dvh - 7rem);
     overflow-y: auto;
+    padding-left: 0.5rem; /* 站點圓圈凸出路線左側，捲動容器沿 padding box 裁切，需留空間 */
     font-size: var(--text-small);
   }
 }
