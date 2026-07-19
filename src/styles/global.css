@@ -202,7 +202,11 @@ main {
   font-size: clamp(2.4rem, 1.6rem + 3vw, 3.6rem);
   line-height: 1.28;
   font-weight: 800;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.12em;
+}
+
+.landing__title-indent {
+  padding-left: 1.8em;
 }
 
 .landing__desc {
@@ -310,9 +314,8 @@ main {
   height: 15px;
   background: var(--paper);
   border: 4.5px solid var(--c-course);
-  offset-distance: var(--pos);
-  scale: 0;
-  animation: landing-pop 0.45s var(--ease) forwards;
+  opacity: 0;
+  animation: landing-appear 0.5s var(--ease) forwards;
   animation-delay: calc(0.55s + var(--s) * 0.22s);
 }
 
@@ -340,9 +343,10 @@ main {
   font-weight: 750;
 }
 
-@keyframes landing-pop {
+/* 站點原地淡入，不做任何位移 */
+@keyframes landing-appear {
   to {
-    scale: 1;
+    opacity: 1;
   }
 }
 

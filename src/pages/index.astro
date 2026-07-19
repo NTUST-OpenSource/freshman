@@ -14,7 +14,7 @@ import Calendar from '../components/Calendar.astro';
       <div class="landing__hero">
         <p class="landing__eyebrow landing-rise" style="--d: 1">開學前指南</p>
         <h1 class="landing__title landing-rise" style="--d: 2">
-          天大地大<br />臺科大
+          天大地大<br /><span class="landing__title-indent">臺科大</span>
         </h1>
         <p class="landing__desc landing-rise" style="--d: 3">
           沒有直屬怎麼辦，
@@ -36,9 +36,9 @@ import Calendar from '../components/Calendar.astro';
             stroke-linecap="round"
           ></path>
         </svg>
-        <span class="landing__station" data-label="古亭" style="--pos: 14%; --s: 1"></span>
-        <span class="landing__station" data-label="台電大樓" style="--pos: 50%; --s: 2"></span>
-        <span class="landing__station landing__station--dest" data-label="公館" style="--pos: 88%; --s: 3"></span>
+        <span class="landing__station" data-label="古亭" style="offset-distance: 14%; --s: 1"></span>
+        <span class="landing__station" data-label="台電大樓" style="offset-distance: 50%; --s: 2"></span>
+        <span class="landing__station landing__station--dest" data-label="公館" style="offset-distance: 88%; --s: 3"></span>
         <span class="landing__train" id="landing-train"></span>
       </div>
     </div>
@@ -54,15 +54,24 @@ import Calendar from '../components/Calendar.astro';
       const ease = 'cubic-bezier(0.4, 0, 0.2, 1)';
       const ride = async () => {
         train.style.opacity = '1';
-        await train.animate(
-          [{ offsetDistance: '0%' }, { offsetDistance: '50%' }],
-          { duration: 950, easing: ease, fill: 'forwards' },
-        ).finished;
-        if (Math.random() < 0.3) await new Promise((r) => setTimeout(r, 700));
-        await train.animate(
-          [{ offsetDistance: '50%' }, { offsetDistance: '88%' }],
-          { duration: 800, easing: ease, fill: 'forwards' },
-        ).finished;
+        if (Math.random() < 0.3) {
+          // 30%：在台電大樓停靠一下再開
+          await train.animate(
+            [{ offsetDistance: '0%' }, { offsetDistance: '50%' }],
+            { duration: 950, easing: ease, fill: 'forwards' },
+          ).finished;
+          await new Promise((r) => setTimeout(r, 700));
+          await train.animate(
+            [{ offsetDistance: '50%' }, { offsetDistance: '88%' }],
+            { duration: 800, easing: ease, fill: 'forwards' },
+          ).finished;
+        } else {
+          // 70%：一段式直達公館，全程流暢無停頓
+          await train.animate(
+            [{ offsetDistance: '0%' }, { offsetDistance: '88%' }],
+            { duration: 1600, easing: ease, fill: 'forwards' },
+          ).finished;
+        }
         train.animate([{ opacity: 1 }, { opacity: 0 }], {
           duration: 450,
           delay: 300,
