@@ -1,0 +1,58 @@
+# 台科新生懶人包 — 專案規則
+
+本檔為專案的最高行為準則（等同 CLAUDE.md），所有 AI 協作與人工開發都必須遵守。
+
+## 語言規範
+
+- 網站 UI 文案、內容、註解、文件一律**繁體中文**
+- 例外：程式碼識別字、網址、無慣用中文譯名的專有名詞（NTUST、GPA、Moodle）
+- 內容文字規範：標點符號全形、數字與英文字母半形、CJK 與數字交界加半形空白
+
+## 禁止事項
+
+- **全站禁止 emoji**：UI、內容、commit 訊息皆不得出現。圖示一律使用 `public/icons/` 下的 SVG（Solar linear 風格：24×24、stroke 1.5、round cap/join），以 CSS mask 上色
+- 不引入未討論過的執行期依賴；優先原生平台能力
+
+## Git 規範
+
+- Commit 訊息**純英文**，格式：`type(Scope): short description` ＋ bullet points
+- type：feat、fix、refactor、docs、test、chore、perf、ci
+- **每完成一個功能就 commit** 當作 checkpoint，不堆積
+- **必須 GPG 簽章**（全域 config 已設定，簽章驗證 `git log --format='%h %G? %s'` 應為 G）
+- 不加 Co-Authored-By 等 trailer
+
+## 設計語言
+
+- 現階段**僅 white mode**（dark mode 未來再做）
+- **桌面版優先**（≥1280px），行動裝置自適應等桌面版完成後處理
+- **圓角**為核心設計語言（radius tokens 見 `src/styles/tokens.css`）
+- 品牌色：台科深紅；分類色：北捷路線色（選課綠、生活藍、資訊橘、其他棕）
+- **動畫暫緩**：維持現有微轉場即可，新動畫等使用者指示後再設計
+- 首頁**不顯示 header 與 footer**（`Base.astro` 的 `chrome` 開關）
+
+## 內容架構
+
+- 文章：`src/content/articles/*.md`，檔名＝slug，自訂語法規格見 `docs/spec/SPEC.md`
+- serializer：`src/plugins/remark-custom.mjs`（directive → HTML 映射）
+- 舊站內容存檔：`docs/dump/`（新站內容至少需涵蓋）
+- 遷移狀態與已知源資料問題：`docs/README.md`
+
+## 系別選擇器
+
+- 系別清單：`src/lib/depts.mjs`，**「所有系」（all）永遠排第一**，新增系別即擴充此陣列
+- 目前支援：`all`（所有系）、`csie`（資工系）
+- 使用者選擇存於 `localStorage.dept`，預設 `all`；`<html data-dept="...">` 由 head 內 inline script 於繪製前設定
+- 內容條件顯示語法：`:::dept{for="csie"}`（區塊僅該系別選擇者可見），渲染為 `data-dept-only` 屬性＋CSS 顯隱；新增系別需在 `src/styles/markdown.css` 增加對應顯隱規則
+
+## 行事曆
+
+- 資料管線見 `.claude/skills/calendar-sync`（ics 更新時觸發）；轉換腳本 `scripts/parse_ics.py` 的 docstring 為規則唯一真相源
+- 人工編輯正本：`docs/calendar/parsed/{學年}.json`；網站副本：`src/data/calendar-115.json`
+- 首頁右側行事曆：整學年連續月曆流、可上下捲動、過去日期降透明度、「回到今天」按鈕、點擊有事件日開 popup（原生 dialog）
+- 網站需顯示行事曆資料更新時間（`meta.parsedAt`）
+
+## 工作流程
+
+- 待補資料與待決事項記錄於 `TODO.md`，補齊後刪除該項
+- 內容與 md style 的調整以使用者指示為準，不自行擴充語法
+- 檔案版本相關決策先以 context7 驗證
