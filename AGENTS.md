@@ -10,13 +10,14 @@
 - 文章系統：全套自訂 Markdown 語法（callout／spoiler／qa／tabs／steps 形色／card 圖片／dept／table 對齊框線／行號／註腳 hover 預覽）
 - 導航：View Transitions 縱向滑動、header 獨立 group（文章間靜止、進出首頁滑入滑出）、sticky 毛玻璃 header、自訂系別下拉
 - SEO 基礎：site=https://freshman.ntust.org、canonical、sitemap、robots.txt、OG 完整、WebSite/Article JSON-LD、404 頁
+- RWD 基線：320px 起 header／landing／文章／popup 皆不溢出，文章目錄避開 sticky header
 
 **待辦（大項）**
 - 舊站 21 篇內容遷移（docs/README.md 有清單與已知問題）
 - Cloudflare Pages 自訂網域 DNS 綁定（使用者操作）
 - og-image 1200×630 設計資產（目前暫用 logo.png）
 - qa 區塊輸出 FAQPage JSON-LD（規格已載明，未實作）
-- 行動裝置自適應、dark mode、非首頁新動畫（依指示延後）
+- dark mode、非首頁新動畫（依指示延後）
 
 ## 語言規範
 
@@ -40,7 +41,7 @@
 ## 設計語言
 
 - 現階段**僅 white mode**（dark mode 未來再做）
-- **桌面版優先**（≥1280px），行動裝置自適應等桌面版完成後處理
+- **桌面版優先**（≥1280px）；行動裝置已有 320px 起的自適應基線，驗收待使用者確認
 - **圓角**為核心設計語言（radius tokens 見 `src/styles/tokens.css`）
 - 品牌色：臺科深紅；分類色：北捷路線色（選課綠、生活藍、資訊橘、其他棕）
 - 動畫：**首頁**進場與互動動畫已依使用者指示實作（進場上浮、路線描線、hover 微互動）；其他頁面新增動畫仍待指示

@@ -12,6 +12,7 @@
 html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
+  overflow-x: clip; /* 進場動畫（行事曆右滑入）不得產生橫向捲動 */
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -301,6 +302,17 @@ a {
   background: var(--brand);
 }
 
+/* 窄螢幕：只留 logo 與導覽控制，避免頁首溢出（320px 需可容納） */
+@media (max-width: 520px) {
+  .brand__text {
+    display: none;
+  }
+
+  .site-header__links {
+    gap: 0.5rem;
+  }
+}
+
 /* ---- 頁尾 ---- */
 main {
   flex: 1;
@@ -438,6 +450,10 @@ main {
   .landing__route {
     display: none;
   }
+
+  .landing__stage {
+    padding-block: 1rem 0; /* 路線動畫隱藏後不留其保留空間 */
+  }
 }
 
 .landing__route svg {
@@ -564,6 +580,7 @@ main {
 
 .article__eyebrow {
   display: flex;
+  flex-wrap: wrap; /* 窄螢幕時 meta 換行靠右，不撐破版面 */
   align-items: center;
   gap: 0.45rem;
   margin-bottom: 0.9rem;
