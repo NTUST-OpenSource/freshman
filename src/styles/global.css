@@ -571,6 +571,23 @@ main {
 }
 
 /* ---- 文章版型 ---- */
+/* 分類色掛載：cat-* class（文章頁容器）→ --cat 供 chip、標題色條、目錄、steps、tabs 取用 */
+.cat-course {
+  --cat: var(--c-course);
+}
+
+.cat-life {
+  --cat: var(--c-life);
+}
+
+.cat-info {
+  --cat: var(--c-info);
+}
+
+.cat-misc {
+  --cat: var(--c-misc);
+}
+
 .article-layout {
   max-width: 78rem;
   margin-inline: auto;
