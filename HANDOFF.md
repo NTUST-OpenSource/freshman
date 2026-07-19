@@ -67,7 +67,7 @@
 
 ## 下一步（優先序）
 
-1. **舊站 21 篇內容遷移**（本階段主軸）：清單、已知問題與守則見 `docs/README.md`
+1. **舊站 16 篇內容遷移**（本階段主軸）：清單、已知問題與守則見 `docs/README.md`
    （goo.gl 全滅需重建連結、clubs 標題筆誤、HTML 表格改 GFM、圖片一律重製自託管）；
    每篇完成即 commit ＋ build 驗證（serializer 嚴格模式會把語法錯誤直接變 build 失敗）
 2. qa 區塊輸出 FAQPage JSON-LD（SPEC 已註記為規劃中）

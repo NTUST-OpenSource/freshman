@@ -7,9 +7,10 @@
 
 ## 內容遷移狀態
 
-- [x] course-select（選課）— 已轉新語法，見 `src/content/articles/`
+- [x] course-select（選課）— 與下列五篇合併重寫為單篇（115 學年資料），見 `src/content/articles/course-select.md`
+- [x] chinese-course、english-course、general-education、physical-education、department-required — 併入選課篇（教授評價依決議不收錄）
 - [x] about（舊站首頁）— 由新首頁與 start 取代，不遷移
-- [ ] 其餘 21 篇待使用者規劃格式後遷移
+- [ ] 其餘 16 篇待使用者規劃格式後遷移
 
 ## 已知源資料問題（遷移時需處理）
 
