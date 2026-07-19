@@ -6,8 +6,9 @@ export function rehypePost() {
     visit(tree, 'element', (node, index, parent) => {
       if (!parent || index === undefined) return;
 
-      // 表格 → 包一層橫向捲動容器（手機不爆版）
-      if (node.tagName === 'table' && parent.tagName !== 'div') {
+      // 表格 → 包一層橫向捲動容器（手機不爆版）；只跳過已包裝者，dept/tabs 等 div 容器內仍要包
+      const parentCls = [].concat(parent.properties?.className ?? []);
+      if (node.tagName === 'table' && !parentCls.includes('table-scroll')) {
         parent.children[index] = {
           type: 'element',
           tagName: 'div',

@@ -110,7 +110,7 @@ export function remarkCustom() {
         if (shape === 'square' || shape === 'diamond') props.className.push(`steps--${shape}`);
         node.data = { hName: 'div', hProperties: props };
       } else if (node.name === 'tabs') {
-        tabs(node, tabsCounter++);
+        tabs(node, tabsCounter++, file);
       } else if (node.name === 'tab') {
         // 落單的 tab（不在 tabs 內）— 當一般區塊呈現
         node.data = { hName: 'div', hProperties: { className: ['tabs__panel'] } };
@@ -200,9 +200,16 @@ export function remarkCustom() {
     }
   };
 
-  function tabs(node, n) {
+  function tabs(node, n, file) {
     const groupId = `tabs-${n}`;
-    const items = node.children.filter((c) => c.type === 'containerDirective' && c.name === 'tab');
+    const isTab = (c) => c.type === 'containerDirective' && c.name === 'tab';
+    const items = node.children.filter(isTab);
+    if (items.length > 6) {
+      // CSS 的 :has 選中規則只列舉到 6 個分頁，超過會靜默空白
+      throw new Error(`[tabs] 最多 6 個分頁（收到 ${items.length}，於 ${file?.path ?? '未知檔案'}）`);
+    }
+    // 非 tab 的子節點（誤放的段落等）保留在分頁列上方，不靜默丟棄；[label] 除外
+    const others = node.children.filter((c) => !isTab(c) && !c.data?.directiveLabel);
     const inputs = [];
     const labels = [];
     const panels = [];
@@ -224,6 +231,7 @@ export function remarkCustom() {
     });
     node.data = { hName: 'div', hProperties: { className: ['tabs'] } };
     node.children = [
+      ...others,
       ...inputs,
       el('div', { className: ['tabs__bar'], role: 'tablist' }, labels),
       el('div', { className: ['tabs__panels'] }, panels),
@@ -241,7 +249,8 @@ export function remarkCustom() {
 
 /** 把一個 text node 的值切成 [[wikilink]] / ==mark== 混合節點；無匹配回傳 null */
 function splitInline(value, file) {
-  const re = /\[\[([^\]|]+)(?:\|([^\]]+))?\]\]|==([^=\n]+)==/g;
+  // mark 內容允許單一 =（如「上限=25」），=(?!=) 擋住跨界吃到下一個標記
+  const re = /\[\[([^\]|]+)(?:\|([^\]]+))?\]\]|==((?:[^=\n]|=(?!=))+)==/g;
   if (!re.test(value)) return null;
   re.lastIndex = 0;
   const parts = [];

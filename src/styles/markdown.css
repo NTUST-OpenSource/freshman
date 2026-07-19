@@ -407,8 +407,8 @@
   padding: 1rem 1.2rem;
 }
 
-.tabs__panel {
-  display: none;
+.tabs .tabs__panel {
+  display: none; /* 限定在 tabs 內：落單 tab 的 fallback 才能以一般區塊顯示 */
 }
 
 .tabs__panel > * + * {
