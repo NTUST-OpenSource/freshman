@@ -10,7 +10,7 @@ lastEdited: 2025-7-26
 # 校園帳號
 
 ## 帳號總覽
-身為台科人，你應該會用到下面幾種帳號
+身為臺科人，你應該會用到下面幾種帳號
 - NTUST Mail / 校園無線網路
 - NTUST Student System / Moodle
 - Google Workspace

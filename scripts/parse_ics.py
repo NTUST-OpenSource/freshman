@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""台科行事曆 ics → 可人工編輯的 JSON。
+"""臺科行事曆 ics → 可人工編輯的 JSON。
 
 用法：
     python3 scripts/parse_ics.py <輸入.ics> [-o 輸出.json] [--sync 已編輯.json]

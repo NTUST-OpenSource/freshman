@@ -1,4 +1,4 @@
-# 台科懶人包 Markdown 語法規格 v0.1（草案）
+# 臺科懶人包 Markdown 語法規格 v0.1（草案）
 
 > 設計原則：**標準 Markdown（GFM）為底，擴充一律走 directive 語法**（`:::name` 區塊 / `::name` 單行 / `:name[]` 行內）。
 > 只有 `==螢光==` 和 `[[內部連結]]` 兩個例外用自訂文法（因為太常打，值得縮寫）。
@@ -248,11 +248,11 @@ graph LR;
 ```
 
 ```html
-<div class="dept-block" data-dept-only="csie" data-dept-label="資工系限定">…</div>
+<div class="dept-block" data-dept-only="csie" data-dept-label="資工系">…</div>
 ```
 
 - 僅選擇該系別的使用者可見（`html[data-dept]` 與 CSS 顯隱），SSG 全量渲染、client 過濾
-- 區塊左上顯示「Ｘ系限定」chip（CSS `attr(data-dept-label)`）
+- 區塊左上顯示「Ｘ系」chip（CSS `attr(data-dept-label)`）
 - `for="all"` 無意義（預設內容本來就人人可見），會被視為未定義語法
 
 ## 12. 明確不做（YAGNI）

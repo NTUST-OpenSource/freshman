@@ -27,7 +27,7 @@ lastEdited: 2025-7-28
 > 💡 不值得退掉系必修去選英文課！
 因為你可能兩失！
 - 其他參考資料
-  - [台科大語言中心英文課程修課規定](https://lc.ntust.edu.tw/p/412-1070-10776.php?Lang=zh-tw)
-  - [Taiwan Tech 台科大語言中心 NTUST Language Center](https://www.facebook.com/ntustlc?__cft__[0]=AZUWVzpQdPRXhigrnRbbl-n5CTGHIH7cFwFWFePSXD1GlntLypOZXW_au25jkaPERLeSIEjtkjqb6wI-AcaK05Wyoxut6a4yPQSgD2m0FGO8lVIY-5qRl4aGhI8aNcw3lLhCZmSh0uT88w5JaQEW4Ezs-en1o7IDv4qNIZ7VrunlSFIVQw33diqKvjz5IhYvmZE&__tn__=-UC%2CP-R)
+  - [臺科大語言中心英文課程修課規定](https://lc.ntust.edu.tw/p/412-1070-10776.php?Lang=zh-tw)
+  - [Taiwan Tech 臺科大語言中心 NTUST Language Center](https://www.facebook.com/ntustlc?__cft__[0]=AZUWVzpQdPRXhigrnRbbl-n5CTGHIH7cFwFWFePSXD1GlntLypOZXW_au25jkaPERLeSIEjtkjqb6wI-AcaK05Wyoxut6a4yPQSgD2m0FGO8lVIY-5qRl4aGhI8aNcw3lLhCZmSh0uT88w5JaQEW4Ezs-en1o7IDv4qNIZ7VrunlSFIVQw33diqKvjz5IhYvmZE&__tn__=-UC%2CP-R)
   - [114學年新生英文分級考資訊](https://lc.ntust.edu.tw/p/406-1070-138685,r1053.php?Lang=zh-tw)
   - [2025EMI學術英語先修班](https://lc.ntust.edu.tw/p/406-1070-138288,r1053.php?Lang=zh-tw)

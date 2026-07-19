@@ -1,4 +1,4 @@
-/* 設計 tokens — 台科紅 × 北捷路線色系統（white mode） */
+/* 設計 tokens — 臺科紅 × 北捷路線色系統（white mode） */
 :root {
   /* 紙面與墨色 */
   --paper: oklch(98% 0.006 85);
@@ -7,7 +7,7 @@
   --ink-soft: oklch(46% 0.018 265);
   --line: oklch(88.5% 0.01 85);
 
-  /* 品牌：台科深紅 */
+  /* 品牌：臺科深紅 */
   --brand: oklch(46% 0.155 22);
   --on-brand: oklch(98.5% 0.008 85);
 

@@ -3,7 +3,7 @@ title: 入口大門
 slug: start
 category: info
 tags: [導覽]
-description: 台科新生懶人包的目錄與使用說明，從這裡開始
+description: 臺科新生懶人包的目錄與使用說明，從這裡開始
 order: 0
 updated: 2026-07-19
 ---

@@ -1,4 +1,4 @@
-// 台科懶人包自訂 Markdown 語法 → HTML 映射（規格見 docs/spec/SPEC.md）
+// 臺科懶人包自訂 Markdown 語法 → HTML 映射（規格見 docs/spec/SPEC.md）
 import fs from 'node:fs';
 import path from 'node:path';
 import { visit } from 'unist-util-visit';
@@ -94,7 +94,7 @@ export function remarkCustom() {
           hProperties: {
             className: ['dept-block'],
             'data-dept-only': code,
-            'data-dept-label': `${dept.label}限定`,
+            'data-dept-label': `${dept.label}`,
           },
         };
       } else if (node.name === 'table') {

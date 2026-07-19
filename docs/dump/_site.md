@@ -1,7 +1,7 @@
 # 站點資訊
 
-- 標題：台科新生懶人包 For Freshman in NTUST
-- 描述：提供台科新生的開學前指南
+- 標題：臺科新生懶人包 For Freshman in NTUST
+- 描述：提供臺科新生的開學前指南
 - 公告：公告
 
 ## 選單結構
@@ -21,7 +21,7 @@
 | article/general-education | 通識課 | 📖 選課 | 課程 |  |  |
 | article/physical-education | 體育課 | 📖 選課 | 課程 |  |  |
 | article/department-required | 系上必修 | 📖 選課 | 課程 |  |  |
-| article/intro-ntust | 認識台科 | None | 資訊 |  |  |
+| article/intro-ntust | 認識臺科 | None | 資訊 |  |  |
 | article/life | 生活 | None | 資訊 |  |  |
 | article/dorm | 住宿 | None | 住 |  |  |
 | article/clubs | 社團 | None | 育樂 |  |  |
@@ -33,7 +33,7 @@
 | article/tools | 工具 | None | 資訊 |  |  |
 | article/student-organization | 系學會社群 | None | 資訊 |  |  |
 | article/account | 校園帳號 | None | 設備,資訊,帳號 |  |  |
-| article/trivia | 台科冷知識 | None |  |  |  |
+| article/trivia | 臺科冷知識 | None |  |  |  |
 | article/other-question | 新生常見其他問題 | None |  |  |  |
 | article/exchange | 國外交換  | None |  |  |  |
 | article/q-and-a | Q&A | None |  |  |  |

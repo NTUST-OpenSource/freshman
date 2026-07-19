@@ -13,7 +13,7 @@ lastEdited: 2025-7-18
 大部分是學長姐無償製作的，如果覺得實用的話可以不吝嗇的給他們一個星星！！
 ## 日曆製作工具
 🔖 [NTUST Calendar Maker](https://ntust-calendar-maker.zudo.cc/) — 製作 `.ics` 檔案以匯入通用日曆軟體！
-🔖 [GitHub - WuSandWitch/NTUST-Calendar-Maker: NTUST Calendar Maker | 台科大日曆製作工具](https://github.com/WuSandWitch/NTUST-Calendar-Maker) — NTUST Calendar Maker | 台科大日曆製作工具 . Contribute to WuSandWitch/NTUST-Calendar-Maker development by creating an account on GitHub.
+🔖 [GitHub - WuSandWitch/NTUST-Calendar-Maker: NTUST Calendar Maker | 臺科大日曆製作工具](https://github.com/WuSandWitch/NTUST-Calendar-Maker) — NTUST Calendar Maker | 臺科大日曆製作工具 . Contribute to WuSandWitch/NTUST-Calendar-Maker development by creating an account on GitHub.
 ### 說明
 可以將課表製作成 `.ics` 檔案
 以匯入日曆軟體達成自動化！效果如圖：

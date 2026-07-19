@@ -22,7 +22,7 @@ lastEdited: 2025-8-1
 - 大二之後可以填寫組隊表單自選室友
 ## 寄送物品
 - 地址請寫：台北市大安區基隆路四段43號 第X學生宿舍 XXX房 X床 (請依你的舍別房號床號改寫)
-- [台科宿舍包裹收發](https://docs.google.com/spreadsheets/d/1RgAEnYjlW0nh5r2s-H2_OwS2Xx_pHJs4bzXL2RSDwuw/edit#gid=532170578)
+- [臺科宿舍包裹收發](https://docs.google.com/spreadsheets/d/1RgAEnYjlW0nh5r2s-H2_OwS2Xx_pHJs4bzXL2RSDwuw/edit#gid=532170578)
 ## 宿舍報修
 - [報修系統](https://docs.google.com/forms/d/e/1FAIpQLSftf0dDG90ji0DXqs70DNo9gbxaWCZXyXa-IBEvv-5Ayz8n6A/viewform)
 - 學校會派人來修

@@ -11,7 +11,7 @@ lastEdited: 2025-11-21
 
 → 即時訊息：
 > 🔥 
-**迎接B114級大學部新生入學，歡迎將懶人包推薦給你認識的台科新鮮人～**
+**迎接B114級大學部新生入學，歡迎將懶人包推薦給你認識的臺科新鮮人～**
 > ⚠️ 
 若瀏覽網頁時發現有圖片無法顯示，請嘗試重新整理頁面
 > ⚠️ 
@@ -41,11 +41,11 @@ lastEdited: 2025-11-21
 - [Telegram Bot](https://t.me/NTUST_bulletin) (NTUST_bulletin)
   - 每天推播臺科公佈欄
 ## 臺科學生常用網站
-- [台科首頁](https://www.ntust.edu.tw/)
+- [臺科首頁](https://www.ntust.edu.tw/)
 - [WebMail](https://mail.ntust.edu.tw/)
 - [Moodle2](https://moodle2.ntust.edu.tw/)
 - [學生資訊系統](https://i.ntust.edu.tw/)
-- [台科公佈欄(限校內連線使用)](https://bulletin.ntust.edu.tw/p/403-1045-1391-1.php)
+- [臺科公佈欄(限校內連線使用)](https://bulletin.ntust.edu.tw/p/403-1045-1391-1.php)
 - [學生建言討論平台](https://suggestionbox.ntust.edu.tw/process_introduction)
 ## Notice
 - 之後會陸續更新一些新生包、新生信與一些申請的資料/介紹，歡迎留存分享給學弟妹
@@ -74,7 +74,7 @@ lastEdited: 2025-11-21
 - Keng Liao
   - About Me (nothing here)
   - [Contact me (Email)](mailto:m11402102@mail.ntust.edu.tw)
-  - ~~江湖人稱台科廖教授~~
+  - ~~江湖人稱臺科廖教授~~
 > 👏 
 特別感謝以上同學的貢獻，讓懶人包的內容更加豐富 
 > 💡 歡迎透過email與我們分享你覺得很重要但沒有寫到的資訊，也歡迎許願！

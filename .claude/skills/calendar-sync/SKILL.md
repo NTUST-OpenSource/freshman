@@ -1,6 +1,6 @@
 ---
 name: calendar-sync
-description: 台科行事曆 ics 轉換與同步。當使用者提供新的或更新的學年行事曆 ics、要求重新生成 calendar JSON、或修改了 docs/calendar/parsed/ 下的檔案需要同步時使用。轉換由 scripts/parse_ics.py 完成，本 skill 的重點是轉換後的 AI 驗證流程，避免規則例外悄悄流入資料。
+description: 臺科行事曆 ics 轉換與同步。當使用者提供新的或更新的學年行事曆 ics、要求重新生成 calendar JSON、或修改了 docs/calendar/parsed/ 下的檔案需要同步時使用。轉換由 scripts/parse_ics.py 完成，本 skill 的重點是轉換後的 AI 驗證流程，避免規則例外悄悄流入資料。
 ---
 
 # 行事曆轉換與同步
