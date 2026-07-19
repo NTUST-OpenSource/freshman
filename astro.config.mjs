@@ -47,5 +47,7 @@ export default defineConfig({
   vite: {
     // mermaid 預先打包，避免 dev 首次載入時 optimize dep 504
     optimizeDeps: { include: ['mermaid'] },
+    // 不內聯小型 module script：CSP 只需固定 hash 一支 is:inline（dept 初始化），改碼不破 CSP
+    build: { assetsInlineLimit: 0 },
   },
 });
