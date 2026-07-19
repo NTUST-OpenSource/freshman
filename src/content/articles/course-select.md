@@ -8,7 +8,7 @@ contributors:
   - name: xinshou
     email: claude@xinshou.tw
 order: 1
-updated: 2025-07-19
+updated: 2026-07-19
 ---
 
 ## 前言
