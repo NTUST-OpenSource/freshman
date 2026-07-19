@@ -14,10 +14,10 @@ import Calendar from '../components/Calendar.astro';
       <div class="landing__hero">
         <p class="landing__eyebrow landing-rise" style="--d: 1">開學前指南</p>
         <h1 class="landing__title landing-rise" style="--d: 2">
-          天大地大<br /><span class="landing__title-indent">臺科大</span>
+          天大地大<br />臺科大
         </h1>
         <p class="landing__desc landing-rise" style="--d: 3">
-          沒有直屬怎麼辦，
+          沒有直屬，什麼都不懂，還可以撈撈嗎？
         </p>
         <a class="landing__cta landing-rise" style="--d: 4" href="/article/start/">
           進入懶人包
@@ -47,15 +47,13 @@ import Calendar from '../components/Calendar.astro';
   </div>
 
   <script>
-    // 列車進站：古亭出發，30% 機率在台電大樓停靠，最後抵達公館（台科）
     const train = document.getElementById('landing-train');
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (train && !reduced) {
       const ease = 'cubic-bezier(0.4, 0, 0.2, 1)';
       const ride = async () => {
         train.style.opacity = '1';
-        if (Math.random() < 0.3) {
-          // 30%：在台電大樓停靠一下再開
+        if (Math.random() < 0.5) {
           await train.animate(
             [{ offsetDistance: '0%' }, { offsetDistance: '50%' }],
             { duration: 950, easing: ease, fill: 'forwards' },
@@ -66,7 +64,6 @@ import Calendar from '../components/Calendar.astro';
             { duration: 800, easing: ease, fill: 'forwards' },
           ).finished;
         } else {
-          // 70%：一段式直達公館，全程流暢無停頓
           await train.animate(
             [{ offsetDistance: '0%' }, { offsetDistance: '88%' }],
             { duration: 1600, easing: ease, fill: 'forwards' },
