@@ -436,13 +436,14 @@ main {
   }
 }
 
-/* 招牌元素：捷運松山新店線 古亭—台電大樓—公館（臺科） */
+/* 招牌元素：捷運松山新店線 中正紀念堂—古亭—台電大樓—公館（臺科） */
 .landing__route {
   position: absolute;
-  left: 0;
+  --route-shift: clamp(1rem, 3vw, 2.5rem);
+  left: var(--route-shift);
   bottom: 0;
   width: 560px;
-  max-width: 100%;
+  max-width: calc(100% - var(--route-shift));
   height: 120px;
 }
 
@@ -535,6 +536,14 @@ main {
   offset-distance: 0%;
   opacity: 0;
   z-index: 1;
+  transition: background var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+
+.landing__train--taipower {
+  background: var(--clr-warning);
+  box-shadow:
+    0 0 0 5px color-mix(in oklab, var(--clr-warning) 28%, transparent),
+    0 4px 18px color-mix(in oklab, var(--clr-warning) 60%, transparent);
 }
 
 /* ---- chip ---- */
