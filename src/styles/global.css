@@ -72,6 +72,8 @@ a {
   *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
+    animation-delay: 0s !important; /* 只歸零 duration 的話，內容仍會依 delay 逐個彈出 */
+    transition-delay: 0s !important;
   }
 }
 
@@ -135,8 +137,10 @@ a {
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-group(*),
   ::view-transition-old(root),
-  ::view-transition-new(root) {
-    animation: none !important;
+  ::view-transition-new(root),
+  ::view-transition-old(site-header),
+  ::view-transition-new(site-header) {
+    animation: none !important; /* VT 偽元素不吃 * 選擇器，header 滑動需獨立停用 */
   }
 }
 
@@ -185,6 +189,7 @@ a {
 .site-header__links a.nav-pill {
   display: inline-flex;
   align-items: center;
+  white-space: nowrap; /* pill 內 CJK 不得折行撐高頁首 */
   color: var(--ink);
   text-decoration: none;
   font-weight: 650;
@@ -214,7 +219,7 @@ a {
   font-weight: 650;
   color: var(--ink);
   background: var(--surface);
-  border: 1px solid var(--line);
+  border: 1px solid var(--line-strong); /* 表單型控制項外框需 >= 3:1 */
   border-radius: 99px;
   padding: 0.32rem 0.9rem;
   cursor: pointer;
@@ -310,6 +315,18 @@ a {
 
   .site-header__links {
     gap: 0.5rem;
+  }
+}
+
+/* 320px 極窄：實算 329px 仍超寬，再縮 pill 內距與間距 */
+@media (max-width: 360px) {
+  .site-header__links {
+    gap: 0.4rem;
+  }
+
+  .site-header__links a.nav-pill,
+  .dept-picker__btn {
+    padding-inline: 0.6rem;
   }
 }
 
@@ -566,8 +583,9 @@ main {
 
 .chip--draft {
   border-style: dashed;
-  color: var(--clr-warning);
-  border-color: var(--clr-warning);
+  /* 比 --clr-warning 深一階：0.78rem 小字需 4.5:1（warning 原色僅 3.49） */
+  color: oklch(55% 0.125 80);
+  border-color: oklch(55% 0.125 80);
 }
 
 /* ---- 文章版型 ---- */
@@ -630,8 +648,8 @@ main {
 }
 
 .contrib__btn {
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1.5rem; /* WCAG 2.5.8 目標尺寸 >= 24px（圖示視覺大小不變） */
+  height: 1.5rem;
   border: none;
   background: none;
   padding: 0;
@@ -778,4 +796,23 @@ main {
 
 .toc__item a:hover::before {
   border-color: var(--cat, var(--brand));
+}
+
+/* ---- 列印：去背景後白字元件需可讀，導航與浮動控制不進紙本 ---- */
+@media print {
+  .site-header,
+  .site-footer,
+  .toc,
+  .cal__today-btn,
+  .code-copy {
+    display: none !important;
+  }
+
+  .chip--cat,
+  .qa__q::before,
+  .steps--diamond > ol > li::before {
+    color: var(--ink) !important;
+    background: none !important;
+    border: 1px solid var(--ink) !important;
+  }
 }

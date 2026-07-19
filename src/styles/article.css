@@ -15,7 +15,7 @@
 /* ---- 註腳 hover 即時預覽 ---- */
 .fn-pop {
   position: fixed;
-  z-index: 30;
+  z-index: 50; /* 高於 sticky header（40），預覽上翻不被毛玻璃蓋住 */
   max-width: min(20rem, calc(100vw - 1rem)); /* 320px 視窗也放得下 */
   background: var(--paper);
   border: 1px solid var(--line);

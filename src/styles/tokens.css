@@ -6,6 +6,7 @@
   --ink: oklch(24% 0.015 265);
   --ink-soft: oklch(46% 0.018 265);
   --line: oklch(88.5% 0.01 85);
+  --line-strong: oklch(63% 0.01 85); /* 互動元件外框：對 paper/surface 皆 >= 3:1 */
 
   /* 品牌：臺科深紅 */
   --brand: oklch(46% 0.155 22);

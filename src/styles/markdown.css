@@ -1,6 +1,10 @@
 /* 文章內容（.md）＋ 自訂語法元件樣式（圖示以 CSS mask 上色，無 emoji） */
 
 /* ---- 基礎排版 ---- */
+.md {
+  overflow-wrap: anywhere; /* 裸長網址在 320px（內容寬 272px）不得溢出被裁 */
+}
+
 .md > * + * {
   margin-top: 1.05em;
 }
@@ -258,7 +262,7 @@
 
 /* ---- Spoiler ---- */
 .spoiler {
-  border: 1px dashed color-mix(in oklab, var(--ink-soft) 45%, var(--line));
+  border: 1px dashed var(--line-strong); /* 原 color-mix 僅 2.40:1，元件邊界近乎不可見 */
   border-radius: var(--radius);
   background: var(--surface);
 }
@@ -727,8 +731,7 @@ html:not([data-dept='csie']) [data-dept-only='csie'] {
   width: 1.9em;
   margin-right: 1.1em;
   text-align: right;
-  color: var(--ink-soft);
-  opacity: 0.55;
+  color: var(--ink-soft); /* 不再乘 opacity：0.55 疊出來只剩 2.52:1 */
   user-select: none;
 }
 
@@ -744,6 +747,7 @@ html:not([data-dept='csie']) [data-dept-only='csie'] {
   position: absolute;
   top: 0.55rem;
   right: 0.55rem;
+  min-height: 1.5rem; /* 目標尺寸 >= 24px */
   font-family: var(--font-sans);
   font-size: var(--text-tiny);
   padding: 0.3em 0.7em;
@@ -760,6 +764,12 @@ html:not([data-dept='csie']) [data-dept-only='csie'] {
 .md pre.astro-code:hover .code-copy,
 .code-copy:focus-visible {
   opacity: 1;
+}
+
+@media (hover: none) {
+  .code-copy {
+    opacity: 1; /* 觸控裝置沒有 hover，隱形按鈕等於不存在 */
+  }
 }
 
 .code-copy:hover {
