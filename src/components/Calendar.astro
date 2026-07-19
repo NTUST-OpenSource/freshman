@@ -1,6 +1,7 @@
 ---
-// 行事曆：涵蓋兩個學年的資料，client 依今天計算「當學期＋前一學期」窗口，
+// 行事曆：載入三個學年的資料，client 依今天計算「當學年 ±1」窗口（保底），
 // 其餘月份隱藏。hover 顯示事件 popup、i 按鈕顯示更新時間卡。
+import cal113 from '../data/calendar-113.json';
 import cal114 from '../data/calendar-114.json';
 import cal115 from '../data/calendar-115.json';
 
@@ -13,7 +14,7 @@ interface CalEvent {
   link: string[];
 }
 
-const calendars = [cal114, cal115];
+const calendars = [cal113, cal114, cal115];
 const events = calendars.flatMap((c) => c.events as CalEvent[]);
 
 // 事件依日期分組（跨日事件展開至每一天）
@@ -142,6 +143,7 @@ const updatedLines = calendars
 </aside>
 
 <script>
+  try {
   const data: Record<string, { t: string; n: string; l: string[] }[]> = JSON.parse(
     document.getElementById('cal-data')!.textContent!,
   );
@@ -156,21 +158,11 @@ const updatedLines = calendars
   const now = new Date();
   const todayKey = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
 
-  // ---- 當學期＋前一學期窗口 ----
-  // 第 1 學期 8~1 月、第 2 學期 2~6 月；7 月（暑假）視為即將開始的第 1 學期，
-  // 讓新生在暑假就能同時看到上學期與開學後的行事曆
-  function semStart(d: Date): [number, number] {
-    const y = d.getFullYear();
-    const m = d.getMonth() + 1;
-    if (m >= 7) return [y, 8];
-    if (m === 1) return [y - 1, 8];
-    return [y, 2];
-  }
-  const [cy, cm] = semStart(now);
-  const [py, pm] = cm === 8 ? [cy, 2] : [cy - 1, 8];
-  const monthKey = (y: number, m: number) => `${y}-${pad(m)}`;
-  const windowFirst = monthKey(py, pm);
-  const windowLast = monthKey(cm + 5 > 12 ? cy + 1 : cy, ((cm + 5 - 1) % 12) + 1);
+  // ---- 顯示窗口：當學年 ±1（保底）----
+  // 學年 8/1 起算；例如 2026 年 7 月屬 114 學年，窗口為 113~115 學年（2024-08 ~ 2027-07）
+  const ayStart = now.getMonth() + 1 >= 8 ? now.getFullYear() : now.getFullYear() - 1;
+  const windowFirst = `${ayStart - 1}-08`;
+  const windowLast = `${ayStart + 2}-07`;
 
   const sections = [...document.querySelectorAll<HTMLElement>('.cal__month')];
   const visible = sections.filter((s) => {
@@ -259,18 +251,14 @@ const updatedLines = calendars
     }, delay);
   }
 
-  scroller.addEventListener('pointerover', (e) => {
-    const cell = (e.target as HTMLElement).closest<HTMLElement>('.cal__cell--event');
-    if (cell) showPop(cell);
-  });
-  scroller.addEventListener('pointerout', (e) => {
-    if ((e.target as HTMLElement).closest('.cal__cell--event')) hidePop();
-  });
-  scroller.addEventListener('focusin', (e) => {
-    const cell = (e.target as HTMLElement).closest<HTMLElement>('.cal__cell--event');
-    if (cell) showPop(cell);
-  });
-  scroller.addEventListener('focusout', () => hidePop());
+  // popup 移出 .cal，徹底避開 overflow/stacking/containing block 影響
+  document.body.appendChild(pop);
+  for (const cell of document.querySelectorAll<HTMLElement>('.cal__cell--event')) {
+    cell.addEventListener('pointerenter', () => showPop(cell));
+    cell.addEventListener('pointerleave', () => hidePop());
+    cell.addEventListener('focus', () => showPop(cell));
+    cell.addEventListener('blur', () => hidePop());
+  }
   pop.addEventListener('pointerenter', () => clearTimeout(hideTimer));
   pop.addEventListener('pointerleave', () => hidePop());
   scroller.addEventListener('scroll', () => hidePop(0), { passive: true });
@@ -288,6 +276,9 @@ const updatedLines = calendars
       infoBtn.setAttribute('aria-expanded', 'false');
     }
   });
+  } catch (err) {
+    console.error('[行事曆] 初始化失敗，互動功能停用：', err);
+  }
 </script>
 
 <style is:global>
