@@ -1,10 +1,11 @@
 // 臺科懶人包自訂 Markdown 語法 → HTML 映射（規格見 docs/spec/SPEC.md）
 import fs from 'node:fs';
-import path from 'node:path';
 import { visit } from 'unist-util-visit';
 import { DEPTS } from '../lib/depts.mjs';
 
-const ARTICLES_DIR = path.resolve('src/content/articles');
+// 以本檔位置定位（cwd 無關）；wikilink 驗證＝frontmatter slug 且排除 draft，
+// 與路由（[slug].astro 的 getStaticPaths）同一套規則，不快取以免 dev 新增文章後誤報
+const ARTICLES_DIR = new URL('../content/articles/', import.meta.url);
 
 const CALLOUT_TYPES = {
   info: '補充',
@@ -33,14 +34,16 @@ function takeLabel(node) {
   return null;
 }
 
-let knownSlugs = null;
 function articleSlugs() {
-  if (!knownSlugs) {
-    knownSlugs = new Set(
-      fs.readdirSync(ARTICLES_DIR).filter((f) => f.endsWith('.md')).map((f) => f.replace(/\.md$/, '')),
-    );
+  const slugs = new Set();
+  for (const f of fs.readdirSync(ARTICLES_DIR)) {
+    if (!f.endsWith('.md')) continue;
+    const fm = fs.readFileSync(new URL(f, ARTICLES_DIR), 'utf8').split(/^---$/m)[1] ?? '';
+    if (/^draft:\s*true\b/m.test(fm)) continue; // prod 不出該頁，連向它就是死鏈
+    const m = fm.match(/^slug:\s*["']?([\w-]+)/m);
+    if (m) slugs.add(m[1]);
   }
-  return knownSlugs;
+  return slugs;
 }
 
 export function remarkCustom() {
@@ -48,9 +51,10 @@ export function remarkCustom() {
 
   return (tree, file) => {
     // --- 行內自訂文法：[[wikilink]] 與 ==mark== ---
+    // 連結文字內仍解析 ==mark==，僅 wikilink 保持字面（避免巢狀連結）
     visit(tree, 'text', (node, index, parent) => {
-      if (!parent || parent.type === 'link') return;
-      const parts = splitInline(node.value, file);
+      if (!parent) return;
+      const parts = splitInline(node.value, file, { wikilink: parent.type !== 'link' });
       if (parts) parent.children.splice(index, 1, ...parts);
     });
 
@@ -82,7 +86,8 @@ export function remarkCustom() {
       } else if (node.name === 'qa') {
         const label = takeLabel(node) ?? [text('Q')];
         node.data = { hName: 'section', hProperties: { className: ['qa'] } };
-        node.children.unshift(el('h3', { className: ['qa__q'] }, label));
+        // 非 h3：qa 問題不得混入右側目錄（Astro 內建收集器抓所有 heading），SR 靠 role 取得層級
+        node.children.unshift(el('p', { className: ['qa__q'], role: 'heading', ariaLevel: 3 }, label));
         const meta = [attrs.by, attrs.date].filter(Boolean).join(' · ');
         if (meta) node.children.push(el('footer', { className: ['qa__meta'] }, [text(meta)]));
       } else if (node.name === 'dept') {
@@ -105,7 +110,10 @@ export function remarkCustom() {
       } else if (node.name === 'steps') {
         const props = { className: ['steps'] };
         const color = (attrs.color ?? '').trim();
-        if (/^#[0-9a-fA-F]{3,8}$/.test(color)) props.style = `--steps-clr: ${color}`;
+        // 3/4/6/8 碼合法 hex；{3,8} 會放行 5、7 碼使 color-mix 整條失效
+        if (/^#(?:[0-9a-fA-F]{3,4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$/.test(color)) {
+          props.style = `--steps-clr: ${color}`;
+        }
         const shape = (attrs.shape ?? '').trim();
         if (shape === 'square' || shape === 'diamond') props.className.push(`steps--${shape}`);
         node.data = { hName: 'div', hProperties: props };
@@ -122,12 +130,17 @@ export function remarkCustom() {
     function leaf(node) {
       const attrs = node.attributes ?? {};
       if (node.name === 'card') {
-        const href = attrs.href ?? '#';
+        const href = (attrs.href ?? '').trim();
+        if (!href) return unknown(node); // 缺 href 不再靜默輸出 "#"
         let domain = '';
+        let external = false;
         try {
-          domain = new URL(href).hostname;
+          const url = new URL(href);
+          if (!/^https?:$/.test(url.protocol)) return unknown(node); // 擋 javascript: 等 scheme
+          domain = url.hostname;
+          external = true;
         } catch {
-          /* 保留空 domain */
+          if (!href.startsWith('/')) return unknown(node); // 僅接受絕對 URL 或站內路徑
         }
         const title = node.children.length ? [...node.children] : [text(domain || href)];
         const img = (attrs.img ?? '').trim();
@@ -136,8 +149,7 @@ export function remarkCustom() {
           hProperties: {
             className: ['linkcard', ...(img ? ['linkcard--with-img'] : [])],
             href,
-            target: '_blank',
-            rel: ['noopener', 'noreferrer'],
+            ...(external ? { target: '_blank', rel: ['noopener', 'noreferrer'] } : {}),
           },
         };
         node.children = [
@@ -152,7 +164,7 @@ export function remarkCustom() {
         ];
       } else if (node.name === 'yt') {
         const id = attrs.id;
-        if (!id) return unknown(node);
+        if (!id || !/^[\w-]{11}$/.test(id)) return unknown(node); // YouTube id 固定 11 碼
         const title = attrs.title ?? 'YouTube 影片';
         node.data = {
           hName: 'a',
@@ -186,17 +198,33 @@ export function remarkCustom() {
         node.data = { hName: 'kbd', hProperties: {} };
       } else if (node.name === 'year') {
         node.data = { hName: 'span', hProperties: { className: ['year-chip'] } };
-        node.children = [...node.children, text('學年')];
+        node.children = [...node.children, text(' 學年')]; // CJK 與數字交界半形空白
       } else {
-        // 不認得的 text directive（例如內文出現「文字:比例」）— 還原成純文字
+        // 不認得的 text directive（例如內文出現「文字:比例」）— 連同方括號與屬性還原原文
+        const attrStr = Object.entries(node.attributes ?? {})
+          .map(([k, v]) => (v === '' ? k : `${k}="${v}"`))
+          .join(' ');
+        const hasLabel = node.children.length > 0;
         node.data = { hName: 'span', hProperties: {} };
-        node.children = [text(`:${node.name}`), ...node.children];
+        node.children = [
+          text(`:${node.name}${hasLabel ? '[' : ''}`),
+          ...node.children,
+          ...(hasLabel ? [text(']')] : []),
+          ...(attrStr ? [text(`{${attrStr}}`)] : []),
+        ];
       }
     }
 
     function unknown(node) {
+      // 冒號數依 directive 型別（::: 容器、:: leaf、: 行內），錯誤訊息才不誤導
+      const colons = { containerDirective: ':::', leafDirective: '::', textDirective: ':' }[node.type] ?? ':::';
+      const label = `${colons}${node.name}`;
+      if (process.env.NODE_ENV === 'production') {
+        // 除錯框只給 dev；production 出現未定義語法直接擋 build，與 wikilink 同嚴格度
+        throw new Error(`[directive] 未定義語法 ${label}（於 ${file.path ?? '未知檔案'}）`);
+      }
       node.data = { hName: 'div', hProperties: { className: ['directive-unknown'] } };
-      node.children.unshift(el('p', { className: ['directive-unknown__name'] }, [text(`未定義語法 :::${node.name}`)]));
+      node.children.unshift(el('p', { className: ['directive-unknown__name'] }, [text(`未定義語法 ${label}`)]));
     }
   };
 
@@ -233,22 +261,29 @@ export function remarkCustom() {
     node.children = [
       ...others,
       ...inputs,
-      el('div', { className: ['tabs__bar'], role: 'tablist' }, labels),
+      // 無 role="tablist"：子元素是 label 非 tab，掛了反而違反 ARIA 結構（radio group 語意已足）
+      el('div', { className: ['tabs__bar'] }, labels),
       el('div', { className: ['tabs__panels'] }, panels),
     ];
   }
 
   function mermaid(node) {
-    node.data = {
-      hName: 'pre',
-      hProperties: { className: ['mermaid'] },
-      hChildren: [{ type: 'text', value: node.value }],
-    };
+    // 整個節點換成 paragraph 載體：code 節點掛 hName 會輸出巢狀 <pre><pre>（無效 HTML）
+    Object.assign(node, {
+      type: 'paragraph',
+      children: [],
+      value: undefined,
+      data: {
+        hName: 'pre',
+        hProperties: { className: ['mermaid'] },
+        hChildren: [{ type: 'text', value: node.value }],
+      },
+    });
   }
 }
 
 /** 把一個 text node 的值切成 [[wikilink]] / ==mark== 混合節點；無匹配回傳 null */
-function splitInline(value, file) {
+function splitInline(value, file, opts = { wikilink: true }) {
   // mark 內容允許單一 =（如「上限=25」），=(?!=) 擋住跨界吃到下一個標記
   const re = /\[\[([^\]|]+)(?:\|([^\]]+))?\]\]|==((?:[^=\n]|=(?!=))+)==/g;
   if (!re.test(value)) return null;
@@ -258,11 +293,15 @@ function splitInline(value, file) {
   for (const m of value.matchAll(re)) {
     if (m.index > last) parts.push(text(value.slice(last, m.index)));
     if (m[1] !== undefined) {
-      const slug = m[1].trim();
-      if (!articleSlugs().has(slug)) {
-        throw new Error(`[wikilink] 找不到文章 "${slug}"（於 ${file.path ?? '未知檔案'}）`);
+      if (!opts.wikilink) {
+        parts.push(text(m[0])); // 已在連結內：wikilink 保持字面
+      } else {
+        const slug = m[1].trim();
+        if (!articleSlugs().has(slug)) {
+          throw new Error(`[wikilink] 找不到文章 "${slug}"（於 ${file.path ?? '未知檔案'}）`);
+        }
+        parts.push({ type: 'link', url: `/article/${slug}/`, children: [text(m[2]?.trim() || slug)] });
       }
-      parts.push({ type: 'link', url: `/article/${slug}/`, children: [text(m[2]?.trim() || slug)] });
     } else {
       parts.push({ type: 'emphasis', data: { hName: 'mark' }, children: [text(m[3])] });
     }
