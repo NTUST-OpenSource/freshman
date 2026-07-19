@@ -66,6 +66,7 @@ const updatedLines = calendars
       year: 'numeric',
       month: 'long',
       day: 'numeric',
+      timeZone: 'Asia/Taipei', // build 機（CI 為 UTC）時區不可影響顯示日期
     }),
   }))
   .sort((a, b) => (b.year ?? 0) - (a.year ?? 0));

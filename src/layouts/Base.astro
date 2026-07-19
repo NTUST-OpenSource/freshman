@@ -191,7 +191,8 @@ const ogImage = new URL('/logo.png', Astro.site);
           btn.type = 'button';
           btn.textContent = '複製';
           btn.addEventListener('click', async () => {
-            await navigator.clipboard.writeText(pre.textContent ?? '');
+            // 按鈕自身在 pre 內，抓 code 才不會把按鈕文字一起複製
+            await navigator.clipboard.writeText(pre.querySelector('code')?.textContent ?? '');
             btn.textContent = '已複製';
             btn.classList.add('code-copy--done');
             setTimeout(() => {
