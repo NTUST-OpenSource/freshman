@@ -1,11 +1,11 @@
-# HANDOFF — 臺科新生懶人包（2026-07-19 更新：進入內容遷移階段）
+# HANDOFF — 臺科新生懶人包（2026-07-19 更新：進入內容撰寫階段）
 
 新 session 交接檔。先讀 `AGENTS.md`（最高行為準則，含進度區塊），再讀本檔，最後看 `TODO.md`。
-要動內容前必讀 `docs/README.md`（遷移狀態＋守則）與 `docs/spec/SPEC.md`（語法規格 v1.0）。
+要動內容前必讀 `docs/README.md`（主題涵蓋狀態＋改寫守則）與 `docs/spec/SPEC.md`（語法規格 v1.0）。
 
 ## 專案是什麼
 
-臺科大新生指南網站，取代舊站 ntust.merlinkuo.tw。內容以自訂 Markdown 語法撰寫（規格 `docs/spec/SPEC.md`），
+臺科大新生指南網站，獨立重新創作（與其他同類站點無任何關聯，關係說明見 AGENTS.md）。內容以自訂 Markdown 語法撰寫（規格 `docs/spec/SPEC.md`），
 由 remark serializer 渲染。目標網域 `https://freshman.ntust.org`，部署至 Cloudflare Pages（DNS 綁定待使用者操作）。
 
 ## 技術棧與指令
@@ -31,7 +31,7 @@
 - `src/styles/` — tokens／global／markdown／article；分類色由 `.cat-*` 掛 `--cat`
 - `src/content/articles/` — 內容；schema 在 `src/content.config.ts`（**strict**）
 - `src/lib/depts.mjs` — 系別清單（all 永遠第一）
-- `docs/dump/` — 舊站 23 頁存檔；`docs/README.md` — 遷移狀態、已知源資料問題、**遷移守則**
+- `docs/dump/` — 外部參考素材（禁止直接複製）；`docs/README.md` — 主題涵蓋狀態、已知源資料問題、**改寫守則**
 - `docs/calendar/parsed/{110..115}.json` — 行事曆正本（人工編輯過，機器欄位勿動）
 - `docs/review-2026-07-19.md` — 全專案對抗審查報告（80 項，含修復狀態與未處理原因）
 - `public/_headers` — CSP 等安全標頭；`scripts/parse_ics.py`＋`.claude/skills/calendar-sync` — 行事曆管線
@@ -67,7 +67,7 @@
 
 ## 下一步（優先序）
 
-1. **舊站 16 篇內容遷移**（本階段主軸）：清單、已知問題與守則見 `docs/README.md`
+1. **其餘 15 篇主題內容改寫**（本階段主軸）：清單、已知問題與守則見 `docs/README.md`
    （goo.gl 全滅需重建連結、clubs 標題筆誤、HTML 表格改 GFM、圖片一律重製自託管）；
    每篇完成即 commit ＋ build 驗證（serializer 嚴格模式會把語法錯誤直接變 build 失敗）
 2. qa 區塊輸出 FAQPage JSON-LD（SPEC 已註記為規劃中）

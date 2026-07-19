@@ -13,7 +13,7 @@
 - RWD 基線：320px 起 header／landing／文章／popup 皆不溢出，文章目錄避開 sticky header
 
 **待辦（大項）**
-- 舊站 16 篇內容遷移（docs/README.md 有清單與已知問題；選課篇已併五篇課程類重寫完成）
+- 內容改寫：其餘 15 篇主題待完成（docs/README.md 有清單與已知問題；選課篇已併五篇課程類、住宿篇已完成）
 - Cloudflare Pages 自訂網域 DNS 綁定（使用者操作）
 - og-image 1200×630 設計資產（目前暫用 logo.png）
 - qa 區塊輸出 FAQPage JSON-LD（規格已載明，未實作）
@@ -29,6 +29,13 @@
 
 - **全站禁止 emoji**：UI、內容、commit 訊息皆不得出現。圖示一律使用 `public/icons/` 下的 SVG（svgrepo stroke-width 2 版、24×24、round cap/join，來源 `docs/svg2/`），以 CSS mask 上色
 - 不引入未討論過的執行期依賴；優先原生平台能力
+
+## 與另一專案（ntust.merlinkuo.tw）的關係
+
+- 本站是**獨立的重新創作**，與 ntust.merlinkuo.tw（他人維護的新生懶人包）**沒有任何關聯**：不是其新版、續作、分支或接手維護，兩專案互不隸屬
+- **禁止直接複製**該站或任何外部來源的內容文字；本站內容一律以**改寫、借鑑、重新查證**的方式產出
+- `docs/dump/` 僅作為主題涵蓋比對與事實查證的參考素材，其文字不得原樣進入本站內容
+- 站內不放指向該站的導流連結或「舊版／新版」式的說明文字
 
 ## Git 規範
 
@@ -52,8 +59,8 @@
 
 - 文章：`src/content/articles/*.md`，檔名＝slug，自訂語法規格見 `docs/spec/SPEC.md`
 - serializer：`src/plugins/remark-custom.mjs`（directive → HTML 映射）
-- 舊站內容存檔：`docs/dump/`（新站內容至少需涵蓋）
-- 遷移狀態與已知源資料問題：`docs/README.md`
+- 外部參考素材存檔：`docs/dump/`（僅供主題涵蓋比對與借鑑改寫，禁止直接複製）
+- 主題涵蓋狀態與已知源資料問題：`docs/README.md`
 
 ## 系別選擇器
 
