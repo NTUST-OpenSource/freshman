@@ -102,6 +102,11 @@ const ogImage = new URL('/logo.png', Astro.site);
 
     <script>
       // ClientRouter 導航後 module script 不會重跑，全部掛在 astro:page-load
+      // swap 會清掉 <html> 上的自訂屬性且 is:inline script 不重跑，每次導航後還原系別
+      document.addEventListener('astro:after-swap', () => {
+        document.documentElement.dataset.dept = localStorage.getItem('dept') || 'all';
+      });
+
       function initDeptPicker() {
         const deptBtn = document.getElementById('dept-btn');
         const deptMenu = document.getElementById('dept-menu');
@@ -112,7 +117,7 @@ const ogImage = new URL('/logo.png', Astro.site);
 
         const options = [...deptMenu.querySelectorAll<HTMLElement>('[role="option"]')];
         const sync = () => {
-          const code = document.documentElement.dataset.dept ?? 'all';
+          const code = localStorage.getItem('dept') ?? 'all';
           for (const opt of options) {
             const selected = opt.dataset.code === code;
             opt.setAttribute('aria-selected', String(selected));
@@ -134,6 +139,31 @@ const ogImage = new URL('/logo.png', Astro.site);
         deptBtn.addEventListener('click', (e) => {
           e.stopPropagation();
           deptBtn.getAttribute('aria-expanded') === 'true' ? close() : open();
+        });
+        // 鍵盤操作：按鈕上下鍵開啟並聚焦，選項間上下移動、Enter/Space 選取、Escape 關閉
+        deptBtn.addEventListener('keydown', (e) => {
+          if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+            e.preventDefault();
+            open();
+            options[0]?.focus();
+          }
+        });
+        deptMenu.addEventListener('keydown', (e) => {
+          const i = options.indexOf(document.activeElement as HTMLElement);
+          if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            options[Math.min(i + 1, options.length - 1)]?.focus();
+          } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            options[Math.max(i - 1, 0)]?.focus();
+          } else if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            (document.activeElement as HTMLElement | null)?.click();
+            deptBtn.focus();
+          } else if (e.key === 'Escape') {
+            close();
+            deptBtn.focus();
+          }
         });
         for (const opt of options) {
           opt.addEventListener('click', () => {
