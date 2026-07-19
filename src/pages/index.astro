@@ -47,38 +47,57 @@ import Calendar from '../components/Calendar.astro';
   </div>
 
   <script>
+    // 列車無限循環：古亭發車 → （50% 台電大樓停靠）→ 公館停一下 → 駛離消失 → 下一班
     function initTrain() {
-    const train = document.getElementById('landing-train');
-    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (train && !train.dataset.bound && !reduced) {
+      const train = document.getElementById('landing-train');
+      const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!train || train.dataset.bound || reduced) return;
       train.dataset.bound = '1';
+
       const ease = 'cubic-bezier(0.4, 0, 0.2, 1)';
-      const ride = async () => {
-        train.style.opacity = '1';
-        if (Math.random() < 0.5) {
-          await train.animate(
-            [{ offsetDistance: '0%' }, { offsetDistance: '50%' }],
-            { duration: 950, easing: ease, fill: 'forwards' },
-          ).finished;
-          await new Promise((r) => setTimeout(r, 700));
-          await train.animate(
-            [{ offsetDistance: '50%' }, { offsetDistance: '88%' }],
-            { duration: 800, easing: ease, fill: 'forwards' },
-          ).finished;
-        } else {
-          await train.animate(
-            [{ offsetDistance: '0%' }, { offsetDistance: '88%' }],
-            { duration: 1600, easing: ease, fill: 'forwards' },
-          ).finished;
-        }
-        train.animate([{ opacity: 1 }, { opacity: 0 }], {
-          duration: 450,
-          delay: 300,
+      const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+      const seg = (from: string, to: string, duration: number) =>
+        train.animate([{ offsetDistance: from }, { offsetDistance: to }], {
+          duration,
+          easing: ease,
           fill: 'forwards',
-        });
-      };
-      setTimeout(ride, 1750); // 等路線描線完成
-    }
+        }).finished;
+
+      // 導航離開時取消動畫，讓迴圈的 await 拋錯結束
+      document.addEventListener(
+        'astro:before-swap',
+        () => train.getAnimations().forEach((a) => a.cancel()),
+        { once: true },
+      );
+
+      (async () => {
+        await sleep(1750); // 等路線描線完成
+        try {
+          while (train.isConnected) {
+            for (const a of train.getAnimations()) a.cancel();
+            train.style.offsetDistance = '0%';
+            train.style.opacity = '1';
+            if (Math.random() < 0.5) {
+              await seg('0%', '50%', 950);
+              await sleep(700); // 台電大樓停靠
+              await seg('50%', '88%', 800);
+            } else {
+              await seg('0%', '88%', 1600);
+            }
+            await sleep(650); // 公館停一下
+            await train.animate(
+              [
+                { offsetDistance: '88%', opacity: 1 },
+                { offsetDistance: '100%', opacity: 0 },
+              ],
+              { duration: 500, easing: ease, fill: 'forwards' },
+            ).finished;
+            await sleep(750); // 下一班發車間隔
+          }
+        } catch {
+          /* 動畫被取消（頁面切換）即結束 */
+        }
+      })();
     }
     document.addEventListener('astro:page-load', initTrain);
   </script>

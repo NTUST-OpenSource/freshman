@@ -102,6 +102,13 @@ a {
   }
 }
 
+/* header 有獨立 group 且不動畫：切頁時完全靜止 */
+::view-transition-group(site-header),
+::view-transition-old(site-header),
+::view-transition-new(site-header) {
+  animation: none !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-group(*),
   ::view-transition-old(root),
@@ -547,17 +554,82 @@ main {
   color: var(--ink-soft);
 }
 
-.article__contrib {
-  margin-left: 0.7em;
-  color: var(--ink-soft);
-  text-decoration: none;
-  border-bottom: 1px dotted var(--line);
-  transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+.contrib {
+  position: relative;
+  display: inline-flex;
+  margin-left: 0.5em;
+  vertical-align: -0.15em;
 }
 
-.article__contrib:hover {
+.contrib__btn {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--ink-soft);
+  display: grid;
+  place-items: center;
+}
+
+.contrib__btn:hover {
   color: var(--brand);
-  border-color: var(--brand);
+}
+
+.contrib__btn span {
+  width: 1rem;
+  height: 1rem;
+  background: currentColor;
+  mask: url('/icons/info.svg') no-repeat center / contain;
+  -webkit-mask: url('/icons/info.svg') no-repeat center / contain;
+}
+
+.contrib__card {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  z-index: 20;
+  min-width: 13rem;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: 0 14px 40px rgb(20 18 24 / 0.14);
+  padding: 0.4rem;
+  font-family: var(--font-sans);
+  opacity: 0;
+  translate: 0 -4px;
+  transition: opacity var(--dur) var(--ease), translate var(--dur) var(--ease);
+}
+
+.contrib__card--open {
+  opacity: 1;
+  translate: 0 0;
+}
+
+.contrib__card a {
+  display: flex;
+  flex-direction: column;
+  gap: 0.05rem;
+  padding: 0.45rem 0.7rem;
+  border-radius: var(--radius-s);
+  text-decoration: none;
+  color: var(--ink);
+  font-size: var(--text-small);
+  font-weight: 650;
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+
+.contrib__card a:hover {
+  background: color-mix(in oklab, var(--brand) 7%, var(--paper));
+  color: var(--brand);
+}
+
+.contrib__mail {
+  font-family: var(--font-mono);
+  font-size: var(--text-tiny);
+  font-weight: 400;
+  color: var(--ink-soft);
 }
 
 .article__title {

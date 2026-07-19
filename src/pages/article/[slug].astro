@@ -23,13 +23,29 @@ const updated = article.data.updated.toLocaleDateString('zh-TW');
           <span class="chip chip--cat">{cat.label}</span>
           {article.data.draft && <span class="chip chip--draft">草稿</span>}
           <span class="article__meta">
-            更新 {updated}
+            {updated} 更新
             {
-              article.data.contributors.map((c) => (
-                <a class="article__contrib" href={`mailto:${c.email}`}>
-                  {c.name}
-                </a>
-              ))
+              article.data.contributors.length > 0 && (
+                <span class="contrib">
+                  <button
+                    class="contrib__btn"
+                    id="contrib-btn"
+                    type="button"
+                    aria-expanded="false"
+                    aria-label="貢獻人列表"
+                  >
+                    <span aria-hidden="true" />
+                  </button>
+                  <div class="contrib__card" id="contrib-card" hidden>
+                    {article.data.contributors.map((c) => (
+                      <a href={`mailto:${c.email}`}>
+                        {c.name}
+                        <span class="contrib__mail">{c.email}</span>
+                      </a>
+                    ))}
+                  </div>
+                </span>
+              )
             }
           </span>
         </p>
@@ -123,10 +139,39 @@ const updated = article.data.updated.toLocaleDateString('zh-TW');
       fnPop.addEventListener('pointerleave', hide);
     }
 
+    function initContributors() {
+      const btn = document.getElementById('contrib-btn');
+      const card = document.getElementById('contrib-card');
+      if (!btn || !card) return;
+      let closeTimer: number | undefined;
+      const close = () => {
+        card.classList.remove('contrib__card--open');
+        btn.setAttribute('aria-expanded', 'false');
+        closeTimer = window.setTimeout(() => (card.hidden = true), 170);
+      };
+      const open = () => {
+        clearTimeout(closeTimer);
+        card.hidden = false;
+        requestAnimationFrame(() => card.classList.add('contrib__card--open'));
+        btn.setAttribute('aria-expanded', 'true');
+      };
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        btn.getAttribute('aria-expanded') === 'true' ? close() : open();
+      });
+      document.addEventListener('click', (e) => {
+        if (!card.hidden && !card.contains(e.target as Node)) close();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !card.hidden) close();
+      });
+    }
+
     document.addEventListener('astro:page-load', () => {
       if (!document.querySelector('.article-layout')) return;
       initCascade();
       initFootnotePreview();
+      initContributors();
     });
   </script>
 </Base>

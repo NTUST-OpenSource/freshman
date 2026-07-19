@@ -50,9 +50,9 @@
 }
 
 .md :is(h2, h3, h4),
-.md sup[id],
+.md sup a[id],
 .md .footnotes li[id] {
-  scroll-margin-top: 34vh; /* 跳轉後落在畫面中段 */
+  scroll-margin-top: 34vh; /* 跳轉後落在畫面中段（註腳返回錨點 id 掛在 a 上） */
 }
 
 .md :target {
