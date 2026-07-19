@@ -2,6 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { visit } from 'unist-util-visit';
+import { DEPTS } from '../lib/depts.mjs';
 
 const ARTICLES_DIR = path.resolve('src/content/articles');
 
@@ -83,6 +84,18 @@ export function remarkCustom() {
         node.children.unshift(el('h3', { className: ['qa__q'] }, label));
         const meta = [attrs.by, attrs.date].filter(Boolean).join(' · ');
         if (meta) node.children.push(el('footer', { className: ['qa__meta'] }, [text(meta)]));
+      } else if (node.name === 'dept') {
+        const code = (attrs.for ?? '').trim();
+        const dept = DEPTS.find((d) => d.code === code && d.code !== 'all');
+        if (!dept) return unknown(node);
+        node.data = {
+          hName: 'div',
+          hProperties: {
+            className: ['dept-block'],
+            'data-dept-only': code,
+            'data-dept-label': `${dept.label}限定`,
+          },
+        };
       } else if (node.name === 'steps') {
         node.data = { hName: 'div', hProperties: { className: ['steps'] } };
       } else if (node.name === 'tabs') {

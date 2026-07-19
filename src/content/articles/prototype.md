@@ -3,7 +3,6 @@ title: 選課與入住示範
 slug: prototype
 category: course
 tags: [課程, 住]
-icon: 🧪
 description: 語法規格 v0.1 的完整示範文章，內容取自真實懶人包
 year: 114
 order: 0
@@ -81,6 +80,14 @@ ipconfig getifaddr en0   # 拿到 140.118 開頭的 IP 就是成功
 ```
 
 連上 NTUST-PEAP 後按 :kbd[⌘] + :kbd[R] 重新整理登入頁。相關申請請看 :year[114] 的[全區停車資訊](https://www.general.ntust.edu.tw/p/406-1054-138102,r7.php?Lang=zh-tw)。
+
+## 系別限定內容
+
+下面這段只有在右上角系別選「資工系」時才會顯示：
+
+:::dept{for="csie"}
+資工系新生請先追蹤系學會 Instagram（ntustcsie），系上迎新與課程公告都會在那裡發布。
+:::
 
 ## 常用工具
 
