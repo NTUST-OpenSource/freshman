@@ -156,11 +156,13 @@ const updatedLines = calendars
   const now = new Date();
   const todayKey = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
 
-  // ---- 當學期＋前一學期窗口（第 1 學期 8~1 月、第 2 學期 2~7 月） ----
+  // ---- 當學期＋前一學期窗口 ----
+  // 第 1 學期 8~1 月、第 2 學期 2~6 月；7 月（暑假）視為即將開始的第 1 學期，
+  // 讓新生在暑假就能同時看到上學期與開學後的行事曆
   function semStart(d: Date): [number, number] {
     const y = d.getFullYear();
     const m = d.getMonth() + 1;
-    if (m >= 8) return [y, 8];
+    if (m >= 7) return [y, 8];
     if (m === 1) return [y - 1, 8];
     return [y, 2];
   }
@@ -452,6 +454,7 @@ const updatedLines = calendars
     position: absolute;
     right: 1rem;
     bottom: 1rem;
+    z-index: 4; /* 高於月份標題的 sticky 白底 */
     display: flex;
     align-items: center;
     gap: 0.4em;
