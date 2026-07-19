@@ -11,7 +11,7 @@ const CALLOUT_TYPES = {
   tip: '小撇步',
   warning: '注意',
   danger: '警告',
-  new: '本年度變動',
+  fatal: '重大',
 };
 
 /** 建立帶 hast 資訊的節點（type 用 paragraph 當載體，hName 會覆蓋輸出標籤） */
@@ -65,11 +65,12 @@ export function remarkCustom() {
 
     function container(node) {
       const attrs = node.attributes ?? {};
-      if (node.name in CALLOUT_TYPES) {
+      const type = node.name === 'critical' ? 'fatal' : node.name; // critical 為 fatal 別名
+      if (type in CALLOUT_TYPES) {
         const label = takeLabel(node);
-        node.data = { hName: 'aside', hProperties: { className: ['callout', `callout--${node.name}`] } };
+        node.data = { hName: 'aside', hProperties: { className: ['callout', `callout--${type}`] } };
         node.children.unshift(
-          el('p', { className: ['callout__title'] }, label ?? [text(CALLOUT_TYPES[node.name])]),
+          el('p', { className: ['callout__title'] }, label ?? [text(CALLOUT_TYPES[type])]),
         );
       } else if (node.name === 'spoiler') {
         const label = takeLabel(node) ?? [text('點我展開')];
@@ -96,6 +97,11 @@ export function remarkCustom() {
             'data-dept-label': `${dept.label}限定`,
           },
         };
+      } else if (node.name === 'table') {
+        // 表格包裝：:::table{vlines} 顯示垂直框線
+        const cls = ['table-scroll'];
+        if ('vlines' in attrs) cls.push('table--vlines');
+        node.data = { hName: 'div', hProperties: { className: cls } };
       } else if (node.name === 'steps') {
         const props = { className: ['steps'] };
         const color = (attrs.color ?? '').trim();
