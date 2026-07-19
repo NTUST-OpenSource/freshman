@@ -1,0 +1,422 @@
+---
+// 學年行事曆：build 時渲染整學年月曆流，client 只負責今天標記、捲動與 popup
+import cal from '../data/calendar-115.json';
+
+type CalEvent = (typeof cal.events)[number];
+
+const meta = cal.meta;
+
+// 事件依日期分組（跨日事件展開至每一天）
+const byDay = new Map<string, CalEvent[]>();
+for (const ev of cal.events) {
+  const start = new Date(`${ev.start}T00:00:00Z`);
+  const end = new Date(`${ev.end}T00:00:00Z`);
+  for (let d = new Date(start); d <= end; d.setUTCDate(d.getUTCDate() + 1)) {
+    const key = d.toISOString().slice(0, 10);
+    if (!byDay.has(key)) byDay.set(key, []);
+    byDay.get(key)!.push(ev);
+  }
+}
+
+// popup 用的精簡資料
+const payload: Record<string, { t: string; n: string; l: string[] }[]> = {};
+for (const [day, events] of byDay) {
+  payload[day] = events.map((e) => ({ t: e.titleDisplay || e.title, n: e.note, l: e.link }));
+}
+
+// 學年涵蓋月份（calendarEnd 為排他月初）
+const [sy, sm] = meta.calendarStart!.split('-').map(Number);
+const [ey, em] = meta.calendarEnd!.split('-').map(Number);
+const months: { y: number; m: number }[] = [];
+for (let y = sy, m = sm; y < ey || (y === ey && m < em); m === 12 ? ((m = 1), y++) : m++) {
+  months.push({ y, m });
+}
+
+const pad = (n: number) => String(n).padStart(2, '0');
+const WEEKDAYS = ['一', '二', '三', '四', '五', '六', '日'];
+
+function monthCells(y: number, m: number): (number | null)[] {
+  const lead = (new Date(Date.UTC(y, m - 1, 1)).getUTCDay() + 6) % 7; // 週一起始
+  const days = new Date(Date.UTC(y, m, 0)).getUTCDate();
+  const cells: (number | null)[] = [
+    ...Array(lead).fill(null),
+    ...Array.from({ length: days }, (_, i) => i + 1),
+  ];
+  while (cells.length % 7) cells.push(null);
+  return cells;
+}
+
+const updatedText = new Date(meta.parsedAt).toLocaleDateString('zh-TW', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<aside class="cal" id="cal" aria-label="學年行事曆">
+  <header class="cal__head">
+    <h2 class="cal__title">{meta.academicYear} 學年行事曆</h2>
+    <p class="cal__updated">行事曆更新於 {updatedText}</p>
+  </header>
+
+  <div class="cal__scroll" id="cal-scroll" tabindex="0">
+    {
+      months.map(({ y, m }) => (
+        <section class="cal__month" data-month={`${y}-${pad(m)}`}>
+          <h3 class="cal__month-title">
+            {y} 年 {m} 月
+          </h3>
+          <div class="cal__grid" role="grid">
+            {WEEKDAYS.map((w) => (
+              <span class="cal__weekday">{w}</span>
+            ))}
+            {monthCells(y, m).map((day) => {
+              if (day === null) return <span class="cal__cell cal__cell--empty" />;
+              const key = `${y}-${pad(m)}-${pad(day)}`;
+              const events = byDay.get(key);
+              return events ? (
+                <button
+                  class="cal__cell cal__cell--event"
+                  type="button"
+                  data-date={key}
+                  aria-label={`${m} 月 ${day} 日，${events.length} 個事件`}
+                >
+                  <span class="cal__num">{day}</span>
+                  <span class="cal__dots" aria-hidden="true">
+                    {events.slice(0, 3).map(() => (
+                      <i />
+                    ))}
+                  </span>
+                </button>
+              ) : (
+                <span class="cal__cell" data-date={key}>
+                  <span class="cal__num">{day}</span>
+                </span>
+              );
+            })}
+          </div>
+        </section>
+      ))
+    }
+  </div>
+
+  <button class="cal__today-btn" id="cal-today" type="button">
+    <span class="cal__today-icon" aria-hidden="true"></span>
+    回到今天
+  </button>
+
+  <dialog class="cal__dialog" id="cal-dialog">
+    <header class="cal__dialog-head">
+      <h3 class="cal__dialog-title" id="cal-dialog-title"></h3>
+      <button class="cal__dialog-close" id="cal-dialog-close" type="button" aria-label="關閉">
+        <span aria-hidden="true"></span>
+      </button>
+    </header>
+    <ul class="cal__dialog-list" id="cal-dialog-list"></ul>
+  </dialog>
+
+  <script type="application/json" id="cal-data" is:inline set:html={JSON.stringify(payload)} />
+</aside>
+
+<script>
+  const data: Record<string, { t: string; n: string; l: string[] }[]> = JSON.parse(
+    document.getElementById('cal-data')!.textContent!,
+  );
+  const scroller = document.getElementById('cal-scroll')!;
+  const dialog = document.getElementById('cal-dialog') as HTMLDialogElement;
+  const dialogTitle = document.getElementById('cal-dialog-title')!;
+  const dialogList = document.getElementById('cal-dialog-list')!;
+
+  // 今天標記與過去日期降透明度（client 判定，build 日期會過期）
+  const now = new Date();
+  const todayKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  for (const cell of document.querySelectorAll<HTMLElement>('.cal__cell[data-date]')) {
+    const key = cell.dataset.date!;
+    if (key < todayKey) cell.classList.add('cal__cell--past');
+    else if (key === todayKey) cell.classList.add('cal__cell--today');
+  }
+
+  // 捲動至目標月份（超出學年範圍時夾到首尾）
+  function scrollToMonth(monthKey: string, behavior: ScrollBehavior = 'auto') {
+    const sections = document.querySelectorAll<HTMLElement>('.cal__month');
+    let target = sections[0];
+    for (const s of sections) {
+      if (s.dataset.month! <= monthKey) target = s;
+    }
+    scroller.scrollTo({ top: target.offsetTop - scroller.offsetTop, behavior });
+  }
+  scrollToMonth(todayKey.slice(0, 7));
+  document.getElementById('cal-today')!.addEventListener('click', () => {
+    scrollToMonth(todayKey.slice(0, 7), 'smooth');
+  });
+
+  // 點擊有事件的日期開啟 popup
+  scroller.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLElement>('.cal__cell--event');
+    if (!btn) return;
+    const key = btn.dataset.date!;
+    const [y, m, d] = key.split('-').map(Number);
+    const weekday = '日一二三四五六'[new Date(y, m - 1, d).getDay()];
+    dialogTitle.textContent = `${y} 年 ${m} 月 ${d} 日（週${weekday}）`;
+    dialogList.replaceChildren(
+      ...(data[key] ?? []).map((ev) => {
+        const li = document.createElement('li');
+        const title = document.createElement('p');
+        title.className = 'cal__ev-title';
+        title.textContent = ev.t;
+        li.appendChild(title);
+        if (ev.n) {
+          const note = document.createElement('p');
+          note.className = 'cal__ev-note';
+          note.textContent = ev.n;
+          li.appendChild(note);
+        }
+        for (const url of ev.l) {
+          const a = document.createElement('a');
+          a.className = 'cal__ev-link';
+          a.href = url;
+          a.target = '_blank';
+          a.rel = 'noopener noreferrer';
+          a.textContent = new URL(url).hostname;
+          li.appendChild(a);
+        }
+        return li;
+      }),
+    );
+    dialog.showModal();
+  });
+
+  document.getElementById('cal-dialog-close')!.addEventListener('click', () => dialog.close());
+  dialog.addEventListener('click', (e) => {
+    if (e.target === dialog) dialog.close(); // 點擊背板關閉
+  });
+</script>
+
+<style is:global>
+  .cal {
+    position: sticky;
+    top: 1.5rem;
+    align-self: start;
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100dvh - 3rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-l);
+    background: var(--paper);
+    overflow: hidden;
+  }
+
+  .cal__head {
+    padding: 1.1rem 1.3rem 0.9rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .cal__title {
+    font-size: 1.05rem;
+    font-weight: 750;
+  }
+
+  .cal__updated {
+    margin-top: 0.2rem;
+    font-size: var(--text-tiny);
+    color: var(--ink-soft);
+  }
+
+  .cal__scroll {
+    overflow-y: auto;
+    padding: 0.4rem 1.3rem 1.2rem;
+    scroll-behavior: smooth;
+    flex: 1;
+  }
+
+  .cal__month {
+    padding-top: 0.9rem;
+  }
+
+  .cal__month-title {
+    font-size: var(--text-small);
+    font-weight: 750;
+    color: var(--ink-soft);
+    position: sticky;
+    top: 0;
+    background: var(--paper);
+    padding-block: 0.35rem;
+    z-index: 1;
+  }
+
+  .cal__grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+    margin-top: 0.3rem;
+  }
+
+  .cal__weekday {
+    font-size: var(--text-tiny);
+    color: var(--ink-soft);
+    text-align: center;
+    padding-block: 0.2rem;
+  }
+
+  .cal__cell {
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.15rem;
+    border-radius: var(--radius-s);
+    font-size: var(--text-small);
+    color: var(--ink);
+    border: none;
+    background: none;
+    padding: 0;
+  }
+
+  .cal__cell--event {
+    cursor: pointer;
+    background: color-mix(in oklab, var(--brand) 7%, var(--paper));
+    font-weight: 650;
+    transition: background var(--dur) var(--ease);
+  }
+
+  .cal__cell--event:hover {
+    background: color-mix(in oklab, var(--brand) 16%, var(--paper));
+  }
+
+  .cal__cell--past {
+    opacity: 0.38;
+  }
+
+  .cal__cell--today {
+    outline: 2px solid var(--brand);
+    outline-offset: -2px;
+  }
+
+  .cal__dots {
+    display: flex;
+    gap: 3px;
+    height: 5px;
+  }
+
+  .cal__dots i {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--brand);
+  }
+
+  .cal__today-btn {
+    position: absolute;
+    right: 1rem;
+    bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4em;
+    font: inherit;
+    font-size: var(--text-small);
+    font-weight: 650;
+    color: var(--brand);
+    background: var(--paper);
+    border: 1px solid color-mix(in oklab, var(--brand) 40%, var(--line));
+    border-radius: 99px;
+    padding: 0.45em 1em;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgb(0 0 0 / 0.07);
+    transition: background var(--dur) var(--ease);
+  }
+
+  .cal__today-btn:hover {
+    background: color-mix(in oklab, var(--brand) 7%, var(--paper));
+  }
+
+  .cal__today-icon {
+    width: 1em;
+    height: 1em;
+    background: currentColor;
+    mask: url('/icons/today.svg') no-repeat center / contain;
+    -webkit-mask: url('/icons/today.svg') no-repeat center / contain;
+  }
+
+  .cal__dialog {
+    border: none;
+    border-radius: var(--radius-l);
+    padding: 0;
+    width: min(26rem, calc(100vw - 3rem));
+    box-shadow: 0 18px 50px rgb(0 0 0 / 0.18);
+  }
+
+  .cal__dialog::backdrop {
+    background: rgb(20 18 24 / 0.35);
+  }
+
+  .cal__dialog-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .cal__dialog-title {
+    font-size: 1rem;
+    font-weight: 750;
+  }
+
+  .cal__dialog-close {
+    width: 1.9rem;
+    height: 1.9rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    color: var(--ink-soft);
+  }
+
+  .cal__dialog-close:hover {
+    color: var(--brand);
+  }
+
+  .cal__dialog-close span {
+    width: 1.3rem;
+    height: 1.3rem;
+    background: currentColor;
+    mask: url('/icons/close.svg') no-repeat center / contain;
+    -webkit-mask: url('/icons/close.svg') no-repeat center / contain;
+  }
+
+  .cal__dialog-list {
+    list-style: none;
+    margin: 0;
+    padding: 0.6rem 1.25rem 1.1rem;
+  }
+
+  .cal__dialog-list li {
+    padding-block: 0.6rem;
+  }
+
+  .cal__dialog-list li + li {
+    border-top: 1px solid var(--line);
+  }
+
+  .cal__ev-title {
+    font-weight: 650;
+    line-height: 1.55;
+  }
+
+  .cal__ev-note {
+    font-size: var(--text-small);
+    color: var(--ink-soft);
+    line-height: 1.6;
+  }
+
+  .cal__ev-link {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: var(--text-tiny);
+    margin-right: 0.8em;
+    margin-top: 0.2em;
+  }
+</style>

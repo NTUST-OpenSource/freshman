@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
+import Calendar from '../components/Calendar.astro';
 import { CATEGORIES } from '../content.config';
 
 const articles = await getCollection('articles', (e) => import.meta.env.DEV || !e.data.draft);
@@ -13,42 +14,48 @@ const byCategory = Object.entries(CATEGORIES).map(([key, meta]) => ({
 }));
 ---
 
-<Base>
-  <section class="hero">
-    <p class="hero__eyebrow">NTUST FRESHMAN HANDBOOK</p>
-    <h1 class="hero__title">開學前，把台科<br />摸得一清二楚</h1>
-    <p class="hero__desc">
-      選課怎麼抽、宿舍怎麼住、哪裡有好吃的——學長姐把四年的坑都踩過了，這裡是活下來的筆記。
-    </p>
-  </section>
+<Base chrome={false}>
+  <div class="home">
+    <div class="home__main">
+      <header class="home__brand">
+        <img src="/logo.svg" alt="" width="34" height="35" />
+        <span>台科新生懶人包</span>
+      </header>
 
-  {
-    byCategory.map(
-      ({ key, label, items }) =>
-        items.length > 0 && (
-          <section class={`shelf cat-${key}`} aria-labelledby={`shelf-${key}`}>
-            <h2 class="shelf__title" id={`shelf-${key}`}>
-              <span class="shelf__dot" aria-hidden="true" />
-              {label}
-            </h2>
-            <div class="shelf__grid">
-              {items.map((a) => (
-                <a class="card" href={`/article/${a.data.slug}/`}>
-                  <span class="card__icon" aria-hidden="true">
-                    {a.data.icon ?? '📄'}
-                  </span>
-                  <span class="card__body">
-                    <span class="card__title">
-                      {a.data.title}
-                      {a.data.draft && <span class="chip chip--draft">草稿</span>}
-                    </span>
-                    <span class="card__desc">{a.data.description}</span>
-                  </span>
-                </a>
-              ))}
-            </div>
-          </section>
-        ),
-    )
-  }
+      <section class="hero">
+        <p class="hero__eyebrow">開學前指南</p>
+        <h1 class="hero__title">開學前，把台科<br />摸得一清二楚</h1>
+        <p class="hero__desc">
+          選課怎麼抽、宿舍怎麼住、哪裡有好吃的——學長姐把四年的坑都踩過了，這裡是活下來的筆記。
+        </p>
+      </section>
+
+      {
+        byCategory.map(
+          ({ key, label, items }) =>
+            items.length > 0 && (
+              <section class={`shelf cat-${key}`} aria-labelledby={`shelf-${key}`}>
+                <h2 class="shelf__title" id={`shelf-${key}`}>
+                  <span class="shelf__dot" aria-hidden="true" />
+                  {label}
+                </h2>
+                <div class="shelf__grid">
+                  {items.map((a) => (
+                    <a class="card" href={`/article/${a.data.slug}/`}>
+                      <span class="card__title">
+                        {a.data.title}
+                        {a.data.draft && <span class="chip chip--draft">草稿</span>}
+                      </span>
+                      <span class="card__desc">{a.data.description}</span>
+                    </a>
+                  ))}
+                </div>
+              </section>
+            ),
+        )
+      }
+    </div>
+
+    <Calendar />
+  </div>
 </Base>

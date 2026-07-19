@@ -41,7 +41,7 @@ a {
 :focus-visible {
   outline: 2px solid var(--brand);
   outline-offset: 2px;
-  border-radius: 2px;
+  border-radius: 4px;
 }
 
 .skip-link {
@@ -92,20 +92,14 @@ a {
   font-weight: 700;
 }
 
-.brand__mark {
-  display: grid;
-  place-items: center;
-  width: 2rem;
-  height: 2rem;
-  border-radius: var(--radius-s);
-  background: var(--brand);
-  color: var(--on-brand);
-  font-size: 1.05rem;
-  font-weight: 800;
+.brand__logo {
+  width: 1.9rem;
+  height: auto;
 }
 
 .site-header__links {
   display: flex;
+  align-items: center;
   gap: 1.1rem;
   font-size: var(--text-small);
 }
@@ -117,6 +111,31 @@ a {
 
 .site-header__links a:hover {
   color: var(--brand);
+}
+
+.dept-picker {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.dept-picker__label {
+  color: var(--ink-soft);
+}
+
+.dept-picker__select {
+  font: inherit;
+  font-size: var(--text-small);
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-s);
+  padding: 0.28rem 0.6rem;
+  cursor: pointer;
+}
+
+.dept-picker__select:hover {
+  border-color: var(--brand);
 }
 
 /* ---- 頁尾 ---- */
@@ -133,17 +152,44 @@ main {
   font-size: var(--text-small);
 }
 
+/* ---- 首頁（無頁首頁尾，雙欄：內容＋行事曆） ---- */
+.home {
+  max-width: 100rem;
+  margin-inline: auto;
+  padding: clamp(1.5rem, 3vw, 3rem) clamp(1.25rem, 3vw, 3rem) 4rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 3rem;
+}
+
+@media (min-width: 1100px) {
+  .home {
+    grid-template-columns: minmax(0, 1fr) 25rem;
+  }
+}
+
+.home__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.home__brand img {
+  width: 2.2rem;
+  height: auto;
+}
+
 /* ---- 首頁 hero ---- */
 .hero {
-  max-width: 76rem;
-  margin-inline: auto;
-  padding: clamp(3rem, 8vw, 5.5rem) 1.25rem 2.5rem;
+  padding: clamp(2.5rem, 5vw, 4rem) 0 2.2rem;
 }
 
 .hero__eyebrow {
   font-family: var(--font-mono);
   font-size: var(--text-tiny);
-  letter-spacing: 0.18em;
+  letter-spacing: 0.35em;
   color: var(--brand);
   margin-bottom: 1rem;
 }
@@ -164,9 +210,7 @@ main {
 
 /* ---- 首頁分類書架 ---- */
 .shelf {
-  max-width: 76rem;
-  margin-inline: auto;
-  padding: 1.6rem 1.25rem;
+  padding: 1.4rem 0;
 }
 
 .cat-course {
@@ -210,10 +254,8 @@ main {
 }
 
 .card {
-  display: flex;
-  gap: 0.8rem;
-  align-items: flex-start;
-  padding: 1rem 1.1rem;
+  display: block;
+  padding: 1rem 1.15rem;
   border: 1px solid var(--line);
   border-left: 4px solid var(--cat);
   border-radius: var(--radius);
@@ -228,11 +270,6 @@ main {
   border-color: var(--cat);
   background: color-mix(in oklab, var(--cat) 5%, var(--paper));
   translate: 0 -2px;
-}
-
-.card__icon {
-  font-size: 1.4rem;
-  line-height: 1.6;
 }
 
 .card__title {
