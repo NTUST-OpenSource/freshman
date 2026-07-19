@@ -446,7 +446,8 @@ main {
   height: 120px;
 }
 
-@media (max-width: 680px) {
+/* 行事曆被擠壓換行（單欄）時隱藏路線；與上方 .landing 雙欄斷點精確互補 */
+@media (width < 1100px) {
   .landing__route {
     display: none;
   }
