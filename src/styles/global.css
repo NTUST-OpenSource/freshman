@@ -695,8 +695,10 @@ main {
   .toc {
     display: block;
     position: sticky;
-    top: 2rem;
+    top: 5.5rem; /* sticky header 高約 3.7rem，需留安全間距 */
     align-self: start;
+    max-height: calc(100dvh - 7rem);
+    overflow-y: auto;
     font-size: var(--text-small);
   }
 }
