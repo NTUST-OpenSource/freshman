@@ -36,8 +36,10 @@ draft: false            # true 時不 build
 |---|---|
 | 標題錨點 | h2/h3 自動加 id；h3 帶分類色圓點、h4 為低調細項層級（不進目錄） |
 | TOC | 從 h2/h3 自動生成右側目錄，不需在文中寫 `[toc]` |
-| 外部連結 | 自動 `target="_blank" rel="noopener noreferrer"` + 外連小圖示 |
+| 外部連結 | 自動 `target="_blank" rel="noopener noreferrer"`（無圖示） |
 | 寬表格 | 自動包 `<div class="table-scroll">` 橫向捲動，手機不爆版 |
+| 表格對齊 | GFM `:---`／`:---:`／`---:` 對應靠左／置中／靠右 |
+| 表格框線 | `:::table{vlines}` 包住表格顯示垂直框線 |
 | 圖片 | `![alt](src "說明文字")` 的 title → `<figure><figcaption>` |
 | 註腳預覽 | `[^1]` 游標 hover 直接浮出註腳內容，不需點擊跳轉 |
 | 捲動顯示 | 內容區塊進入視窗時上浮淡入（無 JS 時直接可見） |
@@ -65,8 +67,8 @@ draft: false            # true 時不 build
 會出事的。退宿、退選、詐騙警告。
 :::
 
-:::new
-本年度新變動。（換學年時最該檢查的區塊）
+:::fatal
+重大事項。（別名 :::critical，換學年時最該檢查的區塊）
 :::
 ```
 

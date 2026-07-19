@@ -54,7 +54,8 @@
 
 ## 工作流程
 
-- **修改 `astro.config.mjs` 或 `src/plugins/` 後必須重啟 dev server**（`./node_modules/.bin/astro dev stop` 再啟動），否則舊管線繼續生效（已踩過兩次）
+- **修改 `astro.config.mjs` 或 `src/plugins/` 後必須：停 dev server → `rm -rf .astro node_modules/.vite` → 重啟**。content layer 以內容 digest 快取渲染結果，舊管線 sync 過的頁面重啟後仍會吃快取（已踩過三次）
+- 全站使用 ClientRouter（View Transitions）：**所有 client script 必須掛 `astro:page-load`**，persist 元素（如 site-header）要用 `dataset.bound` 防重複綁定
 - 待補資料與待決事項記錄於 `TODO.md`，補齊後刪除該項
 - 內容與 md style 的調整以使用者指示為準，不自行擴充語法
 - 檔案版本相關決策先以 context7 驗證
