@@ -1,4 +1,5 @@
 // @ts-check
+import fs from 'node:fs';
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import { unified } from '@astrojs/markdown-remark';
@@ -9,9 +10,36 @@ import { transformerMetaHighlight } from '@shikijs/transformers';
 import { remarkCustom } from './src/plugins/remark-custom.mjs';
 import { rehypePost } from './src/plugins/rehype-post.mjs';
 
+// 文章 frontmatter 的 updated/noindex 供 sitemap 使用（config 階段讀不到 content collection）
+const articleMeta = Object.fromEntries(
+  fs
+    .readdirSync('./src/content/articles')
+    .filter((f) => f.endsWith('.md'))
+    .map((f) => {
+      const fm = fs.readFileSync(`./src/content/articles/${f}`, 'utf8').split(/^---$/m)[1] ?? '';
+      return [
+        fm.match(/^slug:\s*["']?([\w-]+)/m)?.[1] ?? f.replace(/\.md$/, ''),
+        {
+          updated: fm.match(/^updated:\s*(\S+)/m)?.[1],
+          noindex: /^noindex:\s*true\b/m.test(fm),
+        },
+      ];
+    }),
+);
+/** @param {string} url */
+const articleSlugOf = (url) => url.match(/\/article\/([^/]+)\//)?.[1];
+
 export default defineConfig({
   site: 'https://freshman.ntust.org',
-  integrations: [sitemap()],
+  integrations: [
+    sitemap({
+      filter: (page) => !articleMeta[articleSlugOf(page) ?? '']?.noindex, // noindex 頁不進 sitemap
+      serialize: (item) => {
+        const updated = articleMeta[articleSlugOf(item.url) ?? '']?.updated;
+        return updated ? { ...item, lastmod: new Date(updated).toISOString() } : item;
+      },
+    }),
+  ],
   markdown: {
     processor: unified({
       remarkPlugins: [remarkDirective, remarkCustom],

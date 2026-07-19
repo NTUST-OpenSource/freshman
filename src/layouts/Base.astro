@@ -11,9 +11,16 @@ interface Props {
   description?: string;
   chrome?: boolean;
   noindex?: boolean;
+  ogType?: 'website' | 'article';
 }
 
-const { title, description = '提供臺科新生的開學前指南', chrome = true, noindex = false } = Astro.props;
+const {
+  title,
+  description = '臺科新生的開學前指南：選課、住宿、生活與資訊帳號整理，附三學年行事曆與系別專屬內容，開學前照著看完就緒。',
+  chrome = true,
+  noindex = false,
+  ogType = 'website',
+} = Astro.props;
 const pageTitle = title ? `${title}｜臺科新生懶人包` : '臺科新生懶人包';
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = new URL('/logo.png', Astro.site);
@@ -31,7 +38,7 @@ const ogImage = new URL('/logo.png', Astro.site);
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content="臺科新生懶人包" />
     <meta property="og:locale" content="zh_TW" />
     <meta property="og:image" content={ogImage} />
@@ -48,7 +55,7 @@ const ogImage = new URL('/logo.png', Astro.site);
       }).replace(/</g, '\\u003c')}
     />
     <link rel="icon" href="/logo.svg" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href="/logo.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <ClientRouter />
     <script is:inline>
       document.documentElement.dataset.dept = localStorage.getItem('dept') || 'all';

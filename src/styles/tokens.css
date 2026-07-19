@@ -27,7 +27,8 @@
   --clr-new: var(--brand);
 
   /* 字型 */
-  --font-sans: 'PingFang TC', 'Noto Sans TC', 'Helvetica Neue', system-ui, sans-serif;
+  /* Windows 無前三者，明確給正黑體，不靠系統字型連結亂猜 */
+  --font-sans: 'PingFang TC', 'Noto Sans TC', 'Microsoft JhengHei', 'Helvetica Neue', system-ui, sans-serif;
   --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 
   /* 字級 */

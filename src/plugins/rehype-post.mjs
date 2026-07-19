@@ -6,6 +6,13 @@ export function rehypePost() {
     visit(tree, 'element', (node, index, parent) => {
       if (!parent || index === undefined) return;
 
+      // 內容圖片一律延遲載入（未指定者）；文章圖皆在標題之下，無 LCP 疑慮
+      if (node.tagName === 'img') {
+        node.properties ??= {};
+        node.properties.loading ??= 'lazy';
+        node.properties.decoding ??= 'async';
+      }
+
       // 表格 → 包一層橫向捲動容器（手機不爆版）；只跳過已包裝者，dept/tabs 等 div 容器內仍要包
       const parentCls = [].concat(parent.properties?.className ?? []);
       if (node.tagName === 'table' && !parentCls.includes('table-scroll')) {

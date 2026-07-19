@@ -26,11 +26,19 @@ const articleLd = {
   dateModified: article.data.updated.toISOString(),
   inLanguage: 'zh-Hant',
   mainEntityOfPage: new URL(`/article/${article.data.slug}/`, Astro.site).toString(),
-  author: article.data.contributors.map((c) => ({ '@type': 'Person', name: c.name, email: c.email })),
+  // email 不進 LD：對 rich result 零貢獻、徒增收割面；mailto 管道在貢獻人卡
+  ...(article.data.contributors.length
+    ? { author: article.data.contributors.map((c) => ({ '@type': 'Person', name: c.name })) }
+    : {}),
 };
 ---
 
-<Base title={article.data.title} description={article.data.description} noindex={article.data.noindex}>
+<Base
+  title={article.data.title}
+  description={article.data.description}
+  noindex={article.data.noindex}
+  ogType="article"
+>
   {/* < 跳脫：內容含 </script> 也不會截斷資料塊 */}
   <script type="application/ld+json" is:inline set:html={JSON.stringify(articleLd).replace(/</g, '\\u003c')} />
   <div class={`article-layout cat-${article.data.category}`}>
