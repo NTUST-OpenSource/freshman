@@ -13,7 +13,7 @@
 - RWD 基線：320px 起 header／landing／文章／popup 皆不溢出，文章目錄避開 sticky header
 
 **待辦（大項）**
-- 舊站 21 篇內容遷移（docs/README.md 有清單與已知問題）
+- 舊站 16 篇內容遷移（docs/README.md 有清單與已知問題；選課篇已併五篇課程類重寫完成）
 - Cloudflare Pages 自訂網域 DNS 綁定（使用者操作）
 - og-image 1200×630 設計資產（目前暫用 logo.png）
 - qa 區塊輸出 FAQPage JSON-LD（規格已載明，未實作）
