@@ -29,6 +29,26 @@
   margin-top: 1.9em;
 }
 
+.md h3::before {
+  content: '';
+  display: inline-block;
+  width: 0.5em;
+  height: 0.5em;
+  border-radius: 4px;
+  background: var(--cat, var(--brand));
+  opacity: 0.75;
+  margin-right: 0.45em;
+  vertical-align: 0.08em;
+}
+
+.md h4 {
+  font-size: 1rem;
+  font-weight: 750;
+  margin-top: 1.6em;
+  letter-spacing: 0.03em;
+  color: color-mix(in oklab, var(--ink) 72%, var(--cat, var(--brand)));
+}
+
 .md :is(h2, h3) {
   scroll-margin-top: 1.5rem;
 }
@@ -245,6 +265,20 @@
   rotate: 90deg;
 }
 
+.spoiler {
+  interpolate-size: allow-keywords;
+}
+
+.spoiler::details-content {
+  height: 0;
+  overflow: clip;
+  transition: height 0.3s var(--ease), content-visibility 0.3s allow-discrete;
+}
+
+.spoiler[open]::details-content {
+  height: auto;
+}
+
 .spoiler__summary::-webkit-details-marker {
   display: none;
 }
@@ -352,6 +386,18 @@
   margin-top: 0.8em;
 }
 
+/* 切換分頁時內容淡入 */
+.tabs__panel {
+  animation: panel-in 0.24s var(--ease);
+}
+
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    translate: 0 5px;
+  }
+}
+
 /* 選中狀態：radio n 對應 label n 與 panel n（支援至 6 個分頁） */
 .tabs:has(> .tabs__radio:nth-of-type(1):checked) :is(.tabs__label:nth-of-type(1), .tabs__panel:nth-of-type(1)),
 .tabs:has(> .tabs__radio:nth-of-type(2):checked) :is(.tabs__label:nth-of-type(2), .tabs__panel:nth-of-type(2)),
@@ -377,12 +423,16 @@
   outline-offset: -2px;
 }
 
-/* ---- Steps（捷運路線母題） ---- */
+/* ---- Steps（捷運路線母題；:::steps{color="#hex" shape="square|diamond"}） ---- */
+.steps {
+  --sc: var(--steps-clr, var(--cat, var(--brand)));
+}
+
 .steps > ol {
   list-style: none;
   counter-reset: step;
   padding-left: 0;
-  border-left: 2.5px solid color-mix(in oklab, var(--cat, var(--brand)) 45%, var(--line));
+  border-left: 2.5px solid color-mix(in oklab, var(--sc) 45%, var(--line));
   margin-left: 0.95rem;
 }
 
@@ -407,15 +457,30 @@
   font-weight: 750;
   font-family: var(--font-mono);
   background: var(--paper);
-  color: var(--cat, var(--brand));
-  border: 2.5px solid var(--cat, var(--brand));
+  color: var(--sc);
+  border: 2.5px solid var(--sc);
+}
+
+.steps--square > ol > li::before {
+  border-radius: 8px;
+}
+
+.steps--diamond > ol > li::before {
+  border: none;
+  border-radius: 0;
+  clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+  background: var(--sc);
+  color: var(--paper);
+  width: 2.1rem;
+  height: 2.1rem;
+  left: -1.15rem;
 }
 
 /* ---- 連結卡片 ---- */
 .linkcard {
   display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
+  align-items: center;
+  gap: 1rem;
   padding: 0.85rem 1.1rem;
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -460,6 +525,23 @@
   font-family: var(--font-mono);
   font-size: var(--text-tiny);
   color: color-mix(in oklab, var(--cat, var(--brand)) 80%, var(--ink));
+}
+
+.linkcard__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.linkcard__img {
+  flex: none;
+  width: 4.6rem;
+  height: 4.6rem;
+  object-fit: cover;
+  border-radius: var(--radius-s);
+  border: 1px solid var(--line);
 }
 
 .md a.linkcard::after {
@@ -606,6 +688,22 @@ html:not([data-dept='csie']) [data-dept-only='csie'] {
   border-bottom: 1px dashed var(--line);
   padding-bottom: 0.5em;
   margin-bottom: 0.7em;
+}
+
+.md pre.astro-code[data-line-numbers] {
+  counter-reset: line;
+}
+
+.md pre.astro-code[data-line-numbers] .line::before {
+  counter-increment: line;
+  content: counter(line);
+  display: inline-block;
+  width: 1.9em;
+  margin-right: 1.1em;
+  text-align: right;
+  color: var(--ink-soft);
+  opacity: 0.55;
+  user-select: none;
 }
 
 .md pre.astro-code .line.highlighted {

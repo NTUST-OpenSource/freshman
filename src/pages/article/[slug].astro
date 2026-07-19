@@ -19,22 +19,22 @@ const updated = article.data.updated.toLocaleDateString('zh-TW', { year: 'numeri
   <div class={`article-layout cat-${article.data.category}`}>
     <article class="article">
       <header class="article__header">
-        <p class="article__eyebrow">
+        <p class="article__eyebrow article-rise" style="--d: 0">
           <span class="chip chip--cat">{cat.label}</span>
           {article.data.year && <span class="chip">{article.data.year} 學年</span>}
           {article.data.draft && <span class="chip chip--draft">草稿</span>}
         </p>
-        <h1 class="article__title">{article.data.title}</h1>
-        <p class="article__meta">最後更新 {updated}</p>
+        <h1 class="article__title article-rise" style="--d: 1">{article.data.title}</h1>
+        <p class="article__meta article-rise" style="--d: 2">最後更新 {updated}</p>
       </header>
-      <div class="md">
+      <div class="md article-rise" style="--d: 3">
         <Content />
       </div>
     </article>
 
     {
       toc.length > 0 && (
-        <nav class="toc" aria-label="本頁目錄">
+        <nav class="toc toc-in" aria-label="本頁目錄">
           <p class="toc__label">本頁目錄</p>
           <ol class="toc__line">
             {toc.map((h) => (
@@ -47,4 +47,72 @@ const updated = article.data.updated.toLocaleDateString('zh-TW', { year: 'numeri
       )
     }
   </div>
+
+  <script>
+    // 內容區塊捲動顯示（class 由 JS 加，無 JS 時內容直接可見）
+    const blocks = document.querySelectorAll('.md > *');
+    if ('IntersectionObserver' in window && blocks.length) {
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('md-reveal--in');
+              io.unobserve(entry.target);
+            }
+          }
+        },
+        { rootMargin: '0px 0px -6% 0px' },
+      );
+      for (const block of blocks) {
+        block.classList.add('md-reveal');
+        io.observe(block);
+      }
+    }
+
+    // 註腳 hover 即時預覽
+    const refs = document.querySelectorAll<HTMLAnchorElement>('.md sup a[data-footnote-ref]');
+    if (refs.length) {
+      const fnPop = document.createElement('div');
+      fnPop.className = 'fn-pop';
+      fnPop.hidden = true;
+      document.body.appendChild(fnPop);
+      let fnTimer: number | undefined;
+
+      const show = (ref: HTMLAnchorElement) => {
+        clearTimeout(fnTimer);
+        const id = decodeURIComponent(new URL(ref.href).hash.slice(1));
+        const note = document.getElementById(id);
+        if (!note) return;
+        const clone = note.cloneNode(true) as HTMLElement;
+        clone.querySelector('[data-footnote-backref]')?.remove();
+        fnPop.innerHTML = clone.innerHTML;
+        fnPop.hidden = false;
+        const r = ref.getBoundingClientRect();
+        const pw = fnPop.offsetWidth;
+        const ph = fnPop.offsetHeight;
+        const left = Math.min(Math.max(8, r.left + r.width / 2 - pw / 2), innerWidth - pw - 8);
+        let top = r.top - ph - 10;
+        if (top < 8) top = r.bottom + 10;
+        fnPop.style.left = `${left}px`;
+        fnPop.style.top = `${top}px`;
+        requestAnimationFrame(() => fnPop.classList.add('fn-pop--show'));
+      };
+      const hide = () => {
+        clearTimeout(fnTimer);
+        fnTimer = window.setTimeout(() => {
+          fnPop.classList.remove('fn-pop--show');
+          fnPop.hidden = true;
+        }, 130);
+      };
+
+      for (const ref of refs) {
+        ref.addEventListener('pointerenter', () => show(ref));
+        ref.addEventListener('pointerleave', hide);
+        ref.addEventListener('focus', () => show(ref));
+        ref.addEventListener('blur', hide);
+      }
+      fnPop.addEventListener('pointerenter', () => clearTimeout(fnTimer));
+      fnPop.addEventListener('pointerleave', hide);
+    }
+  </script>
 </Base>

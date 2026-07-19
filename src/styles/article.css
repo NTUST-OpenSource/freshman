@@ -1,0 +1,62 @@
+/* 文章頁動畫與註腳預覽（首頁動畫在 global.css 的 landing 區塊） */
+
+/* ---- 進場：標頭逐項上浮（沿用 landing-rise keyframes） ---- */
+.article-rise {
+  opacity: 0;
+  translate: 0 12px;
+  animation: landing-rise 0.55s var(--ease) forwards;
+  animation-delay: calc(var(--d) * 80ms + 40ms);
+}
+
+/* 目錄自右側滑入 */
+.toc-in {
+  opacity: 0;
+  translate: 18px 0;
+  animation: toc-in 0.6s var(--ease) 0.3s forwards;
+}
+
+@keyframes toc-in {
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+/* ---- 捲動顯示：內容區塊進入視窗時上浮（class 由 JS 加，無 JS 不影響閱讀） ---- */
+.md-reveal {
+  opacity: 0;
+  translate: 0 12px;
+  transition: opacity 0.5s var(--ease), translate 0.5s var(--ease);
+}
+
+.md-reveal--in {
+  opacity: 1;
+  translate: 0 0;
+}
+
+/* ---- 註腳 hover 即時預覽 ---- */
+.fn-pop {
+  position: fixed;
+  z-index: 30;
+  max-width: 20rem;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: 0 14px 40px rgb(20 18 24 / 0.16);
+  padding: 0.65rem 0.9rem;
+  font-size: var(--text-small);
+  color: var(--ink);
+  line-height: 1.7;
+  opacity: 0;
+  translate: 0 5px;
+  transition: opacity var(--dur) var(--ease), translate var(--dur) var(--ease);
+}
+
+.fn-pop--show {
+  opacity: 1;
+  translate: 0 0;
+}
+
+.fn-pop p {
+  margin: 0;
+}

@@ -2,6 +2,7 @@
 import '../styles/tokens.css';
 import '../styles/global.css';
 import '../styles/markdown.css';
+import '../styles/article.css';
 import { DEPTS } from '../lib/depts.mjs';
 
 interface Props {
@@ -108,9 +109,13 @@ const pageTitle = title ? `${title}｜台科新生懶人包` : '台科新生懶�
 
       // Mermaid：頁面上有圖才動態載入
       if (document.querySelector('pre.mermaid')) {
-        const { default: mermaid } = await import('mermaid');
-        mermaid.initialize({ startOnLoad: false, theme: 'neutral', fontFamily: 'inherit' });
-        await mermaid.run({ querySelector: 'pre.mermaid' });
+        try {
+          const { default: mermaid } = await import('mermaid');
+          mermaid.initialize({ startOnLoad: false, theme: 'neutral', fontFamily: 'inherit' });
+          await mermaid.run({ querySelector: 'pre.mermaid', suppressErrors: false });
+        } catch (err) {
+          console.error('[mermaid] 渲染失敗：', err);
+        }
       }
     </script>
   </body>
