@@ -1,4 +1,4 @@
-/* 設計 tokens — 台科紅 × 北捷路線色系統 */
+/* 設計 tokens — 台科紅 × 北捷路線色系統（white mode） */
 :root {
   /* 紙面與墨色 */
   --paper: oklch(98% 0.006 85);
@@ -36,33 +36,13 @@
   --text-h2: 1.45rem;
   --text-h3: 1.15rem;
 
-  /* 節奏 */
+  /* 節奏（圓角為核心設計語言） */
   --measure: 44rem;
-  --radius: 12px;
-  --radius-s: 7px;
+  --radius-l: 22px;
+  --radius: 14px;
+  --radius-s: 9px;
   --dur: 160ms;
   --ease: cubic-bezier(0.2, 0.7, 0.3, 1);
 
-  color-scheme: light dark;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --paper: oklch(20% 0.012 265);
-    --surface: oklch(24% 0.014 265);
-    --ink: oklch(91% 0.01 85);
-    --ink-soft: oklch(68% 0.014 265);
-    --line: oklch(32.5% 0.014 265);
-
-    --brand: oklch(60% 0.16 22);
-    --on-brand: oklch(15% 0.03 22);
-
-    --c-course: oklch(70% 0.13 155);
-    --c-life: oklch(70% 0.115 255);
-    --c-info: oklch(74% 0.13 55);
-    --c-misc: oklch(66% 0.06 60);
-
-    --clr-warning: oklch(76% 0.13 85);
-    --clr-danger: oklch(66% 0.18 27);
-  }
+  color-scheme: light;
 }

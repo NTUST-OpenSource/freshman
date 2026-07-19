@@ -24,10 +24,7 @@ const updated = article.data.updated.toLocaleDateString('zh-TW', { year: 'numeri
           {article.data.year && <span class="chip">{article.data.year} 學年</span>}
           {article.data.draft && <span class="chip chip--draft">草稿</span>}
         </p>
-        <h1 class="article__title">
-          {article.data.icon && <span aria-hidden="true">{article.data.icon}</span>}
-          {article.data.title}
-        </h1>
+        <h1 class="article__title">{article.data.title}</h1>
         <p class="article__meta">最後更新 {updated}</p>
       </header>
       <div class="md">

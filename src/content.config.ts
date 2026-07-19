@@ -16,7 +16,6 @@ const articles = defineCollection({
     slug: z.string(),
     category: z.enum(['course', 'life', 'info', 'misc']),
     tags: z.array(z.string()).default([]),
-    icon: z.string().optional(),
     description: z.string(),
     year: z.number().optional(),
     order: z.number().default(99),

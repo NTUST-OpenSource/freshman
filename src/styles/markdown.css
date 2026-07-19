@@ -1,4 +1,4 @@
-/* 文章內容（.md）＋ 自訂語法元件樣式 */
+/* 文章內容（.md）＋ 自訂語法元件樣式（圖示以 CSS mask 上色，無 emoji） */
 
 /* ---- 基礎排版 ---- */
 .md > * + * {
@@ -62,7 +62,7 @@
   background: color-mix(in oklab, var(--clr-warning) 32%, transparent);
   color: inherit;
   padding: 0.08em 0.25em;
-  border-radius: 3px;
+  border-radius: 4px;
 }
 
 .md kbd {
@@ -71,7 +71,7 @@
   padding: 0.15em 0.5em;
   border: 1px solid var(--line);
   border-bottom-width: 2.5px;
-  border-radius: 6px;
+  border-radius: 7px;
   background: var(--surface);
 }
 
@@ -80,17 +80,22 @@
   font-size: 0.86em;
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 5px;
+  border-radius: 6px;
   padding: 0.12em 0.4em;
 }
 
+/* 外部連結：chevron 圖示旋轉 45 度作為出框箭頭 */
 .md a[target='_blank']::after {
-  content: '↗';
-  font-size: 0.75em;
-  margin-left: 0.15em;
-  vertical-align: super;
-  text-decoration: none;
+  content: '';
   display: inline-block;
+  width: 0.72em;
+  height: 0.72em;
+  margin-left: 0.16em;
+  background: currentColor;
+  mask: url('/icons/chevron.svg') no-repeat center / contain;
+  -webkit-mask: url('/icons/chevron.svg') no-repeat center / contain;
+  rotate: -45deg;
+  vertical-align: -0.02em;
 }
 
 /* ---- 圖片 ---- */
@@ -153,9 +158,10 @@
   margin-right: 0.4em;
 }
 
-/* ---- Callout ---- */
+/* ---- Callout（圖示對應 public/icons/，以 mask 上色） ---- */
 .callout {
   --clr: var(--clr-info);
+  --callout-icon: url('/icons/info.svg');
   border: 1px solid color-mix(in oklab, var(--clr) 35%, var(--line));
   border-left: 4px solid var(--clr);
   border-radius: var(--radius);
@@ -165,18 +171,22 @@
 
 .callout--tip {
   --clr: var(--clr-tip);
+  --callout-icon: url('/icons/tip.svg');
 }
 
 .callout--warning {
   --clr: var(--clr-warning);
+  --callout-icon: url('/icons/warning.svg');
 }
 
 .callout--danger {
   --clr: var(--clr-danger);
+  --callout-icon: url('/icons/danger.svg');
 }
 
 .callout--new {
   --clr: var(--clr-new);
+  --callout-icon: url('/icons/new.svg');
 }
 
 .callout__title {
@@ -190,27 +200,13 @@
 }
 
 .callout__title::before {
-  font-size: 1.05em;
-}
-
-.callout--info .callout__title::before {
-  content: 'ℹ️';
-}
-
-.callout--tip .callout__title::before {
-  content: '💡';
-}
-
-.callout--warning .callout__title::before {
-  content: '⚠️';
-}
-
-.callout--danger .callout__title::before {
-  content: '⛔';
-}
-
-.callout--new .callout__title::before {
-  content: '🔥';
+  content: '';
+  flex: none;
+  width: 1.15em;
+  height: 1.15em;
+  background: currentColor;
+  mask: var(--callout-icon) no-repeat center / contain;
+  -webkit-mask: var(--callout-icon) no-repeat center / contain;
 }
 
 .callout > * + * {
@@ -229,13 +225,19 @@
   padding: 0.75rem 1.1rem;
   font-weight: 650;
   list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
 }
 
 .spoiler__summary::before {
-  content: '▸';
-  display: inline-block;
-  margin-right: 0.5em;
-  color: var(--ink-soft);
+  content: '';
+  flex: none;
+  width: 1em;
+  height: 1em;
+  background: var(--ink-soft);
+  mask: url('/icons/chevron.svg') no-repeat center / contain;
+  -webkit-mask: url('/icons/chevron.svg') no-repeat center / contain;
   transition: rotate var(--dur) var(--ease);
 }
 
@@ -350,7 +352,7 @@
   margin-top: 0.8em;
 }
 
-/* 選中狀態：radio n ↔ label n / panel n（支援至 6 個分頁） */
+/* 選中狀態：radio n 對應 label n 與 panel n（支援至 6 個分頁） */
 .tabs:has(> .tabs__radio:nth-of-type(1):checked) :is(.tabs__label:nth-of-type(1), .tabs__panel:nth-of-type(1)),
 .tabs:has(> .tabs__radio:nth-of-type(2):checked) :is(.tabs__label:nth-of-type(2), .tabs__panel:nth-of-type(2)),
 .tabs:has(> .tabs__radio:nth-of-type(3):checked) :is(.tabs__label:nth-of-type(3), .tabs__panel:nth-of-type(3)),
@@ -433,12 +435,19 @@
 .linkcard__title {
   font-weight: 700;
   color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
 }
 
 .linkcard__title::before {
-  content: '🔗';
-  margin-right: 0.5em;
-  font-size: 0.9em;
+  content: '';
+  flex: none;
+  width: 1em;
+  height: 1em;
+  background: var(--cat, var(--brand));
+  mask: url('/icons/link.svg') no-repeat center / contain;
+  -webkit-mask: url('/icons/link.svg') no-repeat center / contain;
 }
 
 .linkcard__desc {
@@ -483,7 +492,7 @@
   margin: auto;
   width: 4rem;
   height: 2.8rem;
-  border-radius: 14px;
+  border-radius: 16px;
   background: color-mix(in oklab, var(--brand) 88%, black);
   transition: scale var(--dur) var(--ease);
 }
@@ -534,11 +543,41 @@
   font-family: var(--font-mono);
   line-height: 1;
   padding: 0.28em 0.55em;
-  border-radius: 6px;
+  border-radius: 7px;
   color: color-mix(in oklab, var(--brand) 85%, var(--ink));
   background: color-mix(in oklab, var(--brand) 10%, var(--paper));
   border: 1px solid color-mix(in oklab, var(--brand) 35%, var(--line));
   vertical-align: 0.1em;
+}
+
+/* ---- 系別條件區塊 ---- */
+.dept-block {
+  border: 1px solid color-mix(in oklab, var(--brand) 30%, var(--line));
+  border-radius: var(--radius);
+  padding: 0.9rem 1.15rem;
+  position: relative;
+}
+
+.dept-block::before {
+  content: attr(data-dept-label);
+  display: inline-block;
+  font-size: var(--text-tiny);
+  font-weight: 700;
+  color: var(--brand);
+  background: color-mix(in oklab, var(--brand) 8%, var(--paper));
+  border: 1px solid color-mix(in oklab, var(--brand) 30%, var(--line));
+  border-radius: 99px;
+  padding: 0.25em 0.7em;
+  margin-bottom: 0.5em;
+}
+
+.dept-block > * + * {
+  margin-top: 0.55em;
+}
+
+/* 顯隱規則：新增系別時在此擴充對應行 */
+html:not([data-dept='csie']) [data-dept-only='csie'] {
+  display: none;
 }
 
 /* ---- 程式碼區塊 ---- */
@@ -556,14 +595,6 @@
 .md pre.astro-code span {
   color: var(--shiki-light);
   background-color: var(--shiki-light-bg);
-}
-
-@media (prefers-color-scheme: dark) {
-  .md pre.astro-code,
-  .md pre.astro-code span {
-    color: var(--shiki-dark);
-    background-color: var(--shiki-dark-bg);
-  }
 }
 
 .md pre.astro-code[data-title]::before {
@@ -592,7 +623,7 @@
   font-family: var(--font-sans);
   font-size: var(--text-tiny);
   padding: 0.3em 0.7em;
-  border-radius: 6px;
+  border-radius: 7px;
   border: 1px solid var(--line);
   background: var(--paper);
   color: var(--ink-soft);

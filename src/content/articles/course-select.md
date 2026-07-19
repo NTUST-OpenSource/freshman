@@ -3,7 +3,6 @@ title: 選課
 slug: course-select
 category: course
 tags: [課程]
-icon: 📖
 description: 志願序怎麼填、初選加退選加簽在幹嘛，台科選課制度一篇搞懂
 year: 114
 order: 1
