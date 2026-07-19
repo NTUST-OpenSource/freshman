@@ -150,31 +150,37 @@ const articleLd = {
       fnPop.addEventListener('pointerleave', hide);
     }
 
+    // 卡片開合放模組層、以 id 查當前元素：document 監聽只掛一次，
+    // 不隨每篇文章導航累積（模組 script 由 router 去重，只執行一次）
+    let contribCloseTimer: number | undefined;
+    function closeContrib() {
+      const card = document.getElementById('contrib-card');
+      if (!card || card.hidden) return;
+      card.classList.remove('contrib__card--open');
+      document.getElementById('contrib-btn')?.setAttribute('aria-expanded', 'false');
+      contribCloseTimer = window.setTimeout(() => (card.hidden = true), 170);
+    }
+    document.addEventListener('click', (e) => {
+      const card = document.getElementById('contrib-card');
+      if (card && !card.hidden && !card.contains(e.target as Node)) closeContrib();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeContrib();
+    });
+
     function initContributors() {
       const btn = document.getElementById('contrib-btn');
       const card = document.getElementById('contrib-card');
       if (!btn || !card) return;
-      let closeTimer: number | undefined;
-      const close = () => {
-        card.classList.remove('contrib__card--open');
-        btn.setAttribute('aria-expanded', 'false');
-        closeTimer = window.setTimeout(() => (card.hidden = true), 170);
-      };
       const open = () => {
-        clearTimeout(closeTimer);
+        clearTimeout(contribCloseTimer);
         card.hidden = false;
         requestAnimationFrame(() => card.classList.add('contrib__card--open'));
         btn.setAttribute('aria-expanded', 'true');
       };
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
-        btn.getAttribute('aria-expanded') === 'true' ? close() : open();
-      });
-      document.addEventListener('click', (e) => {
-        if (!card.hidden && !card.contains(e.target as Node)) close();
-      });
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && !card.hidden) close();
+        btn.getAttribute('aria-expanded') === 'true' ? closeContrib() : open();
       });
     }
 

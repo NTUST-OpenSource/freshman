@@ -107,6 +107,32 @@ const ogImage = new URL('/logo.png', Astro.site);
         document.documentElement.dataset.dept = localStorage.getItem('dept') || 'all';
       });
 
+      // 選單開合放模組層、以 id 查當前元素：document 監聽只掛一次，
+      // 不隨導航累積（header 在首頁往返時會整顆重建，掛在 init 裡會重複註冊）
+      let deptCloseTimer: number | undefined;
+      function closeDeptMenu() {
+        const menu = document.getElementById('dept-menu');
+        if (!menu || menu.hidden) return;
+        menu.classList.remove('dept-picker__menu--open');
+        document.getElementById('dept-btn')?.setAttribute('aria-expanded', 'false');
+        deptCloseTimer = window.setTimeout(() => (menu.hidden = true), 170);
+      }
+      function openDeptMenu() {
+        const menu = document.getElementById('dept-menu');
+        if (!menu) return;
+        clearTimeout(deptCloseTimer);
+        menu.hidden = false;
+        requestAnimationFrame(() => menu.classList.add('dept-picker__menu--open'));
+        document.getElementById('dept-btn')?.setAttribute('aria-expanded', 'true');
+      }
+      document.addEventListener('click', (e) => {
+        const menu = document.getElementById('dept-menu');
+        if (menu && !menu.hidden && !menu.contains(e.target as Node)) closeDeptMenu();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeDeptMenu();
+      });
+
       function initDeptPicker() {
         const deptBtn = document.getElementById('dept-btn');
         const deptMenu = document.getElementById('dept-menu');
@@ -124,27 +150,15 @@ const ogImage = new URL('/logo.png', Astro.site);
             if (selected) deptLabel.textContent = opt.textContent?.trim() ?? '全部';
           }
         };
-        let closeTimer: number | undefined;
-        const close = () => {
-          deptMenu.classList.remove('dept-picker__menu--open');
-          deptBtn.setAttribute('aria-expanded', 'false');
-          closeTimer = window.setTimeout(() => (deptMenu.hidden = true), 170);
-        };
-        const open = () => {
-          clearTimeout(closeTimer);
-          deptMenu.hidden = false;
-          requestAnimationFrame(() => deptMenu.classList.add('dept-picker__menu--open'));
-          deptBtn.setAttribute('aria-expanded', 'true');
-        };
         deptBtn.addEventListener('click', (e) => {
           e.stopPropagation();
-          deptBtn.getAttribute('aria-expanded') === 'true' ? close() : open();
+          deptBtn.getAttribute('aria-expanded') === 'true' ? closeDeptMenu() : openDeptMenu();
         });
         // 鍵盤操作：按鈕上下鍵開啟並聚焦，選項間上下移動、Enter/Space 選取、Escape 關閉
         deptBtn.addEventListener('keydown', (e) => {
           if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
             e.preventDefault();
-            open();
+            openDeptMenu();
             options[0]?.focus();
           }
         });
@@ -161,7 +175,7 @@ const ogImage = new URL('/logo.png', Astro.site);
             (document.activeElement as HTMLElement | null)?.click();
             deptBtn.focus();
           } else if (e.key === 'Escape') {
-            close();
+            closeDeptMenu();
             deptBtn.focus();
           }
         });
@@ -171,15 +185,9 @@ const ogImage = new URL('/logo.png', Astro.site);
             localStorage.setItem('dept', code);
             document.documentElement.dataset.dept = code;
             sync();
-            close();
+            closeDeptMenu();
           });
         }
-        document.addEventListener('click', (e) => {
-          if (!deptMenu.hidden && !deptMenu.contains(e.target as Node)) close();
-        });
-        document.addEventListener('keydown', (e) => {
-          if (e.key === 'Escape' && !deptMenu.hidden) close();
-        });
         sync();
       }
 
@@ -191,10 +199,14 @@ const ogImage = new URL('/logo.png', Astro.site);
           btn.type = 'button';
           btn.textContent = '複製';
           btn.addEventListener('click', async () => {
-            // 按鈕自身在 pre 內，抓 code 才不會把按鈕文字一起複製
-            await navigator.clipboard.writeText(pre.querySelector('code')?.textContent ?? '');
-            btn.textContent = '已複製';
-            btn.classList.add('code-copy--done');
+            try {
+              // 按鈕自身在 pre 內，抓 code 才不會把按鈕文字一起複製
+              await navigator.clipboard.writeText(pre.querySelector('code')?.textContent ?? '');
+              btn.textContent = '已複製';
+              btn.classList.add('code-copy--done');
+            } catch {
+              btn.textContent = '複製失敗'; // 非 https 或權限拒絕
+            }
             setTimeout(() => {
               btn.textContent = '複製';
               btn.classList.remove('code-copy--done');

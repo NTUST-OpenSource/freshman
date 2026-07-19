@@ -186,8 +186,9 @@ const updatedLines = calendars
     else if (key === todayKey) cell.classList.add('cal__cell--today');
   }
 
-  // 捲動至目標月份（窗口外夾到首尾）
-  function scrollToMonth(key: string, behavior: ScrollBehavior = 'auto') {
+  // 捲動至目標月份（窗口外夾到首尾）；預設 instant——'auto' 會沿用容器的
+  // scroll-behavior: smooth，初始定位變成跨 20 個月的長距離動畫
+  function scrollToMonth(key: string, behavior: ScrollBehavior = 'instant') {
     let target = visible[0];
     for (const s of visible) {
       if (s.dataset.month! <= key) target = s;
@@ -287,16 +288,18 @@ const updatedLines = calendars
     infoCard.hidden = !open;
     infoBtn.setAttribute('aria-expanded', String(open));
   });
-  document.addEventListener('click', (e) => {
-    if (!infoCard.hidden && !infoCard.contains(e.target as Node)) {
-      infoCard.hidden = true;
-      infoBtn.setAttribute('aria-expanded', 'false');
-    }
-  });
   } catch (err) {
     console.error('[行事曆] 初始化失敗，互動功能停用：', err);
   }
   }
+  // i 卡收合：document 監聽掛模組層一次、以 id 查當前元素，不隨每次進首頁累積
+  document.addEventListener('click', (e) => {
+    const infoCard = document.getElementById('cal-info-card');
+    if (infoCard && !infoCard.hidden && !infoCard.contains(e.target as Node)) {
+      infoCard.hidden = true;
+      document.getElementById('cal-info-btn')?.setAttribute('aria-expanded', 'false');
+    }
+  });
   document.addEventListener('astro:page-load', initCalendar);
 </script>
 
