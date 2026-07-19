@@ -1,0 +1,659 @@
+/* 文章內容（.md）＋ 自訂語法元件樣式 */
+
+/* ---- 基礎排版 ---- */
+.md > * + * {
+  margin-top: 1.05em;
+}
+
+.md h2 {
+  font-size: var(--text-h2);
+  font-weight: 750;
+  line-height: 1.4;
+  margin-top: 2.4em;
+  padding-top: 0.2em;
+}
+
+.md h2::after {
+  content: '';
+  display: block;
+  width: 2rem;
+  height: 5px;
+  border-radius: 3px;
+  margin-top: 0.35rem;
+  background: var(--cat, var(--brand));
+}
+
+.md h3 {
+  font-size: var(--text-h3);
+  font-weight: 700;
+  margin-top: 1.9em;
+}
+
+.md :is(h2, h3) {
+  scroll-margin-top: 1.5rem;
+}
+
+.md ul,
+.md ol {
+  padding-left: 1.5em;
+}
+
+.md li {
+  margin-block: 0.3em;
+}
+
+.md li::marker {
+  color: var(--cat, var(--brand));
+}
+
+.md hr {
+  border: none;
+  border-top: 1px solid var(--line);
+  margin-block: 2.5em;
+}
+
+.md blockquote {
+  border-left: 3px solid var(--line);
+  padding-left: 1em;
+  color: var(--ink-soft);
+}
+
+.md mark {
+  background: color-mix(in oklab, var(--clr-warning) 32%, transparent);
+  color: inherit;
+  padding: 0.08em 0.25em;
+  border-radius: 3px;
+}
+
+.md kbd {
+  font-family: var(--font-mono);
+  font-size: 0.82em;
+  padding: 0.15em 0.5em;
+  border: 1px solid var(--line);
+  border-bottom-width: 2.5px;
+  border-radius: 6px;
+  background: var(--surface);
+}
+
+.md code:not(pre code) {
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  padding: 0.12em 0.4em;
+}
+
+.md a[target='_blank']::after {
+  content: '↗';
+  font-size: 0.75em;
+  margin-left: 0.15em;
+  vertical-align: super;
+  text-decoration: none;
+  display: inline-block;
+}
+
+/* ---- 圖片 ---- */
+.md img {
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+}
+
+.md figure {
+  margin-block: 1.4em;
+}
+
+.md figcaption {
+  margin-top: 0.55em;
+  font-size: var(--text-small);
+  color: var(--ink-soft);
+  text-align: center;
+}
+
+/* ---- 表格 ---- */
+.table-scroll {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.md table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-small);
+  line-height: 1.65;
+}
+
+.md th {
+  text-align: left;
+  font-weight: 700;
+  background: var(--surface);
+  white-space: nowrap;
+}
+
+.md th,
+.md td {
+  padding: 0.6em 0.9em;
+  border-bottom: 1px solid var(--line);
+}
+
+.md tr:last-child td {
+  border-bottom: none;
+}
+
+/* ---- 任務清單 ---- */
+.md li:has(> input[type='checkbox']) {
+  list-style: none;
+  margin-left: -1.5em;
+  padding-left: 0;
+}
+
+.md input[type='checkbox'] {
+  accent-color: var(--cat, var(--brand));
+  margin-right: 0.4em;
+}
+
+/* ---- Callout ---- */
+.callout {
+  --clr: var(--clr-info);
+  border: 1px solid color-mix(in oklab, var(--clr) 35%, var(--line));
+  border-left: 4px solid var(--clr);
+  border-radius: var(--radius);
+  background: color-mix(in oklab, var(--clr) 6%, var(--paper));
+  padding: 0.9rem 1.15rem;
+}
+
+.callout--tip {
+  --clr: var(--clr-tip);
+}
+
+.callout--warning {
+  --clr: var(--clr-warning);
+}
+
+.callout--danger {
+  --clr: var(--clr-danger);
+}
+
+.callout--new {
+  --clr: var(--clr-new);
+}
+
+.callout__title {
+  font-weight: 750;
+  font-size: var(--text-small);
+  color: color-mix(in oklab, var(--clr) 78%, var(--ink));
+  display: flex;
+  align-items: center;
+  gap: 0.45em;
+  margin-bottom: 0.35em;
+}
+
+.callout__title::before {
+  font-size: 1.05em;
+}
+
+.callout--info .callout__title::before {
+  content: 'ℹ️';
+}
+
+.callout--tip .callout__title::before {
+  content: '💡';
+}
+
+.callout--warning .callout__title::before {
+  content: '⚠️';
+}
+
+.callout--danger .callout__title::before {
+  content: '⛔';
+}
+
+.callout--new .callout__title::before {
+  content: '🔥';
+}
+
+.callout > * + * {
+  margin-top: 0.55em;
+}
+
+/* ---- Spoiler ---- */
+.spoiler {
+  border: 1px dashed color-mix(in oklab, var(--ink-soft) 45%, var(--line));
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.spoiler__summary {
+  cursor: pointer;
+  padding: 0.75rem 1.1rem;
+  font-weight: 650;
+  list-style: none;
+}
+
+.spoiler__summary::before {
+  content: '▸';
+  display: inline-block;
+  margin-right: 0.5em;
+  color: var(--ink-soft);
+  transition: rotate var(--dur) var(--ease);
+}
+
+.spoiler[open] .spoiler__summary::before {
+  rotate: 90deg;
+}
+
+.spoiler__summary::-webkit-details-marker {
+  display: none;
+}
+
+.spoiler > *:not(.spoiler__summary) {
+  padding-inline: 1.1rem;
+  margin-top: 0;
+}
+
+.spoiler > *:nth-child(2) {
+  padding-top: 0.2rem;
+}
+
+.spoiler > *:last-child {
+  padding-bottom: 1rem;
+}
+
+/* ---- QA ---- */
+.qa {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1rem 1.2rem;
+}
+
+.qa__q {
+  font-size: 1.02rem;
+  font-weight: 700;
+  margin: 0;
+  padding-left: 1.7em;
+  position: relative;
+}
+
+.qa__q::before {
+  content: 'Q';
+  position: absolute;
+  left: 0;
+  top: 0.18em;
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  font-weight: 700;
+  color: var(--paper);
+  background: var(--cat, var(--brand));
+  width: 1.35em;
+  height: 1.35em;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+}
+
+.qa > * + * {
+  margin-top: 0.65em;
+}
+
+.qa__meta {
+  font-size: var(--text-tiny);
+  font-family: var(--font-mono);
+  color: var(--ink-soft);
+  text-align: right;
+}
+
+/* ---- Tabs（CSS-only radio） ---- */
+.tabs {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.tabs__radio {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.tabs__bar {
+  display: flex;
+  flex-wrap: wrap;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+
+.tabs__label {
+  padding: 0.6rem 1.1rem;
+  font-size: var(--text-small);
+  font-weight: 650;
+  color: var(--ink-soft);
+  cursor: pointer;
+  border-bottom: 2.5px solid transparent;
+  margin-bottom: -1px;
+  transition: color var(--dur) var(--ease);
+}
+
+.tabs__label:hover {
+  color: var(--ink);
+}
+
+.tabs__panels {
+  padding: 1rem 1.2rem;
+}
+
+.tabs__panel {
+  display: none;
+}
+
+.tabs__panel > * + * {
+  margin-top: 0.8em;
+}
+
+/* 選中狀態：radio n ↔ label n / panel n（支援至 6 個分頁） */
+.tabs:has(> .tabs__radio:nth-of-type(1):checked) :is(.tabs__label:nth-of-type(1), .tabs__panel:nth-of-type(1)),
+.tabs:has(> .tabs__radio:nth-of-type(2):checked) :is(.tabs__label:nth-of-type(2), .tabs__panel:nth-of-type(2)),
+.tabs:has(> .tabs__radio:nth-of-type(3):checked) :is(.tabs__label:nth-of-type(3), .tabs__panel:nth-of-type(3)),
+.tabs:has(> .tabs__radio:nth-of-type(4):checked) :is(.tabs__label:nth-of-type(4), .tabs__panel:nth-of-type(4)),
+.tabs:has(> .tabs__radio:nth-of-type(5):checked) :is(.tabs__label:nth-of-type(5), .tabs__panel:nth-of-type(5)),
+.tabs:has(> .tabs__radio:nth-of-type(6):checked) :is(.tabs__label:nth-of-type(6), .tabs__panel:nth-of-type(6)) {
+  display: block;
+}
+
+.tabs:has(> .tabs__radio:nth-of-type(1):checked) .tabs__label:nth-of-type(1),
+.tabs:has(> .tabs__radio:nth-of-type(2):checked) .tabs__label:nth-of-type(2),
+.tabs:has(> .tabs__radio:nth-of-type(3):checked) .tabs__label:nth-of-type(3),
+.tabs:has(> .tabs__radio:nth-of-type(4):checked) .tabs__label:nth-of-type(4),
+.tabs:has(> .tabs__radio:nth-of-type(5):checked) .tabs__label:nth-of-type(5),
+.tabs:has(> .tabs__radio:nth-of-type(6):checked) .tabs__label:nth-of-type(6) {
+  color: var(--cat, var(--brand));
+  border-bottom-color: var(--cat, var(--brand));
+}
+
+.tabs:has(> .tabs__radio:focus-visible) .tabs__bar {
+  outline: 2px solid var(--brand);
+  outline-offset: -2px;
+}
+
+/* ---- Steps（捷運路線母題） ---- */
+.steps > ol {
+  list-style: none;
+  counter-reset: step;
+  padding-left: 0;
+  border-left: 2.5px solid color-mix(in oklab, var(--cat, var(--brand)) 45%, var(--line));
+  margin-left: 0.95rem;
+}
+
+.steps > ol > li {
+  counter-increment: step;
+  position: relative;
+  padding-left: 1.9rem;
+  margin-block: 1.1em;
+}
+
+.steps > ol > li::before {
+  content: counter(step);
+  position: absolute;
+  left: -1.05rem;
+  top: 0.1em;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 0.85rem;
+  font-weight: 750;
+  font-family: var(--font-mono);
+  background: var(--paper);
+  color: var(--cat, var(--brand));
+  border: 2.5px solid var(--cat, var(--brand));
+}
+
+/* ---- 連結卡片 ---- */
+.linkcard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.85rem 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  text-decoration: none;
+  transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease);
+}
+
+.linkcard:hover {
+  border-color: var(--cat, var(--brand));
+  background: color-mix(in oklab, var(--cat, var(--brand)) 4%, var(--paper));
+}
+
+.linkcard + .linkcard {
+  margin-top: 0.6rem;
+}
+
+.linkcard__title {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.linkcard__title::before {
+  content: '🔗';
+  margin-right: 0.5em;
+  font-size: 0.9em;
+}
+
+.linkcard__desc {
+  font-size: var(--text-small);
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+
+.linkcard__domain {
+  font-family: var(--font-mono);
+  font-size: var(--text-tiny);
+  color: color-mix(in oklab, var(--cat, var(--brand)) 80%, var(--ink));
+}
+
+.md a.linkcard::after {
+  content: none;
+}
+
+/* ---- YouTube facade ---- */
+.yt {
+  position: relative;
+  display: block;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  aspect-ratio: 16 / 9;
+  background: #000;
+}
+
+.yt__thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.85;
+  border: none;
+  border-radius: 0;
+}
+
+.yt__play {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 4rem;
+  height: 2.8rem;
+  border-radius: 14px;
+  background: color-mix(in oklab, var(--brand) 88%, black);
+  transition: scale var(--dur) var(--ease);
+}
+
+.yt__play::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 0;
+  height: 0;
+  border: 0.55rem solid transparent;
+  border-left: 0.9rem solid white;
+  translate: 0.28rem 0;
+}
+
+.yt:hover .yt__play {
+  scale: 1.08;
+}
+
+.yt__title {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  padding: 1.6rem 1rem 0.7rem;
+  color: white;
+  font-size: var(--text-small);
+  font-weight: 650;
+  background: linear-gradient(transparent, rgb(0 0 0 / 0.75));
+}
+
+.md a.yt::after {
+  content: none;
+}
+
+.yt__iframe {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: none;
+  border-radius: var(--radius);
+}
+
+/* ---- year chip ---- */
+.year-chip {
+  display: inline-block;
+  font-size: 0.78em;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  line-height: 1;
+  padding: 0.28em 0.55em;
+  border-radius: 6px;
+  color: color-mix(in oklab, var(--brand) 85%, var(--ink));
+  background: color-mix(in oklab, var(--brand) 10%, var(--paper));
+  border: 1px solid color-mix(in oklab, var(--brand) 35%, var(--line));
+  vertical-align: 0.1em;
+}
+
+/* ---- 程式碼區塊 ---- */
+.md pre.astro-code {
+  position: relative;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1rem 1.2rem;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  overflow-x: auto;
+}
+
+.md pre.astro-code,
+.md pre.astro-code span {
+  color: var(--shiki-light);
+  background-color: var(--shiki-light-bg);
+}
+
+@media (prefers-color-scheme: dark) {
+  .md pre.astro-code,
+  .md pre.astro-code span {
+    color: var(--shiki-dark);
+    background-color: var(--shiki-dark-bg);
+  }
+}
+
+.md pre.astro-code[data-title]::before {
+  content: attr(data-title);
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--text-tiny);
+  color: var(--ink-soft);
+  border-bottom: 1px dashed var(--line);
+  padding-bottom: 0.5em;
+  margin-bottom: 0.7em;
+}
+
+.md pre.astro-code .line.highlighted {
+  display: inline-block;
+  width: calc(100% + 2.4rem);
+  margin-inline: -1.2rem;
+  padding-inline: 1.2rem;
+  background: color-mix(in oklab, var(--clr-warning) 14%, transparent);
+}
+
+.code-copy {
+  position: absolute;
+  top: 0.55rem;
+  right: 0.55rem;
+  font-family: var(--font-sans);
+  font-size: var(--text-tiny);
+  padding: 0.3em 0.7em;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink-soft);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity var(--dur) var(--ease);
+}
+
+.md pre.astro-code:hover .code-copy,
+.code-copy:focus-visible {
+  opacity: 1;
+}
+
+.code-copy:hover {
+  color: var(--brand);
+  border-color: var(--brand);
+}
+
+/* ---- Mermaid ---- */
+pre.mermaid {
+  display: flex;
+  justify-content: center;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.2rem;
+  overflow-x: auto;
+}
+
+/* ---- 註腳 ---- */
+.md sup a {
+  text-decoration: none;
+  font-weight: 700;
+  padding: 0 0.15em;
+}
+
+.md .footnotes {
+  margin-top: 3rem;
+  border-top: 1px solid var(--line);
+  font-size: var(--text-small);
+  color: var(--ink-soft);
+}
+
+.md .footnotes h2 {
+  display: none;
+}
+
+.md .footnotes h2 + ol {
+  margin-top: 1rem;
+}
+
+/* ---- 未定義語法（除錯用） ---- */
+.directive-unknown {
+  border: 2px dashed var(--clr-danger);
+  border-radius: var(--radius);
+  padding: 0.8rem 1.1rem;
+}
+
+.directive-unknown__name {
+  font-family: var(--font-mono);
+  font-size: var(--text-tiny);
+  color: var(--clr-danger);
+  font-weight: 700;
+}

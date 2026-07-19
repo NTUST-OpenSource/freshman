@@ -1,0 +1,68 @@
+/* 設計 tokens — 台科紅 × 北捷路線色系統 */
+:root {
+  /* 紙面與墨色 */
+  --paper: oklch(98% 0.006 85);
+  --surface: oklch(95.5% 0.009 85);
+  --ink: oklch(24% 0.015 265);
+  --ink-soft: oklch(46% 0.018 265);
+  --line: oklch(88.5% 0.01 85);
+
+  /* 品牌：台科深紅 */
+  --brand: oklch(46% 0.155 22);
+  --on-brand: oklch(98.5% 0.008 85);
+
+  /* 分類色（北捷路線）：選課=松山新店綠、生活=板南藍、資訊=中和新蘆橘、其他=文湖棕 */
+  --c-course: oklch(55% 0.115 155);
+  --c-life: oklch(51% 0.115 255);
+  --c-info: oklch(62% 0.125 55);
+  --c-misc: oklch(50% 0.055 60);
+
+  /* 語意色（callout） */
+  --clr-tip: var(--c-course);
+  --clr-info: var(--c-life);
+  --clr-warning: oklch(62% 0.125 80);
+  --clr-danger: oklch(52% 0.185 27);
+  --clr-new: var(--brand);
+
+  /* 字型 */
+  --font-sans: 'PingFang TC', 'Noto Sans TC', 'Helvetica Neue', system-ui, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  /* 字級 */
+  --text-body: 1.0625rem;
+  --text-small: 0.875rem;
+  --text-tiny: 0.78rem;
+  --text-h1: clamp(1.9rem, 1.4rem + 2.2vw, 2.7rem);
+  --text-h2: 1.45rem;
+  --text-h3: 1.15rem;
+
+  /* 節奏 */
+  --measure: 44rem;
+  --radius: 12px;
+  --radius-s: 7px;
+  --dur: 160ms;
+  --ease: cubic-bezier(0.2, 0.7, 0.3, 1);
+
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: oklch(20% 0.012 265);
+    --surface: oklch(24% 0.014 265);
+    --ink: oklch(91% 0.01 85);
+    --ink-soft: oklch(68% 0.014 265);
+    --line: oklch(32.5% 0.014 265);
+
+    --brand: oklch(60% 0.16 22);
+    --on-brand: oklch(15% 0.03 22);
+
+    --c-course: oklch(70% 0.13 155);
+    --c-life: oklch(70% 0.115 255);
+    --c-info: oklch(74% 0.13 55);
+    --c-misc: oklch(66% 0.06 60);
+
+    --clr-warning: oklch(76% 0.13 85);
+    --clr-danger: oklch(66% 0.18 27);
+  }
+}

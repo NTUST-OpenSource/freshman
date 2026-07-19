@@ -1,0 +1,53 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { CATEGORIES } from '../../content.config';
+
+export async function getStaticPaths() {
+  const articles = await getCollection('articles', (e) => import.meta.env.DEV || !e.data.draft);
+  return articles.map((article) => ({ params: { slug: article.data.slug }, props: { article } }));
+}
+
+const { article } = Astro.props;
+const { Content, headings } = await render(article);
+const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
+const cat = CATEGORIES[article.data.category];
+const updated = article.data.updated.toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+
+<Base title={article.data.title} description={article.data.description}>
+  <div class={`article-layout cat-${article.data.category}`}>
+    <article class="article">
+      <header class="article__header">
+        <p class="article__eyebrow">
+          <span class="chip chip--cat">{cat.label}</span>
+          {article.data.year && <span class="chip">{article.data.year} 學年</span>}
+          {article.data.draft && <span class="chip chip--draft">草稿</span>}
+        </p>
+        <h1 class="article__title">
+          {article.data.icon && <span aria-hidden="true">{article.data.icon}</span>}
+          {article.data.title}
+        </h1>
+        <p class="article__meta">最後更新 {updated}</p>
+      </header>
+      <div class="md">
+        <Content />
+      </div>
+    </article>
+
+    {
+      toc.length > 0 && (
+        <nav class="toc" aria-label="本頁目錄">
+          <p class="toc__label">本頁目錄</p>
+          <ol class="toc__line">
+            {toc.map((h) => (
+              <li class={`toc__item toc__item--d${h.depth}`}>
+                <a href={`#${h.slug}`}>{h.text}</a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      )
+    }
+  </div>
+</Base>

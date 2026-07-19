@@ -1,0 +1,380 @@
+/* 全站骨架：reset、頁首頁尾、首頁、文章版型、目錄 */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: 1.85;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+img,
+svg,
+video,
+iframe {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: var(--brand);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--brand);
+  color: var(--on-brand);
+  padding: 0.5rem 1rem;
+  z-index: 99;
+}
+
+.skip-link:focus {
+  left: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---- 頁首 ---- */
+.site-header {
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.site-header__inner {
+  max-width: 76rem;
+  margin-inline: auto;
+  padding: 0.7rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.brand__mark {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--radius-s);
+  background: var(--brand);
+  color: var(--on-brand);
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.site-header__links {
+  display: flex;
+  gap: 1.1rem;
+  font-size: var(--text-small);
+}
+
+.site-header__links a {
+  color: var(--ink-soft);
+  text-decoration: none;
+}
+
+.site-header__links a:hover {
+  color: var(--brand);
+}
+
+/* ---- 頁尾 ---- */
+main {
+  flex: 1;
+}
+
+.site-footer {
+  border-top: 1px solid var(--line);
+  margin-top: 5rem;
+  padding: 1.6rem 1.25rem;
+  text-align: center;
+  color: var(--ink-soft);
+  font-size: var(--text-small);
+}
+
+/* ---- 首頁 hero ---- */
+.hero {
+  max-width: 76rem;
+  margin-inline: auto;
+  padding: clamp(3rem, 8vw, 5.5rem) 1.25rem 2.5rem;
+}
+
+.hero__eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-tiny);
+  letter-spacing: 0.18em;
+  color: var(--brand);
+  margin-bottom: 1rem;
+}
+
+.hero__title {
+  font-size: var(--text-h1);
+  line-height: 1.3;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  max-width: 24ch;
+}
+
+.hero__desc {
+  margin-top: 1.1rem;
+  max-width: 34rem;
+  color: var(--ink-soft);
+}
+
+/* ---- 首頁分類書架 ---- */
+.shelf {
+  max-width: 76rem;
+  margin-inline: auto;
+  padding: 1.6rem 1.25rem;
+}
+
+.cat-course {
+  --cat: var(--c-course);
+}
+
+.cat-life {
+  --cat: var(--c-life);
+}
+
+.cat-info {
+  --cat: var(--c-info);
+}
+
+.cat-misc {
+  --cat: var(--c-misc);
+}
+
+.shelf__title {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink-soft);
+  margin-bottom: 0.9rem;
+}
+
+.shelf__dot {
+  width: 0.85rem;
+  height: 0.85rem;
+  border-radius: 50%;
+  background: var(--cat);
+  border: 3px solid color-mix(in oklab, var(--cat) 25%, var(--paper));
+}
+
+.shelf__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+  gap: 0.8rem;
+}
+
+.card {
+  display: flex;
+  gap: 0.8rem;
+  align-items: flex-start;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--cat);
+  border-radius: var(--radius);
+  background: var(--paper);
+  text-decoration: none;
+  color: var(--ink);
+  transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease),
+    translate var(--dur) var(--ease);
+}
+
+.card:hover {
+  border-color: var(--cat);
+  background: color-mix(in oklab, var(--cat) 5%, var(--paper));
+  translate: 0 -2px;
+}
+
+.card__icon {
+  font-size: 1.4rem;
+  line-height: 1.6;
+}
+
+.card__title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+}
+
+.card__desc {
+  display: block;
+  font-size: var(--text-small);
+  color: var(--ink-soft);
+  line-height: 1.6;
+  margin-top: 0.15rem;
+}
+
+/* ---- chip ---- */
+.chip {
+  display: inline-block;
+  font-size: var(--text-tiny);
+  font-weight: 600;
+  line-height: 1;
+  padding: 0.3em 0.65em;
+  border-radius: 99px;
+  border: 1px solid var(--line);
+  color: var(--ink-soft);
+}
+
+.chip--cat {
+  background: var(--cat, var(--brand));
+  border-color: transparent;
+  color: var(--paper);
+}
+
+.chip--draft {
+  border-style: dashed;
+  color: var(--clr-warning);
+  border-color: var(--clr-warning);
+}
+
+/* ---- 文章版型 ---- */
+.article-layout {
+  max-width: 76rem;
+  margin-inline: auto;
+  padding: clamp(2rem, 5vw, 3.5rem) 1.25rem 0;
+  display: grid;
+  grid-template-columns: minmax(0, var(--measure));
+  justify-content: center;
+  gap: 3rem;
+}
+
+@media (min-width: 1100px) {
+  .article-layout {
+    grid-template-columns: minmax(0, var(--measure)) 15rem;
+  }
+}
+
+.article__eyebrow {
+  display: flex;
+  gap: 0.45rem;
+  margin-bottom: 0.9rem;
+}
+
+.article__title {
+  font-size: var(--text-h1);
+  line-height: 1.25;
+  font-weight: 800;
+}
+
+.article__meta {
+  margin-top: 0.7rem;
+  font-size: var(--text-small);
+  color: var(--ink-soft);
+}
+
+.article__header {
+  padding-bottom: 1.6rem;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 2rem;
+}
+
+/* ---- 目錄（捷運路線圖母題） ---- */
+.toc {
+  display: none;
+}
+
+@media (min-width: 1100px) {
+  .toc {
+    display: block;
+    position: sticky;
+    top: 2rem;
+    align-self: start;
+    font-size: var(--text-small);
+  }
+}
+
+.toc__label {
+  font-family: var(--font-mono);
+  font-size: var(--text-tiny);
+  letter-spacing: 0.14em;
+  color: var(--ink-soft);
+  margin-bottom: 0.8rem;
+}
+
+.toc__line {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-left: 2.5px solid color-mix(in oklab, var(--cat, var(--brand)) 45%, var(--line));
+}
+
+.toc__item a {
+  display: block;
+  position: relative;
+  padding: 0.28rem 0 0.28rem 1.1rem;
+  color: var(--ink-soft);
+  text-decoration: none;
+  line-height: 1.5;
+}
+
+.toc__item--d2 > a::before {
+  content: '';
+  position: absolute;
+  left: -0.42rem;
+  top: 0.72em;
+  width: 0.62rem;
+  height: 0.62rem;
+  border-radius: 50%;
+  background: var(--paper);
+  border: 2.5px solid color-mix(in oklab, var(--cat, var(--brand)) 55%, var(--line));
+}
+
+.toc__item--d3 > a {
+  padding-left: 1.9rem;
+  font-size: var(--text-tiny);
+}
+
+.toc__item a:hover {
+  color: var(--cat, var(--brand));
+}
+
+.toc__item a:hover::before {
+  border-color: var(--cat, var(--brand));
+}

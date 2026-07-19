@@ -1,0 +1,88 @@
+---
+import '../styles/tokens.css';
+import '../styles/global.css';
+import '../styles/markdown.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description = '提供台科新生的開學前指南' } = Astro.props;
+const pageTitle = title ? `${title}｜台科新生懶人包` : '台科新生懶人包';
+---
+
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">跳到主要內容</a>
+    <header class="site-header">
+      <nav class="site-header__inner" aria-label="主選單">
+        <a class="brand" href="/">
+          <span class="brand__mark" aria-hidden="true">科</span>
+          <span class="brand__text">台科新生懶人包</span>
+        </a>
+        <div class="site-header__links">
+          <a href="https://www.ntust.edu.tw" target="_blank" rel="noopener noreferrer">NTUST</a>
+          <a href="https://i.ntust.edu.tw" target="_blank" rel="noopener noreferrer">學生資訊系統</a>
+        </div>
+      </nav>
+    </header>
+    <main id="main">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <p>由台科學長姐無償維護 · 歡迎分享，請勿營利</p>
+    </footer>
+
+    <script>
+      // 程式碼區塊複製按鈕
+      for (const pre of document.querySelectorAll('pre.astro-code')) {
+        const btn = document.createElement('button');
+        btn.className = 'code-copy';
+        btn.type = 'button';
+        btn.textContent = '複製';
+        btn.addEventListener('click', async () => {
+          await navigator.clipboard.writeText(pre.textContent ?? '');
+          btn.textContent = '已複製';
+          setTimeout(() => (btn.textContent = '複製'), 1500);
+        });
+        pre.appendChild(btn);
+      }
+
+      // YouTube facade：點擊時才載入 iframe（未載入前是普通外連）
+      for (const a of document.querySelectorAll('a.yt[data-yt-id]')) {
+        a.addEventListener('click', (e) => {
+          e.preventDefault();
+          const id = (a as HTMLElement).dataset.ytId;
+          const iframe = document.createElement('iframe');
+          iframe.className = 'yt__iframe';
+          iframe.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1`;
+          iframe.allow = 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture';
+          iframe.allowFullscreen = true;
+          iframe.title = a.querySelector('.yt__title')?.textContent ?? 'YouTube';
+          a.replaceWith(iframe);
+        }, { once: true });
+      }
+
+      // Mermaid：頁面上有圖才動態載入
+      if (document.querySelector('pre.mermaid')) {
+        const { default: mermaid } = await import('mermaid');
+        mermaid.initialize({
+          startOnLoad: false,
+          theme: matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'neutral',
+          fontFamily: 'inherit',
+        });
+        await mermaid.run({ querySelector: 'pre.mermaid' });
+      }
+    </script>
+  </body>
+</html>
