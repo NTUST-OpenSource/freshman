@@ -129,10 +129,7 @@ const updatedLines = calendars
     }
   </div>
 
-  <button class="cal__today-btn" id="cal-today" type="button">
-    <span class="cal__today-icon" aria-hidden="true"></span>
-    回到今天
-  </button>
+  <button class="cal__today-btn" id="cal-today" type="button">回到今天</button>
 
   <div class="cal__pop" id="cal-pop" hidden>
     <p class="cal__pop-date" id="cal-pop-date"></p>
@@ -472,13 +469,6 @@ const updatedLines = calendars
     background: color-mix(in oklab, var(--brand) 7%, var(--paper));
   }
 
-  .cal__today-icon {
-    width: 1em;
-    height: 1em;
-    background: currentColor;
-    mask: url('/icons/today.svg') no-repeat center / contain;
-    -webkit-mask: url('/icons/today.svg') no-repeat center / contain;
-  }
 
   /* ---- hover popup ---- */
   .cal__pop {
