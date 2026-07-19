@@ -1,0 +1,1069 @@
+{
+  "meta": {
+    "academicYear": 112,
+    "source": "NTUST112_.ics",
+    "sourceSha256": "340ff4f4940f091f77dee8b077838f2d70e4a619b1f35e21d0c91d41dbc2d29c",
+    "parsedAt": "2026-07-19T07:58:09+08:00",
+    "calendarStart": "2023-08-01",
+    "calendarEnd": "2024-08-30",
+    "rawEventCount": 87,
+    "eventCount": 92,
+    "autoCount": 2,
+    "exceptionCount": 0
+  },
+  "events": [
+    {
+      "_titleRaw": "本學年度開始",
+      "id": "2023-08-01-1",
+      "uid": "Ical5f831ba1afe4cffca5f398a412d4ea72",
+      "start": "2023-08-01",
+      "end": "2023-08-01",
+      "title": "112 學年度開始",
+      "titleDisplay": "112 學年度開始",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "全校高壓變電站年度保養",
+      "id": "2023-08-05-1",
+      "uid": "Icalb5bbf695696453bb3f326b0f3039e0ff",
+      "start": "2023-08-05",
+      "end": "2023-08-05",
+      "title": "全校高壓變電站年度保養",
+      "titleDisplay": "全校高壓變電站年度保養",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "全校高壓變電站年度保養",
+      "id": "2023-08-06-1",
+      "uid": "Ical097ca1aea91d73c8e7d5f6be8f96269e",
+      "start": "2023-08-06",
+      "end": "2023-08-06",
+      "title": "全校高壓變電站年度保養",
+      "titleDisplay": "全校高壓變電站年度保養",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "2.新生及轉學生抵免學分申請開始",
+      "id": "2023-08-18-1",
+      "uid": "Ical193f2af87a3dbb9f83026c830e765f17",
+      "start": "2023-08-18",
+      "end": "2023-08-18",
+      "title": "新生及轉學生抵免學分申請開始",
+      "titleDisplay": "新生及轉學生抵免學分申請開始",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "1.新生及轉學生選課開始",
+      "id": "2023-08-18-2",
+      "uid": "Ical94b1ecf97ab548a0dfed2f520a92009f",
+      "start": "2023-08-18",
+      "end": "2023-08-18",
+      "title": "新生及轉學生選課開始",
+      "titleDisplay": "新生及轉學生選課開始",
+      "note": "",
+      "link": [
+        "https://courseselection.ntust.edu.tw/"
+      ]
+    },
+    {
+      "_titleRaw": "新生入學英文分級會考",
+      "id": "2023-08-19-1",
+      "uid": "Ical979a575537539e6e2868f3937aa4dbec",
+      "start": "2023-08-19",
+      "end": "2023-08-19",
+      "title": "新生入學英文分級會考",
+      "titleDisplay": "新生入學英文分級會考",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "研究所新生註冊截止",
+      "id": "2023-08-21-1",
+      "uid": "Ical05770e818613dc845db2ce78512066b4",
+      "start": "2023-08-21",
+      "end": "2023-08-21",
+      "title": "研究所新生註冊截止",
+      "titleDisplay": "研究所新生註冊截止",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "2.學分學程修讀申請開始",
+      "id": "2023-08-23-1",
+      "uid": "Ical15c0f5803a7e25622a14120d05082c45",
+      "start": "2023-08-23",
+      "end": "2023-08-23",
+      "title": "學分學程修讀申請開始",
+      "titleDisplay": "學分學程修讀申請開始",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "1.輔系.雙主修申請開始",
+      "id": "2023-08-23-2",
+      "uid": "Ical5beb15b3d40a5b9fe7990c1cf183cf7c",
+      "start": "2023-08-23",
+      "end": "2023-08-23",
+      "title": "輔系．雙主修申請開始",
+      "titleDisplay": "輔系．雙主修申請開始",
+      "note": "",
+      "link": [
+        "https://cour01.ntust.edu.tw/DMP_student/#/",
+        "https://cour01.ntust.edu.tw/StudentDoubleMajor/Announcement/Index"
+      ]
+    },
+    {
+      "_titleRaw": "暑期期末考試結束",
+      "id": "2023-08-24-1",
+      "uid": "Ical197a19f3d6e438ade39f9562c7674c8a",
+      "start": "2023-08-24",
+      "end": "2023-08-24",
+      "title": "暑期期末考試結束",
+      "titleDisplay": "暑期期末考試結束",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "新生及轉學生選課結束",
+      "id": "2023-08-28-1",
+      "uid": "Ical382dffbd7e6ebecbd609b89d643fee17",
+      "start": "2023-08-28",
+      "end": "2023-08-28",
+      "title": "新生及轉學生選課結束",
+      "titleDisplay": "新生及轉學生選課結束",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "1.研究所舊生.大學部新.舊生註冊截止",
+      "id": "2023-08-31-1",
+      "uid": "Ical2d259cc9abd60730e0d28b5a8edbddea",
+      "start": "2023-08-31",
+      "end": "2023-08-31",
+      "title": "研究所舊生．大學部新．舊生註冊截止",
+      "titleDisplay": "研究所舊生．大學部新．舊生註冊截止",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "2.前一學期研究所畢業生離校手續截止日",
+      "id": "2023-08-31-2",
+      "uid": "Ical613185c4a3baf0cfec012b7fb1feb632",
+      "start": "2023-08-31",
+      "end": "2023-08-31",
+      "title": "前一學期研究所畢業生離校手續截止日",
+      "titleDisplay": "前一學期研究所畢業生離校手續截止日",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "3.暑假結束",
+      "id": "2023-08-31-3",
+      "uid": "Icala5feca04be6bdb9ba78a756b84e32c9a",
+      "start": "2023-08-31",
+      "end": "2023-08-31",
+      "title": "暑假結束",
+      "titleDisplay": "暑假結束",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "研究所暨大學部新生入學指導",
+      "id": "2023-09-01-1",
+      "uid": "Ical6ec4386f4a0c89fdf737e58e3f819cf6",
+      "start": "2023-09-01",
+      "end": "2023-09-01",
+      "title": "研究所暨大學部新生入學指導",
+      "titleDisplay": "研究所暨大學部新生入學指導",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "1.上課開始",
+      "id": "2023-09-04-1",
+      "uid": "Icalb6e045bfe234224178bf1e4093236998",
+      "start": "2023-09-04",
+      "end": "2023-09-04",
+      "title": "上課開始",
+      "titleDisplay": "上課開始",
+      "note": "",
+      "link": [],
+      "splitIndex": 1
+    },
+    {
+      "_titleRaw": "2.全校加退選開始",
+      "id": "2023-09-04-2",
+      "uid": "Icalb6e045bfe234224178bf1e4093236998",
+      "start": "2023-09-04",
+      "end": "2023-09-04",
+      "title": "全校加退選開始",
+      "titleDisplay": "全校加退選開始",
+      "note": "",
+      "link": [
+        "https://courseselection.ntust.edu.tw/"
+      ],
+      "splitIndex": 2
+    },
+    {
+      "_titleRaw": "1.新生及轉學生抵免學分申請截止",
+      "id": "2023-09-06-1",
+      "uid": "Ical6eeaeccc25e3aded3aa0add61318c91a",
+      "start": "2023-09-06",
+      "end": "2023-09-06",
+      "title": "新生及轉學生抵免學分申請截止",
+      "titleDisplay": "新生及轉學生抵免學分申請截止",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "2.輔系.雙主修申請截止",
+      "id": "2023-09-06-2",
+      "uid": "Icale17ba28e0f485807d329d4620f4eee27",
+      "start": "2023-09-06",
+      "end": "2023-09-06",
+      "title": "輔系．雙主修申請截止",
+      "titleDisplay": "輔系．雙主修申請截止",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "3.就學貸款收件截止",
+      "id": "2023-09-06-3",
+      "uid": "Icalea6dc412bb164ed06db6b6f5f84a4e0b",
+      "start": "2023-09-06",
+      "end": "2023-09-06",
+      "title": "就學貸款收件截止",
+      "titleDisplay": "就學貸款收件截止",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "2.學分學程修讀申請截止",
+      "id": "2023-09-15-1",
+      "uid": "Ical1300df3004e62ea67b2bb32c40202cd0",
+      "start": "2023-09-15",
+      "end": "2023-09-15",
+      "title": "學分學程修讀申請截止",
+      "titleDisplay": "學分學程修讀申請截止",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "1.全校加退選截止",
+      "id": "2023-09-15-2",
+      "uid": "Icalf8ab1b8f1e6a8cda54d7ae759f0326cb",
+      "start": "2023-09-15",
+      "end": "2023-09-15",
+      "title": "全校加退選截止",
+      "titleDisplay": "全校加退選截止",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "補上班.上課(補10月9日之調整放假)",
+      "id": "2023-09-23-1",
+      "uid": "Ical3898e6323c2faf639b1a3e59b9747ee8",
+      "start": "2023-09-23",
+      "end": "2023-09-23",
+      "title": "補上班．上課（補 10 月 9 日之調整放假）",
+      "titleDisplay": "補上班．上課（補 10 月 9 日之調整放假）",
+      "note": "",
+      "link": [],
+      "dates": [
+        "2023-10-09"
+      ]
+    },
+    {
+      "_titleRaw": "中秋節(放假一天)",
+      "id": "2023-09-29-1",
+      "uid": "Ical7a9339d7450a939565128e5578e5da3d",
+      "start": "2023-09-29",
+      "end": "2023-09-29",
+      "title": "中秋節（放假一天）",
+      "titleDisplay": "中秋節放假",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "研究生學位考試開始",
+      "id": "2023-10-01-1",
+      "uid": "Ical58b6ed62869b4f055793b9081b3712f8",
+      "start": "2023-10-01",
+      "end": "2023-10-01",
+      "title": "研究生學位考試開始",
+      "titleDisplay": "研究生學位考試開始",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "調整放假(於9月23日補上班.上課)",
+      "id": "2023-10-09-1",
+      "uid": "Ical7dccadab4f4f680247894017e6f1d359",
+      "start": "2023-10-09",
+      "end": "2023-10-09",
+      "title": "調整放假（於 9 月 23 日補上班．上課）",
+      "titleDisplay": "調整放假（於 9 月 23 日補上班．上課）",
+      "note": "",
+      "link": [],
+      "dates": [
+        "2023-09-23"
+      ]
+    },
+    {
+      "_titleRaw": "國慶日(放假一天)",
+      "id": "2023-10-10-1",
+      "uid": "Ical7ce1f056857f11c1f7ab88e130309dae",
+      "start": "2023-10-10",
+      "end": "2023-10-10",
+      "title": "國慶日（放假一天）",
+      "titleDisplay": "國慶日放假",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "休、退學學生退 2/3 學雜費截止",
+      "id": "2023-10-13-1",
+      "uid": "Ical92c9a2f53fe697834e5f2a9c8d4b6d7e",
+      "start": "2023-10-13",
+      "end": "2023-10-13",
+      "title": "休、退學學生退 2／3 學雜費截止",
+      "titleDisplay": "休退學退 2／3 學雜費截止",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "期中考試開始 (若教師另有訂定其他日期者，從其規定)",
+      "id": "2023-10-23-1",
+      "uid": "Icale8dfd2c27ddfcca66221b4f0daa0a49c",
+      "start": "2023-10-23",
+      "end": "2023-10-23",
+      "title": "期中考試開始（若教師另有訂定其他日期者，從其規定）",
+      "titleDisplay": "期中考試開始（若教師另有訂定其他日期者，從其規定）",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "期中考試結束",
+      "id": "2023-10-27-1",
+      "uid": "Icale9b502bb09b7114f7c7161a2ccc95aec",
+      "start": "2023-10-27",
+      "end": "2023-10-27",
+      "title": "期中考試結束",
+      "titleDisplay": "期中考試結束",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "第二次退選開始",
+      "id": "2023-11-06-1",
+      "uid": "Ical7bf135e5f91e03d9dab829fca7abc5fc",
+      "start": "2023-11-06",
+      "end": "2023-11-06",
+      "title": "第二次退選開始",
+      "titleDisplay": "第二次退選開始",
+      "note": "",
+      "link": [
+        "https://courseselection.ntust.edu.tw/"
+      ]
+    },
+    {
+      "_titleRaw": "休、退學學生退 1/3 學雜費截止",
+      "id": "2023-11-17-1",
+      "uid": "Ical222d3b213d0fb0ef1079cdd0fe187d97",
+      "start": "2023-11-17",
+      "end": "2023-11-17",
+      "title": "休、退學學生退 1／3 學雜費截止",
+      "titleDisplay": "休退學退 1／3 學雜費截止",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "第二次退選截止",
+      "id": "2023-11-23-1",
+      "uid": "Ical4024f80a16b695934ba8e04c5881d9f8",
+      "start": "2023-11-23",
+      "end": "2023-11-23",
+      "title": "第二次退選截止",
+      "titleDisplay": "第二次退選截止",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "研究所轉所申請開始",
+      "id": "2023-11-30-1",
+      "uid": "Ical075de7b4f26675f050c0edcaf16d8650",
+      "start": "2023-11-30",
+      "end": "2023-11-30",
+      "title": "研究所轉所申請開始",
+      "titleDisplay": "研究所轉所申請開始",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "研究所轉所申請截止",
+      "id": "2023-12-07-1",
+      "uid": "Ical95e8ffe94924abb9e90128bf35b9e3bf",
+      "start": "2023-12-07",
+      "end": "2023-12-07",
+      "title": "研究所轉所申請截止",
+      "titleDisplay": "研究所轉所申請截止",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "第 85次校務會議",
+      "id": "2023-12-08-1",
+      "uid": "Icalf4f8298575ff443a863e97f9d8533528",
+      "start": "2023-12-08",
+      "end": "2023-12-08",
+      "title": "第 85 次校務會議",
+      "titleDisplay": "第 85 次校務會議",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "申請休學截止日",
+      "id": "2023-12-13-1",
+      "uid": "Ical3e7ad65cbaa6beb599098d627a5d5bdc",
+      "start": "2023-12-13",
+      "end": "2023-12-13",
+      "title": "申請休學截止日",
+      "titleDisplay": "申請休學截止日",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "校定英文能力檢測",
+      "id": "2023-12-16-1",
+      "uid": "Icala3a557fda024741d23274fbe1737ddb7",
+      "start": "2023-12-16",
+      "end": "2023-12-16",
+      "title": "校定英文能力檢測",
+      "titleDisplay": "校定英文能力檢測",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "期末考試開始 (若教師另有訂定其他日期者，從其規定)",
+      "id": "2023-12-18-1",
+      "uid": "Ical6b622def732555227d73f06b65cdead7",
+      "start": "2023-12-18",
+      "end": "2023-12-18",
+      "title": "期末考試開始（若教師另有訂定其他日期者，從其規定）",
+      "titleDisplay": "期末考試開始（若教師另有訂定其他日期者，從其規定）",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "期末考試結束",
+      "id": "2023-12-22-1",
+      "uid": "Ical588fc78d3400982ffd8263cfe08ecd57",
+      "start": "2023-12-22",
+      "end": "2023-12-22",
+      "title": "期末考試結束",
+      "titleDisplay": "期末考試結束",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "寒假開始(至113年2月16日止)",
+      "id": "2023-12-25-1",
+      "uid": "Icalaa2a7aaf482179199a50edce9470a9ff",
+      "start": "2023-12-25",
+      "end": "2023-12-25",
+      "title": "寒假開始",
+      "titleDisplay": "寒假開始",
+      "note": "",
+      "link": [],
+      "dates": [
+        "2024-02-16"
+      ]
+    },
+    {
+      "_titleRaw": "開國紀念日(放假一天)",
+      "id": "2024-01-01-1",
+      "uid": "Ical9727ce0387910af2ed1d2b321432dab5",
+      "start": "2024-01-01",
+      "end": "2024-01-01",
+      "title": "開國紀念日（放假一天）",
+      "titleDisplay": "開國紀念日放假",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "教師送繳成績截止日",
+      "id": "2024-01-02-1",
+      "uid": "Ical2188273885221f737061ddcff3791874",
+      "start": "2024-01-02",
+      "end": "2024-01-02",
+      "title": "教師送繳成績截止日",
+      "titleDisplay": "教師送繳成績截止日",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "1.第1學期研究生學位考試截止日",
+      "id": "2024-01-31-1",
+      "uid": "Ical029739c1d109c7657cade14cfc917f18",
+      "start": "2024-01-31",
+      "end": "2024-01-31",
+      "title": "研究生學位考試截止日",
+      "titleDisplay": "研究生學位考試截止日",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "2.學期結束",
+      "id": "2024-01-31-2",
+      "uid": "Ical0da6dea4fb93cd50653c9c3c7e2ac763",
+      "start": "2024-01-31",
+      "end": "2024-01-31",
+      "title": "學期結束",
+      "titleDisplay": "學期結束",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "第二學期開始",
+      "id": "2024-02-01-1",
+      "uid": "Ical66791b2b78221219d2399677bd251015",
+      "start": "2024-02-01",
+      "end": "2024-02-01",
+      "title": "第二學期開始",
+      "titleDisplay": "第二學期開始",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "1.研究所新生申請抵免學分開始",
+      "id": "2024-02-02-1",
+      "uid": "Ical1fc44deec61c0d2575ffdb34e7c79bd9",
+      "start": "2024-02-02",
+      "end": "2024-02-02",
+      "title": "研究所新生申請抵免學分開始",
+      "titleDisplay": "研究所新生申請抵免學分開始",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "2.輔系.雙主修申請開始",
+      "id": "2024-02-02-2",
+      "uid": "Ical6a1ece855df2f85397fcd07732773278",
+      "start": "2024-02-02",
+      "end": "2024-02-02",
+      "title": "輔系．雙主修申請開始",
+      "titleDisplay": "輔系．雙主修申請開始",
+      "note": "",
+      "link": [
+        "https://cour01.ntust.edu.tw/DMP_student/#/",
+        "https://cour01.ntust.edu.tw/StudentDoubleMajor/Announcement/Index"
+      ]
+    },
+    {
+      "_titleRaw": "3.學分學程修讀申請開始",
+      "id": "2024-02-02-3",
+      "uid": "Icalf82de737d8a4f20d2f691eebba8f3fd0",
+      "start": "2024-02-02",
+      "end": "2024-02-02",
+      "title": "學分學程修讀申請開始",
+      "titleDisplay": "學分學程修讀申請開始",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "農曆春節開始",
+      "id": "2024-02-07-1",
+      "uid": "Ical660035af3387ca61eb676b52044c0666",
+      "start": "2024-02-07",
+      "end": "2024-02-07",
+      "title": "農曆春節開始",
+      "titleDisplay": "農曆春節開始",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "農曆春節結束",
+      "id": "2024-02-15-1",
+      "uid": "Ical8728962fe5e62af31c85d59d90431f3a",
+      "start": "2024-02-15",
+      "end": "2024-02-15",
+      "title": "農曆春節結束",
+      "titleDisplay": "農曆春節結束",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "1.註冊截止",
+      "id": "2024-02-16-1",
+      "uid": "Ical8881f9fe078a6411ab2ab932bb2c6b6b",
+      "start": "2024-02-16",
+      "end": "2024-02-16",
+      "title": "註冊截止",
+      "titleDisplay": "註冊截止",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "2.前一學期研究所畢業生離校手續截止日",
+      "id": "2024-02-16-2",
+      "uid": "Ical8c1fb1f8c908463b27f33b79b967e4eb",
+      "start": "2024-02-16",
+      "end": "2024-02-16",
+      "title": "前一學期研究所畢業生離校手續截止日",
+      "titleDisplay": "前一學期研究所畢業生離校手續截止日",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "寒假開始(至113年2月16日止)",
+      "id": "2024-02-16-3",
+      "uid": "Icalaa2a7aaf482179199a50edce9470a9ff",
+      "start": "2024-02-16",
+      "end": "2024-02-16",
+      "title": "寒假結束",
+      "titleDisplay": "寒假結束",
+      "note": "",
+      "link": [],
+      "auto": true,
+      "_src": "2023-12-25-1"
+    },
+    {
+      "_titleRaw": "補上班(補2月8日之調整放假)",
+      "id": "2024-02-17-1",
+      "uid": "Icald9447542ae7cdf351af7f0f470c46478",
+      "start": "2024-02-17",
+      "end": "2024-02-17",
+      "title": "補上班（補 2 月 8 日之調整放假）",
+      "titleDisplay": "補上班（補 2 月 8 日之調整放假）",
+      "note": "",
+      "link": [],
+      "dates": [
+        "2024-02-08"
+      ]
+    },
+    {
+      "_titleRaw": "2.全校加退選開始",
+      "id": "2024-02-19-1",
+      "uid": "Icalde291a1012991340e0df0d82fab7a2de",
+      "start": "2024-02-19",
+      "end": "2024-02-19",
+      "title": "全校加退選開始",
+      "titleDisplay": "全校加退選開始",
+      "note": "",
+      "link": [
+        "https://courseselection.ntust.edu.tw/"
+      ]
+    },
+    {
+      "_titleRaw": "1.上課開始",
+      "id": "2024-02-19-2",
+      "uid": "Icalf4811aa16f3d076df17801a7b3f63aea",
+      "start": "2024-02-19",
+      "end": "2024-02-19",
+      "title": "上課開始",
+      "titleDisplay": "上課開始",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "2.就學貸款收件截止",
+      "id": "2024-02-21-1",
+      "uid": "Ical3ba67e5f27c8f3aa23703df3bf35947c",
+      "start": "2024-02-21",
+      "end": "2024-02-21",
+      "title": "就學貸款收件截止",
+      "titleDisplay": "就學貸款收件截止",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "1.研究所新生申請抵免學分截止",
+      "id": "2024-02-21-2",
+      "uid": "Ical4a056fc3499efc2e26b1f0d9da2a214b",
+      "start": "2024-02-21",
+      "end": "2024-02-21",
+      "title": "研究所新生申請抵免學分截止",
+      "titleDisplay": "研究所新生申請抵免學分截止",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "3.輔系.雙主修申請截止",
+      "id": "2024-02-21-3",
+      "uid": "Ical84aba2d94375d0163d3097c9fe291d3b",
+      "start": "2024-02-21",
+      "end": "2024-02-21",
+      "title": "輔系．雙主修申請截止",
+      "titleDisplay": "輔系．雙主修申請截止",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "和平紀念日 (放假一天)",
+      "id": "2024-02-28-1",
+      "uid": "Ical8776207bc92a3c4256b2fefbab46dbf1",
+      "start": "2024-02-28",
+      "end": "2024-02-28",
+      "title": "和平紀念日（放假一天）",
+      "titleDisplay": "和平紀念日放假",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "1.全校加退選截止",
+      "id": "2024-03-01-1",
+      "uid": "Ical7da2e8a4e82cdae7b54df15881f83f76",
+      "start": "2024-03-01",
+      "end": "2024-03-01",
+      "title": "全校加退選截止",
+      "titleDisplay": "全校加退選截止",
+      "note": "",
+      "link": [],
+      "splitIndex": 1
+    },
+    {
+      "_titleRaw": "2.學分學程修讀申請截止",
+      "id": "2024-03-01-2",
+      "uid": "Ical7da2e8a4e82cdae7b54df15881f83f76",
+      "start": "2024-03-01",
+      "end": "2024-03-01",
+      "title": "學分學程修讀申請截止",
+      "titleDisplay": "學分學程修讀申請截止",
+      "note": "",
+      "link": [],
+      "splitIndex": 2
+    },
+    {
+      "_titleRaw": "大學部轉系申請開始",
+      "id": "2024-03-13-1",
+      "uid": "Ical3e8d006f8f19ff3ed039e4a6f832c816",
+      "start": "2024-03-13",
+      "end": "2024-03-13",
+      "title": "大學部轉系申請開始",
+      "titleDisplay": "大學部轉系申請開始",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "大學部轉系申請截止",
+      "id": "2024-03-20-1",
+      "uid": "Ical49b95401cedb4fb9c6e07c7796fc5835",
+      "start": "2024-03-20",
+      "end": "2024-03-20",
+      "title": "大學部轉系申請截止",
+      "titleDisplay": "大學部轉系申請截止",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "校慶全校運動會 (全天上班) (停課一天)",
+      "id": "2024-03-23-1",
+      "uid": "Ical173b6d4dafb55920ed9f9d1fbd051902",
+      "start": "2024-03-23",
+      "end": "2024-03-23",
+      "title": "校慶全校運動會（全天上班）（停課一天）",
+      "titleDisplay": "校慶全校運動會（全天上班）（停課一天）",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "補假一天(校慶運動會)",
+      "id": "2024-03-29-1",
+      "uid": "Ical344e102ccced269fa766bc5e57d68d37",
+      "start": "2024-03-29",
+      "end": "2024-03-29",
+      "title": "補假一天（校慶運動會）",
+      "titleDisplay": "補假一天（校慶運動會）",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "1.研究生學位考試開始",
+      "id": "2024-04-01-1",
+      "uid": "Ical8eba9103138e18c07fc36c240addb17e",
+      "start": "2024-04-01",
+      "end": "2024-04-01",
+      "title": "研究生學位考試開始",
+      "titleDisplay": "研究生學位考試開始",
+      "note": "",
+      "link": [],
+      "splitIndex": 1
+    },
+    {
+      "_titleRaw": "2.休、退學學生退 2/3 學雜費截止",
+      "id": "2024-04-01-2",
+      "uid": "Ical8eba9103138e18c07fc36c240addb17e",
+      "start": "2024-04-01",
+      "end": "2024-04-01",
+      "title": "休、退學學生退 2／3 學雜費截止",
+      "titleDisplay": "休退學退 2／3 學雜費截止",
+      "note": "",
+      "link": [],
+      "splitIndex": 2
+    },
+    {
+      "_titleRaw": "兒童節/民族掃墓節(放假一天)",
+      "id": "2024-04-04-1",
+      "uid": "Icalc9d8b20706da4a555e78cc6c2a121fdd",
+      "start": "2024-04-04",
+      "end": "2024-04-04",
+      "title": "兒童節／民族掃墓節（放假一天）",
+      "titleDisplay": "兒童節／民族掃墓節放假",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "兒童節/民族掃墓節(補假一天)",
+      "id": "2024-04-05-1",
+      "uid": "Ical5b4f296d953b2f1dea399d061e66bc67",
+      "start": "2024-04-05",
+      "end": "2024-04-05",
+      "title": "兒童節／民族掃墓節（補假一天）",
+      "titleDisplay": "兒童節／民族掃墓節（補假一天）",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "期中考試開始 (若教師另有訂定其他日期者，從其規定)",
+      "id": "2024-04-08-1",
+      "uid": "Ical285932ca43019384ab683a44b4d2afa2",
+      "start": "2024-04-08",
+      "end": "2024-04-08",
+      "title": "期中考試開始（若教師另有訂定其他日期者，從其規定）",
+      "titleDisplay": "期中考試開始（若教師另有訂定其他日期者，從其規定）",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "期中考試結束",
+      "id": "2024-04-12-1",
+      "uid": "Icalc16b29b3ea9f9cb880c219f9869a7896",
+      "start": "2024-04-12",
+      "end": "2024-04-12",
+      "title": "期中考試結束",
+      "titleDisplay": "期中考試結束",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "研究所轉所申請開始",
+      "id": "2024-04-15-1",
+      "uid": "Icalac4f6b1835180dc5a6fc3bdc3109fca5",
+      "start": "2024-04-15",
+      "end": "2024-04-15",
+      "title": "研究所轉所申請開始",
+      "titleDisplay": "研究所轉所申請開始",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "第二次退選開始",
+      "id": "2024-04-22-1",
+      "uid": "Ical6b1ed11bb1b04bec214a6af0d92151ec",
+      "start": "2024-04-22",
+      "end": "2024-04-22",
+      "title": "第二次退選開始",
+      "titleDisplay": "第二次退選開始",
+      "note": "",
+      "link": [
+        "https://courseselection.ntust.edu.tw/"
+      ]
+    },
+    {
+      "_titleRaw": "研究所轉所申請截止",
+      "id": "2024-04-23-1",
+      "uid": "Icalca69c4518de7227aa5398d9b7b5d4a58",
+      "start": "2024-04-23",
+      "end": "2024-04-23",
+      "title": "研究所轉所申請截止",
+      "titleDisplay": "研究所轉所申請截止",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "勞動節 (適用勞基法人員放假)",
+      "id": "2024-05-01-1",
+      "uid": "Ical9c92efbd4fc2d8c0740e00ada68c4455",
+      "start": "2024-05-01",
+      "end": "2024-05-01",
+      "title": "勞動節（適用勞基法人員放假）",
+      "titleDisplay": "勞動節（適用勞基法人員放假）",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "休、退學學生退 1/3 學雜費截止",
+      "id": "2024-05-03-1",
+      "uid": "Ical12fa5d533e9327734400a647c047434b",
+      "start": "2024-05-03",
+      "end": "2024-05-03",
+      "title": "休、退學學生退 1／3 學雜費截止",
+      "titleDisplay": "休退學退 1／3 學雜費截止",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "第二次退選截止",
+      "id": "2024-05-09-1",
+      "uid": "Icalecf6d6c4b4f074f6acbf187b4664b7a8",
+      "start": "2024-05-09",
+      "end": "2024-05-09",
+      "title": "第二次退選截止",
+      "titleDisplay": "第二次退選截止",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "畢業典禮",
+      "id": "2024-05-25-1",
+      "uid": "Ical1fde3e658ff5b42da8f2974dd1bca4c5",
+      "start": "2024-05-25",
+      "end": "2024-05-25",
+      "title": "畢業典禮",
+      "titleDisplay": "畢業典禮",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "申請休學截止日",
+      "id": "2024-05-29-1",
+      "uid": "Ical359b6d0564cb3c3f10c2540c5f11e5f3",
+      "start": "2024-05-29",
+      "end": "2024-05-29",
+      "title": "申請休學截止日",
+      "titleDisplay": "申請休學截止日",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "期末考試開始 (若教師另有訂定其他日期者，從其規定)",
+      "id": "2024-06-03-1",
+      "uid": "Icalafe0218b9104d87870d05b72e4dd3c11",
+      "start": "2024-06-03",
+      "end": "2024-06-03",
+      "title": "期末考試開始（若教師另有訂定其他日期者，從其規定）",
+      "titleDisplay": "期末考試開始（若教師另有訂定其他日期者，從其規定）",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "2.第 86 次校務會議",
+      "id": "2024-06-07-1",
+      "uid": "Ical69ab1bfa0f37ef9dfa247385924624ae",
+      "start": "2024-06-07",
+      "end": "2024-06-07",
+      "title": "第 86 次校務會議",
+      "titleDisplay": "第 86 次校務會議",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "1.期末考試結束",
+      "id": "2024-06-07-2",
+      "uid": "Icalef9d79fd645c27ae8a9294b23c5cd12d",
+      "start": "2024-06-07",
+      "end": "2024-06-07",
+      "title": "期末考試結束",
+      "titleDisplay": "期末考試結束",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "端午節(放假一天)",
+      "id": "2024-06-10-1",
+      "uid": "Ical6d3822a2e2206850baf5907c18e58550",
+      "start": "2024-06-10",
+      "end": "2024-06-10",
+      "title": "端午節（放假一天）",
+      "titleDisplay": "端午節放假",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "暑假開始(至113年8月30日止)",
+      "id": "2024-06-11-1",
+      "uid": "Ical469e8f9f654a6733ff4484dac4f01302",
+      "start": "2024-06-11",
+      "end": "2024-06-11",
+      "title": "暑假開始",
+      "titleDisplay": "暑假開始",
+      "note": "",
+      "link": [],
+      "dates": [
+        "2024-08-30"
+      ]
+    },
+    {
+      "_titleRaw": "教師送繳成績截止日",
+      "id": "2024-06-17-1",
+      "uid": "Ical1d788a7730e72e933b88b2b67ab08802",
+      "start": "2024-06-17",
+      "end": "2024-06-17",
+      "title": "教師送繳成績截止日",
+      "titleDisplay": "教師送繳成績截止日",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "暑期選課截止",
+      "id": "2024-06-26-1",
+      "uid": "Icalaae419b44b8d4e40b0eed2dd34e8abab",
+      "start": "2024-06-26",
+      "end": "2024-06-26",
+      "title": "暑期選課截止",
+      "titleDisplay": "暑期選課截止",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "暑期上課開始",
+      "id": "2024-07-01-1",
+      "uid": "Icald4530a1e6ecf7dfa4c233bcfc8c20aa8",
+      "start": "2024-07-01",
+      "end": "2024-07-01",
+      "title": "暑期上課開始",
+      "titleDisplay": "暑期上課開始",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "1.第2學期研究生學位考試截止日",
+      "id": "2024-07-31-1",
+      "uid": "Ical754c3953ea325fee25b8387ea103855f",
+      "start": "2024-07-31",
+      "end": "2024-07-31",
+      "title": "研究生學位考試截止日",
+      "titleDisplay": "研究生學位考試截止日",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "2.本學年度結束",
+      "id": "2024-07-31-2",
+      "uid": "Icalbd4c7b7e6d1b6de6d3b156e10668cfa7",
+      "start": "2024-07-31",
+      "end": "2024-07-31",
+      "title": "本學年度結束",
+      "titleDisplay": "本學年度結束",
+      "note": "",
+      "link": []
+    },
+    {
+      "_titleRaw": "暑假開始(至113年8月30日止)",
+      "id": "2024-08-30-1",
+      "uid": "Ical469e8f9f654a6733ff4484dac4f01302",
+      "start": "2024-08-30",
+      "end": "2024-08-30",
+      "title": "暑假結束",
+      "titleDisplay": "暑假結束",
+      "note": "",
+      "link": [],
+      "auto": true,
+      "_src": "2024-06-11-1"
+    }
+  ]
+}
