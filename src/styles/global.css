@@ -173,7 +173,7 @@ main {
 
 .landing__stage {
   position: relative;
-  padding-block: 2rem 6rem;
+  padding-block: 2rem 9.5rem;
 }
 
 .landing__brand {
@@ -261,14 +261,27 @@ main {
   }
 }
 
-/* 招牌元素：捷運路線描線動畫（分類色站點） */
+/* 招牌元素：捷運松山新店線 古亭—台電大樓—公館（台科） */
 .landing__route {
   position: absolute;
   left: 0;
   bottom: 0;
-  width: min(34rem, 90%);
-  height: auto;
-  opacity: 0.95;
+  width: 560px;
+  max-width: 100%;
+  height: 120px;
+}
+
+@media (max-width: 680px) {
+  .landing__route {
+    display: none;
+  }
+}
+
+.landing__route svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .landing__route-line {
@@ -283,18 +296,65 @@ main {
   }
 }
 
+/* 站點與列車都錨定在同一條 offset-path 上，必然置中於線 */
+.landing__station,
+.landing__train {
+  position: absolute;
+  border-radius: 50%;
+  offset-path: path('M 10 96 C 130 96 150 26 280 26 S 430 96 550 96');
+  offset-rotate: 0deg;
+}
+
 .landing__station {
-  transform-box: fill-box;
-  transform-origin: center;
+  width: 15px;
+  height: 15px;
+  background: var(--paper);
+  border: 4.5px solid var(--c-course);
+  offset-distance: var(--pos);
   scale: 0;
   animation: landing-pop 0.45s var(--ease) forwards;
   animation-delay: calc(0.55s + var(--s) * 0.22s);
+}
+
+.landing__station::after {
+  content: attr(data-label);
+  position: absolute;
+  top: calc(100% + 0.45rem);
+  left: 50%;
+  translate: -50% 0;
+  white-space: nowrap;
+  font-size: var(--text-tiny);
+  font-weight: 650;
+  letter-spacing: 0.05em;
+  color: var(--ink-soft);
+}
+
+.landing__station--dest {
+  width: 18px;
+  height: 18px;
+  border-color: var(--brand);
+}
+
+.landing__station--dest::after {
+  color: var(--brand);
+  font-weight: 750;
 }
 
 @keyframes landing-pop {
   to {
     scale: 1;
   }
+}
+
+.landing__train {
+  width: 13px;
+  height: 13px;
+  background: var(--brand);
+  border: 2.5px solid var(--paper);
+  box-shadow: 0 2px 8px color-mix(in oklab, var(--brand) 45%, transparent);
+  offset-distance: 0%;
+  opacity: 0;
+  z-index: 1;
 }
 
 /* ---- chip ---- */

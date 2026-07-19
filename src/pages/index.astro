@@ -14,10 +14,10 @@ import Calendar from '../components/Calendar.astro';
       <div class="landing__hero">
         <p class="landing__eyebrow landing-rise" style="--d: 1">開學前指南</p>
         <h1 class="landing__title landing-rise" style="--d: 2">
-          開學前，把台科<br />摸得一清二楚
+          天大地大<br />臺科大
         </h1>
         <p class="landing__desc landing-rise" style="--d: 3">
-          選課怎麼抽、宿舍怎麼住、哪裡有好吃的——學長姐把四年的坑都踩過了，這裡是活下來的筆記。
+          沒有直屬怎麼辦，
         </p>
         <a class="landing__cta landing-rise" style="--d: 4" href="/article/start/">
           進入懶人包
@@ -25,27 +25,51 @@ import Calendar from '../components/Calendar.astro';
         </a>
       </div>
 
-      <svg
-        class="landing__route"
-        viewBox="0 0 560 120"
-        fill="none"
-        aria-hidden="true"
-      >
-        <path
-          class="landing__route-line"
-          pathLength="1"
-          d="M8 96 C 120 96 150 24 260 24 S 420 96 552 96"
-          stroke="var(--brand)"
-          stroke-width="5"
-          stroke-linecap="round"
-        ></path>
-        <circle class="landing__station" style="--s: 1" cx="96" cy="72" r="9" fill="var(--paper)" stroke="var(--c-course)" stroke-width="5"></circle>
-        <circle class="landing__station" style="--s: 2" cx="260" cy="24" r="9" fill="var(--paper)" stroke="var(--c-life)" stroke-width="5"></circle>
-        <circle class="landing__station" style="--s: 3" cx="424" cy="72" r="9" fill="var(--paper)" stroke="var(--c-info)" stroke-width="5"></circle>
-        <rect class="landing__station" style="--s: 4" x="540" y="84" width="24" height="24" rx="7" fill="var(--brand)"></rect>
-      </svg>
+      <div class="landing__route" aria-hidden="true">
+        <svg viewBox="0 0 560 120" fill="none" preserveAspectRatio="none">
+          <path
+            class="landing__route-line"
+            pathLength="1"
+            d="M 10 96 C 130 96 150 26 280 26 S 430 96 550 96"
+            stroke="var(--c-course)"
+            stroke-width="5"
+            stroke-linecap="round"
+          ></path>
+        </svg>
+        <span class="landing__station" data-label="古亭" style="--pos: 14%; --s: 1"></span>
+        <span class="landing__station" data-label="台電大樓" style="--pos: 50%; --s: 2"></span>
+        <span class="landing__station landing__station--dest" data-label="公館" style="--pos: 88%; --s: 3"></span>
+        <span class="landing__train" id="landing-train"></span>
+      </div>
     </div>
 
     <Calendar />
   </div>
+
+  <script>
+    // 列車進站：古亭出發，30% 機率在台電大樓停靠，最後抵達公館（台科）
+    const train = document.getElementById('landing-train');
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (train && !reduced) {
+      const ease = 'cubic-bezier(0.4, 0, 0.2, 1)';
+      const ride = async () => {
+        train.style.opacity = '1';
+        await train.animate(
+          [{ offsetDistance: '0%' }, { offsetDistance: '50%' }],
+          { duration: 950, easing: ease, fill: 'forwards' },
+        ).finished;
+        if (Math.random() < 0.3) await new Promise((r) => setTimeout(r, 700));
+        await train.animate(
+          [{ offsetDistance: '50%' }, { offsetDistance: '88%' }],
+          { duration: 800, easing: ease, fill: 'forwards' },
+        ).finished;
+        train.animate([{ opacity: 1 }, { opacity: 0 }], {
+          duration: 450,
+          delay: 300,
+          fill: 'forwards',
+        });
+      };
+      setTimeout(ride, 1750); // 等路線描線完成
+    }
+  </script>
 </Base>
