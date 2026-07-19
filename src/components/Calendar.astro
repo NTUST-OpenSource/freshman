@@ -142,7 +142,8 @@ const updatedLines = calendars
     <ul class="cal__pop-list" id="cal-pop-list"></ul>
   </div>
 
-  <script type="application/json" id="cal-data" is:inline set:html={JSON.stringify(payload)} />
+  {/* < 跳脫：ics 來源或人工欄位含 </script> 也不會截斷資料塊 */}
+  <script type="application/json" id="cal-data" is:inline set:html={JSON.stringify(payload).replace(/</g, '\\u003c')} />
 </aside>
 
 <script>

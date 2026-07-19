@@ -10,9 +10,10 @@ interface Props {
   title?: string;
   description?: string;
   chrome?: boolean;
+  noindex?: boolean;
 }
 
-const { title, description = '提供臺科新生的開學前指南', chrome = true } = Astro.props;
+const { title, description = '提供臺科新生的開學前指南', chrome = true, noindex = false } = Astro.props;
 const pageTitle = title ? `${title}｜臺科新生懶人包` : '臺科新生懶人包';
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = new URL('/logo.png', Astro.site);
@@ -26,6 +27,7 @@ const ogImage = new URL('/logo.png', Astro.site);
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
     <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
@@ -43,7 +45,7 @@ const ogImage = new URL('/logo.png', Astro.site);
         name: '臺科新生懶人包',
         url: Astro.site?.toString(),
         inLanguage: 'zh-Hant',
-      })}
+      }).replace(/</g, '\\u003c')}
     />
     <link rel="icon" href="/logo.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/logo.png" />

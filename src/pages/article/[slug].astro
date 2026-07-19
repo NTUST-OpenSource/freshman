@@ -5,6 +5,11 @@ import { CATEGORIES } from '../../content.config';
 
 export async function getStaticPaths() {
   const articles = await getCollection('articles', (e) => import.meta.env.DEV || !e.data.draft);
+  const seen = new Set<string>();
+  for (const a of articles) {
+    if (seen.has(a.data.slug)) throw new Error(`[articles] slug 重複："${a.data.slug}"，路由會靜默互蓋`);
+    seen.add(a.data.slug);
+  }
   return articles.map((article) => ({ params: { slug: article.data.slug }, props: { article } }));
 }
 
@@ -25,8 +30,9 @@ const articleLd = {
 };
 ---
 
-<Base title={article.data.title} description={article.data.description}>
-  <script type="application/ld+json" is:inline set:html={JSON.stringify(articleLd)} />
+<Base title={article.data.title} description={article.data.description} noindex={article.data.noindex}>
+  {/* < 跳脫：內容含 </script> 也不會截斷資料塊 */}
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(articleLd).replace(/</g, '\\u003c')} />
   <div class={`article-layout cat-${article.data.category}`}>
     <article class="article">
       <header class="article__header" transition:name="article-head">
