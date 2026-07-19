@@ -13,9 +13,20 @@ const { Content, headings } = await render(article);
 const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
 const cat = CATEGORIES[article.data.category];
 const updated = article.data.updated.toLocaleDateString('zh-TW');
+const articleLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: article.data.title,
+  description: article.data.description,
+  dateModified: article.data.updated.toISOString(),
+  inLanguage: 'zh-Hant',
+  mainEntityOfPage: new URL(`/article/${article.data.slug}/`, Astro.site).toString(),
+  author: article.data.contributors.map((c) => ({ '@type': 'Person', name: c.name, email: c.email })),
+};
 ---
 
 <Base title={article.data.title} description={article.data.description}>
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(articleLd)} />
   <div class={`article-layout cat-${article.data.category}`}>
     <article class="article">
       <header class="article__header" transition:name="article-head">

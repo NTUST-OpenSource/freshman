@@ -2,6 +2,22 @@
 
 本檔為專案的最高行為準則（等同 CLAUDE.md），所有 AI 協作與人工開發都必須遵守。
 
+## 目前進度（2026-07-19 更新）
+
+**已完成**
+- 行事曆資料管線：110–115 六學年轉換完成、例外歸零、calendar-sync skill 就緒
+- 首頁：單一入口設計、捷運路線列車循環動畫、三學年行事曆 rail（hover popup、i 更新卡、回到今天）
+- 文章系統：全套自訂 Markdown 語法（callout／spoiler／qa／tabs／steps 形色／card 圖片／dept／table 對齊框線／行號／註腳 hover 預覽）
+- 導航：View Transitions 縱向滑動、header 獨立 group（文章間靜止、進出首頁滑入滑出）、sticky 毛玻璃 header、自訂系別下拉
+- SEO 基礎：site=https://freshman.ntust.org、canonical、sitemap、robots.txt、OG 完整、WebSite/Article JSON-LD、404 頁
+
+**待辦（大項）**
+- 舊站 21 篇內容遷移（docs/README.md 有清單與已知問題）
+- Cloudflare Pages 自訂網域 DNS 綁定（使用者操作）
+- og-image 1200×630 設計資產（目前暫用 logo.png）
+- qa 區塊輸出 FAQPage JSON-LD（規格已載明，未實作）
+- 行動裝置自適應、dark mode、非首頁新動畫（依指示延後）
+
 ## 語言規範
 
 - 網站 UI 文案、內容、註解、文件一律**繁體中文**

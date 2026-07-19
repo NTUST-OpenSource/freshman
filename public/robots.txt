@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://freshman.ntust.org/sitemap-index.xml
