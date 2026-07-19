@@ -16,7 +16,7 @@
        標點符號轉全形、數字與英文字母強制半形、全形括號前空白移除、
        CJK 與數字交界補半形空白
     3. _titleRaw 中的日期（民國年月日或月日）自動解析為 ISO 寫入 dates，
-       年份缺省時以距離事件起日最近者推定
+       年份缺省時以距離事件起日最近者推定（距離相同時取不早於起日者）
     4. 「（至N月N日截止/止）」範圍字串自動從 title 移除（日期已存於 dates）
     5. 「XX開始（至N截止/止）」且 dates 唯一時，自動複製一筆「XX結束」
        事件到截止日（auto: true 標記）
@@ -32,7 +32,9 @@
        sync 前先驗證 id 對齊（同 id 的 uid／splitIndex／auto 必須相符）：
        id 是同日流水號，ics 同日增刪事件會使序號位移、人工欄位貼錯對象，
        偵測到錯位即中止不寫檔，交人工比對
-   10. house rules（定案內容規則）：類型連結自動附加（LINK_RULES）、
+   10. DTEND 減一天的排他語意僅適用全日（VALUE=DATE）事件；DATE-TIME 值
+       僅取日期部分（時區不轉換）並輸出警告，請人工確認
+   11. house rules（定案內容規則）：類型連結自動附加（LINK_RULES）、
        學位考試截止日去「第 N 學期」前綴、
        「本學年度開始」→「{年} 學年度開始」、節日「X（放假…）」display 縮為
        「X放假」（光復節特例改名）、學雜費 display 縮寫、
@@ -131,7 +133,8 @@ def extract_dates(text: str, anchor: date) -> list[str]:
                         candidates.append(date(y, month, day))
                     except ValueError:
                         continue
-                d = min(candidates, key=lambda x: abs((x - anchor).days))
+                # 距離平手時偏向不早於起日者（「（至…止）」的截止日不得推到過去）
+                d = min(candidates, key=lambda x: (abs((x - anchor).days), x < anchor))
         except ValueError:
             continue
         iso = d.isoformat()
@@ -228,8 +231,18 @@ def parse_ics(raw: str) -> tuple[dict, list[dict]]:
         props = parse_props(block)
         if "DTSTART" not in props or "SUMMARY" not in props:
             continue
-        start = parse_date(props["DTSTART"])
-        end = parse_date(props["DTEND"]) - timedelta(days=1) if "DTEND" in props else start
+        dtstart, dtend = props["DTSTART"], props.get("DTEND")
+        if "T" in dtstart or (dtend and "T" in dtend):
+            print(
+                f"[警告] DATE-TIME 值（UID {props.get('UID', '?')}）：僅取日期、時區未轉換，請人工確認",
+                file=sys.stderr,
+            )
+        start = parse_date(dtstart)
+        if dtend:
+            # DTEND 排他語意僅適用全日事件；DATE-TIME 的結束日直接取當日
+            end = parse_date(dtend) - timedelta(days=1) if "T" not in dtend else parse_date(dtend)
+        else:
+            end = start
         if end < start:
             end = start
         events.append(
