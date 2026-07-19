@@ -21,9 +21,17 @@ const updated = article.data.updated.toLocaleDateString('zh-TW');
       <header class="article__header" transition:name="article-head">
         <p class="article__eyebrow">
           <span class="chip chip--cat">{cat.label}</span>
-          {article.data.year && <span class="chip">{article.data.year} 學年</span>}
           {article.data.draft && <span class="chip chip--draft">草稿</span>}
-          <span class="article__meta">更新 {updated}</span>
+          <span class="article__meta">
+            更新 {updated}
+            {
+              article.data.contributors.map((c) => (
+                <a class="article__contrib" href={`mailto:${c.email}`}>
+                  {c.name}
+                </a>
+              ))
+            }
+          </span>
         </p>
         <h1 class="article__title">{article.data.title}</h1>
       </header>

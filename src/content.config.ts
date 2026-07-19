@@ -17,7 +17,9 @@ const articles = defineCollection({
     category: z.enum(['course', 'life', 'info', 'misc']),
     tags: z.array(z.string()).default([]),
     description: z.string(),
-    year: z.number().optional(),
+    contributors: z
+      .array(z.object({ name: z.string(), email: z.string() }))
+      .default([]),
     order: z.number().default(99),
     updated: z.coerce.date(),
     draft: z.boolean().default(false),

@@ -4,7 +4,9 @@ slug: prototype
 category: course
 tags: [課程, 住]
 description: 語法規格的完整示範文章，涵蓋所有自訂語法與渲染效果
-year: 115
+contributors:
+  - name: xinshou
+    email: claude@xinshou.tw
 order: 0
 updated: 2026-07-19
 draft: true
@@ -203,7 +205,7 @@ graph LR;
 
 ## 圖片與說明
 
-![校園配置示意](https://i.imgur.com/i9qq6ut.jpg "公館站二號出口到台科的步行路線")
+![校園配置示意](https://i.imgur.com/i9qq6ut.jpg "公館站二號出口到臺科的步行路線")
 
 ## 系別限定內容
 

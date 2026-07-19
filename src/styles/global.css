@@ -74,6 +74,42 @@ a {
   }
 }
 
+/* ---- View Transitions：內容縱向滑動，非單純淡入淡出 ---- */
+::view-transition-group(*) {
+  animation-duration: 0.45s;
+  animation-timing-function: var(--ease);
+}
+
+::view-transition-old(root) {
+  animation: vt-out 0.38s var(--ease) both;
+}
+
+::view-transition-new(root) {
+  animation: vt-in 0.52s var(--ease) both;
+}
+
+@keyframes vt-out {
+  to {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+}
+
+@keyframes vt-in {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
+  }
+}
+
 /* ---- 頁首（凍結於畫面頂端） ---- */
 .site-header {
   position: sticky;
@@ -359,7 +395,7 @@ main {
   }
 }
 
-/* 招牌元素：捷運松山新店線 古亭—台電大樓—公館（台科） */
+/* 招牌元素：捷運松山新店線 古亭—台電大樓—公館（臺科） */
 .landing__route {
   position: absolute;
   left: 0;
@@ -509,6 +545,19 @@ main {
   font-size: var(--text-tiny);
   font-family: var(--font-mono);
   color: var(--ink-soft);
+}
+
+.article__contrib {
+  margin-left: 0.7em;
+  color: var(--ink-soft);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--line);
+  transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+
+.article__contrib:hover {
+  color: var(--brand);
+  border-color: var(--brand);
 }
 
 .article__title {

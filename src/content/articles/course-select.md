@@ -3,8 +3,10 @@ title: 選課
 slug: course-select
 category: course
 tags: [課程]
-description: 志願序怎麼填、初選加退選加簽在幹嘛，台科選課制度一篇搞懂
-year: 114
+description: 志願序怎麼填、初選加退選加簽在幹嘛，臺科選課制度一篇搞懂
+contributors:
+  - name: xinshou
+    email: claude@xinshou.tw
 order: 1
 updated: 2025-07-19
 ---
@@ -117,7 +119,7 @@ graph LR;
 
 - [選課須知與時程](https://www.academic.ntust.edu.tw/p/412-1048-8580.php?Lang=zh-tw)：查詢每學期選課事務相關的時程
 - [大學部選課專區](https://www.academic.ntust.edu.tw/p/412-1048-8230.php?Lang=zh-tw)：各系畢業學分、雙主修輔系、校際選課資訊
-- [大學部選課推薦系統（台科大教務處建置）](https://academicgaa.ntust.edu.tw/Home/Index)
+- [大學部選課推薦系統（臺科大教務處建置）](https://academicgaa.ntust.edu.tw/Home/Index)
 
 ## 小撇步
 
