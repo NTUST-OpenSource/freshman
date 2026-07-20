@@ -79,16 +79,16 @@ a {
 
 /* ---- View Transitions：內容縱向滑動，非單純淡入淡出 ---- */
 ::view-transition-group(*) {
-  animation-duration: 0.45s;
+  animation-duration: 0.3s;
   animation-timing-function: var(--ease);
 }
 
 ::view-transition-old(root) {
-  animation: vt-out 0.38s var(--ease) both;
+  animation: vt-out 0.2s var(--ease) both;
 }
 
 ::view-transition-new(root) {
-  animation: vt-in 0.52s var(--ease) both;
+  animation: vt-in 0.3s var(--ease) both;
 }
 
 @keyframes vt-out {
@@ -113,11 +113,11 @@ a {
 }
 
 ::view-transition-old(site-header):only-child {
-  animation: vt-header-out 0.32s var(--ease) both;
+  animation: vt-header-out 0.22s var(--ease) both;
 }
 
 ::view-transition-new(site-header):only-child {
-  animation: vt-header-in 0.4s var(--ease) both;
+  animation: vt-header-in 0.28s var(--ease) both;
 }
 
 @keyframes vt-header-out {
