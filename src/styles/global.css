@@ -113,11 +113,11 @@ a {
 }
 
 ::view-transition-old(site-header):only-child {
-  animation: vt-header-out 0.22s var(--ease) both;
+  animation: vt-header-out 0.32s var(--ease) both;
 }
 
 ::view-transition-new(site-header):only-child {
-  animation: vt-header-in 0.28s var(--ease) both;
+  animation: vt-header-in 0.4s var(--ease) both;
 }
 
 @keyframes vt-header-out {
