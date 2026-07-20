@@ -4,8 +4,11 @@ slug: start
 category: info
 tags: [導覽]
 description: 臺科新生懶人包的目錄與使用說明，從這裡開始
+contributors:
+  - name: xinshoutw
+    email: me@xinshou.tw
 order: 0
-updated: 2026-07-19
+updated: 2026-07-20
 ---
 
 ## 開始之前

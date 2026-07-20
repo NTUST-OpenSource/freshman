@@ -4,6 +4,9 @@ slug: contribute
 category: info
 tags: [導覽]
 description: 本站採用開源模式運作，人人皆可參與貢獻。這份指南將帶你看懂從核心理念，到 Issue 與 PR 的實際操作方法。
+contributors:
+  - name: slimuCS
+    email: slimu.cs@gmail.com 
 order: 98
 updated: 2026-07-20
 ---

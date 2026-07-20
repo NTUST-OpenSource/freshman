@@ -5,10 +5,10 @@ category: course
 tags: [課程, 住]
 description: 語法規格的完整示範文章，涵蓋所有自訂語法與渲染效果
 contributors:
-  - name: xinshou
-    email: claude@xinshou.tw
+  - name: xinshoutw
+    email: me@xinshou.tw
 order: 0
-updated: 2026-07-19
+updated: 2026-07-20
 #draft: true
 noindex: true
 ---
