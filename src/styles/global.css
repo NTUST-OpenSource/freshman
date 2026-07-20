@@ -78,6 +78,11 @@ a {
 }
 
 /* ---- View Transitions：內容縱向滑動，非單純淡入淡出 ---- */
+/* 疊加層不攔截指標事件，讓事件落到已 swap 的即時 DOM */
+::view-transition {
+  pointer-events: none;
+}
+
 ::view-transition-group(*) {
   animation-duration: 0.3s;
   animation-timing-function: var(--ease);
@@ -105,8 +110,7 @@ a {
   }
 }
 
-/* header 獨立 group：兩頁都有 header 時完全靜止；
-   進出無 header 的首頁時（快照只有單邊）上滑淡出／下滑淡入 */
+/* header 獨立 group：兩頁皆有時靜止，進出首頁（快照單邊）才上下滑 */
 ::view-transition-old(site-header):not(:only-child),
 ::view-transition-new(site-header):not(:only-child) {
   animation: none !important;
@@ -153,6 +157,8 @@ a {
   background: color-mix(in oklab, var(--paper) 82%, transparent);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  user-select: none; /* 連點按鈕不反白選字 */
+  -webkit-user-select: none;
 }
 
 .site-header__inner {
@@ -172,6 +178,11 @@ a {
   text-decoration: none;
   color: var(--ink);
   font-weight: 700;
+  transition: scale var(--dur) var(--ease);
+}
+
+.brand:active {
+  scale: 0.97;
 }
 
 .brand__logo {
@@ -197,13 +208,21 @@ a {
   border-radius: 99px;
   padding: 0.32rem 0.95rem;
   transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease),
-    color var(--dur) var(--ease);
+    color var(--dur) var(--ease), scale var(--dur) var(--ease);
 }
 
-.site-header__links a.nav-pill:hover {
+/* .vt-hover：轉場中 :hover 失效，由 script 座標鏡射 */
+.site-header__links a.nav-pill:hover,
+.site-header__links a.nav-pill.vt-hover {
   border-color: var(--brand);
   color: var(--brand);
   background: color-mix(in oklab, var(--brand) 6%, var(--paper));
+}
+
+/* 按下當下即時回饋，不等轉場 */
+.site-header__links a.nav-pill:active {
+  scale: 0.94;
+  background: color-mix(in oklab, var(--brand) 12%, var(--paper));
 }
 
 .dept-picker {
@@ -226,7 +245,8 @@ a {
   transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease);
 }
 
-.dept-picker__btn:hover {
+.dept-picker__btn:hover,
+.dept-picker__btn.vt-hover {
   border-color: var(--brand);
   background: color-mix(in oklab, var(--brand) 6%, var(--paper));
 }

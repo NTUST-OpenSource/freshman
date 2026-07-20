@@ -67,13 +67,14 @@ const ogImage = new URL('/logo.png', Astro.site);
       chrome && (
         <header class="site-header" transition:persist="site-header" transition:name="site-header">
           <nav class="site-header__inner" aria-label="主選單">
-            <a class="brand" href="/">
+            {/* header 常駐視口，viewport 策略等於進頁即預抓 */}
+            <a class="brand" href="/" data-astro-prefetch="viewport">
               <img class="brand__logo" src="/logo.svg" alt="" width="30" height="31" />
               <span class="brand__text">臺科新生懶人包</span>
             </a>
             <div class="site-header__links">
-              <a class="nav-pill" href="/article/start/">目錄</a>
-              <a class="nav-pill" href="/article/contribute/">如何貢獻</a>
+              <a class="nav-pill" href="/article/start/" data-astro-prefetch="viewport">目錄</a>
+              <a class="nav-pill" href="/article/contribute/" data-astro-prefetch="viewport">如何貢獻</a>
               <div class="dept-picker" id="dept-picker">
                 <button
                   class="dept-picker__btn"
@@ -110,14 +111,76 @@ const ogImage = new URL('/logo.png', Astro.site);
     }
 
     <script>
-      // ClientRouter 導航後 module script 不會重跑，全部掛在 astro:page-load
-      // swap 會清掉 <html> 上的自訂屬性且 is:inline script 不重跑，每次導航後還原系別
+      import type { TransitionBeforeSwapEvent } from 'astro:transitions/client';
+
+      // swap 會清掉 <html> 自訂屬性且 is:inline 不重跑，導航後還原系別
       document.addEventListener('astro:after-swap', () => {
         document.documentElement.dataset.dept = localStorage.getItem('dept') || 'all';
       });
 
-      // 選單開合放模組層、以 id 查當前元素：document 監聽只掛一次，
-      // 不隨導航累積（header 在首頁往返時會整顆重建，掛在 init 裡會重複註冊）
+      // 轉場中整頁退出 hit-testing，點擊退化到 <html>：跳過動畫後以座標找回目標重新觸發
+      let activeViewTransition: TransitionBeforeSwapEvent['viewTransition'] | undefined;
+      document.addEventListener('astro:before-swap', (e) => {
+        const vt = (e as TransitionBeforeSwapEvent).viewTransition;
+        activeViewTransition = vt;
+        vt?.finished
+          .catch(() => {
+            /* 中斷的轉場 finished 會 reject */
+          })
+          .finally(() => {
+            if (activeViewTransition === vt) activeViewTransition = undefined;
+            for (const el of document.querySelectorAll('.vt-hover')) el.classList.remove('vt-hover');
+            document.documentElement.style.cursor = '';
+          });
+      });
+
+      // 轉場中 :hover 與游標失效：以最後座標鏡射 .vt-hover 樣式與 html 上的手型
+      let lastMouseX = -1;
+      let lastMouseY = -1;
+      function mirrorHeaderHover() {
+        const targets = document.querySelectorAll<HTMLElement>(
+          '.site-header a.nav-pill, .site-header .brand, .dept-picker__btn',
+        );
+        let overAny = false;
+        for (const el of targets) {
+          const r = el.getBoundingClientRect();
+          const over =
+            lastMouseX >= r.left &&
+            lastMouseX <= r.right &&
+            lastMouseY >= r.top &&
+            lastMouseY <= r.bottom;
+          el.classList.toggle('vt-hover', over);
+          overAny = overAny || over;
+        }
+        document.documentElement.style.cursor = overAny ? 'pointer' : '';
+      }
+      document.addEventListener('mousemove', (e) => {
+        lastMouseX = e.clientX;
+        lastMouseY = e.clientY;
+        if (activeViewTransition) mirrorHeaderHover();
+      });
+      // 滑鼠靜止時無 mousemove：導航起點先鏡射，swap 重建 <html> 屬性後同步補回
+      document.addEventListener('astro:before-preparation', () => mirrorHeaderHover());
+      document.addEventListener('astro:after-swap', () => {
+        if (activeViewTransition) mirrorHeaderHover();
+      });
+      document.addEventListener('click', async (e) => {
+        if (e.target !== document.documentElement || !activeViewTransition) return;
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return; // 修飾鍵語意無法轉發，放棄救援
+        const vt = activeViewTransition;
+        vt.skipTransition();
+        try {
+          await vt.finished;
+        } catch {
+          /* 被中斷的轉場 finished 會 reject，不影響後續命中 */
+        }
+        document
+          .elementFromPoint(e.clientX, e.clientY)
+          ?.closest<HTMLAnchorElement>('a[href]')
+          ?.click();
+      });
+
+      // document 監聽掛模組層一次、以 id 查當前元素，header 重建時才不重複註冊
       let deptCloseTimer: number | undefined;
       function closeDeptMenu() {
         const menu = document.getElementById('dept-menu');
@@ -184,7 +247,6 @@ const ogImage = new URL('/logo.png', Astro.site);
           e.stopPropagation();
           deptBtn.getAttribute('aria-expanded') === 'true' ? closeDeptMenu() : openDeptMenu();
         });
-        // 鍵盤操作：按鈕上下鍵開啟並聚焦，選項間上下移動、Enter/Space 選取、Escape 關閉
         deptBtn.addEventListener('keydown', (e) => {
           if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
             e.preventDefault();
@@ -249,7 +311,7 @@ const ogImage = new URL('/logo.png', Astro.site);
       function initYt() {
         for (const a of document.querySelectorAll('a.yt[data-yt-id]')) {
           a.addEventListener('click', (e) => {
-            // 修飾鍵交還瀏覽器（開新分頁等）；成功替換後元素隨即消失，毋須 once
+            // 修飾鍵交還瀏覽器；替換後元素消失毋須 once
             if (e.metaKey || e.ctrlKey || e.shiftKey) return;
             e.preventDefault();
             const id = (a as HTMLElement).dataset.ytId;
