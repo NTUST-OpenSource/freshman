@@ -40,7 +40,9 @@ import Calendar from '../components/Calendar.astro';
         <span class="landing__station" data-label="古亭" style="offset-distance: 40%; --s: 2"></span>
         <span class="landing__station" data-label="台電大樓" style="offset-distance: 56%; --s: 3"></span>
         <span class="landing__station landing__station--dest" data-label="公館" style="offset-distance: 88%; --s: 4"></span>
-        <span class="landing__train" id="landing-train"></span>
+        <span class="landing__train" id="landing-train">
+          <span class="landing__train-bubble" id="train-bubble">靠！被台電大樓了</span>
+        </span>
       </div>
     </div>
 
@@ -111,13 +113,17 @@ import Calendar from '../components/Calendar.astro';
                 { duration: 500, easing: ease, fill: 'forwards' },
               ).finished;
             } else {
+              const bubble = document.getElementById('train-bubble');
+              if (bubble) bubble.classList.add('landing__train-bubble--show');
+              await sleep(1200);
+              if (bubble) bubble.classList.remove('landing__train-bubble--show');
+              if (aborted) break;
               await train.animate(
                 [
-                  { offsetDistance: taipower, opacity: 1, offset: 0 },
-                  { offsetDistance: '92%', opacity: 1, offset: 0.82 },
-                  { offsetDistance: '100%', opacity: 0, offset: 1 },
+                  { offsetDistance: taipower, opacity: 1 },
+                  { offsetDistance: inbound, opacity: 0 },
                 ],
-                { duration: 990, easing: ease, fill: 'forwards' },
+                { duration: 900, easing: ease, fill: 'forwards' },
               ).finished;
             }
             await sleep(750); // 下一班發車間隔
