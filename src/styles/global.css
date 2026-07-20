@@ -724,7 +724,8 @@ main {
 }
 
 .contrib__card {
-  display: block;
+  /* 無 display 宣告：讓 hidden 屬性（UA 的 [hidden]{display:none}）生效，
+     收合時 mailto 連結不占版面、不可點；顯示時 position:absolute 自成 block */
   position: absolute;
   top: calc(100% + 0.5rem);
   right: 0;
