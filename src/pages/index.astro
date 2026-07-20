@@ -71,8 +71,7 @@ import Calendar from '../components/Calendar.astro';
           fill: 'forwards',
         }).finished;
 
-      // 導航離開時取消動畫並立旗；cancel 只殺得掉進行中的動畫，
-      // 落在 sleep 期間的導航靠 aborted 旗標終止迴圈
+      // 導航時取消動畫並立旗；sleep 期間的導航靠旗標終止迴圈
       let aborted = false;
       document.addEventListener(
         'astro:before-swap',

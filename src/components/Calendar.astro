@@ -1,6 +1,5 @@
 ---
-// 行事曆：載入三個學年的資料，client 依今天計算「當學年 ±1」窗口（保底），
-// 其餘月份隱藏。hover 顯示事件 popup、i 按鈕顯示更新時間卡。
+// 行事曆：三學年資料，client 依今天算「當學年 ±1」顯示窗口
 import cal113 from '../data/calendar-113.json';
 import cal114 from '../data/calendar-114.json';
 import cal115 from '../data/calendar-115.json';
@@ -17,8 +16,7 @@ interface CalEvent {
 const calendars = [cal113, cal114, cal115];
 const events = calendars.flatMap((c) => c.events as CalEvent[]);
 
-// 事件依日期分組（跨日事件展開至每一天）；同日同名去重——相鄰學年檔會重複收錄
-// 交界事件（如學年初的「暑假結束」）
+// 依日分組（跨日展開至每天）；同日同名去重——相鄰學年檔會重複收錄交界事件
 const byDay = new Map<string, CalEvent[]>();
 for (const ev of events) {
   const start = new Date(`${ev.start}T00:00:00Z`);
@@ -32,14 +30,12 @@ for (const ev of events) {
   }
 }
 
-// popup 用的精簡資料
 const payload: Record<string, { t: string; n: string; l: string[] }[]> = {};
 for (const [day, dayEvents] of byDay) {
   payload[day] = dayEvents.map((e) => ({ t: e.titleDisplay || e.title, n: e.note, l: e.link }));
 }
 
-// 三學年合併的月份範圍；顯示窗口由 client 決定。calendarEnd 來源有「排他月初」
-// 與「月末日」兩種慣例（如 111=2023-07-31、115=2027-08-01），末日非 1 號時該月含入
+// 合併月份範圍；calendarEnd 有排他月初與月末日兩種慣例，末日非 1 號時該月含入
 const starts = calendars.map((c) => c.meta.calendarStart!).sort();
 const ends = calendars.map((c) => c.meta.calendarEnd!).sort();
 const [sy, sm] = starts[0].split('-').map(Number);
@@ -174,8 +170,7 @@ const updatedLines = calendars
   const now = new Date();
   const todayKey = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
 
-  // ---- 顯示窗口：當學年 ±1（保底）----
-  // 學年 8/1 起算；例如 2026 年 7 月屬 114 學年，窗口為 113~115 學年（2024-08 ~ 2027-07）
+  // 顯示窗口：學年 8/1 起算，當學年 ±1
   const ayStart = now.getMonth() + 1 >= 8 ? now.getFullYear() : now.getFullYear() - 1;
   const windowFirst = `${ayStart - 1}-08`;
   const windowLast = `${ayStart + 2}-07`;
@@ -202,8 +197,7 @@ const updatedLines = calendars
     else if (key === todayKey) cell.classList.add('cal__cell--today');
   }
 
-  // 捲動至目標月份（窗口外夾到首尾）；預設 instant——'auto' 會沿用容器的
-  // scroll-behavior: smooth，初始定位變成跨 20 個月的長距離動畫
+  // 捲至目標月份（窗外夾首尾）；預設 instant，避免初始定位沿用 smooth 變長距離動畫
   function scrollToMonth(key: string, behavior: ScrollBehavior = 'instant') {
     let target = visible[0];
     for (const s of visible) {
@@ -322,7 +316,7 @@ const updatedLines = calendars
     console.error('[行事曆] 初始化失敗，互動功能停用：', err);
   }
   }
-  // i 卡收合：document 監聽掛模組層一次、以 id 查當前元素，不隨每次進首頁累積
+  // document 監聽掛模組層一次，不隨每次進首頁累積
   function closeInfoCard() {
     const infoCard = document.getElementById('cal-info-card');
     if (!infoCard || infoCard.hidden) return;
