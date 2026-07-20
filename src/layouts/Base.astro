@@ -159,8 +159,18 @@ const ogImage = new URL('/logo.png', Astro.site);
         lastMouseY = e.clientY;
         if (activeViewTransition) mirrorHeaderHover();
       });
-      // 滑鼠靜止時無 mousemove：導航起點先鏡射，swap 重建 <html> 屬性後同步補回
-      document.addEventListener('astro:before-preparation', () => mirrorHeaderHover());
+      // 滑鼠靜止時無 mousemove：導航起點先鏡射，swap 重建 <html> 屬性後同步補回；
+      // 退場動畫點擊當下即播（不等請求），loader 等 fetch 與退場都完成才 swap
+      document.addEventListener('astro:before-preparation', (e) => {
+        mirrorHeaderHover();
+        const ev = e as Event & { loader: () => Promise<void> };
+        const loader = ev.loader;
+        ev.loader = async () => {
+          document.documentElement.classList.add('is-leaving');
+          const exits = document.querySelector('main')?.getAnimations() ?? [];
+          await Promise.all([loader(), Promise.allSettled(exits.map((a) => a.finished))]);
+        };
+      });
       document.addEventListener('astro:after-swap', () => {
         if (activeViewTransition) mirrorHeaderHover();
       });

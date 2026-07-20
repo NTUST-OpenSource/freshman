@@ -88,8 +88,15 @@ a {
   animation-timing-function: var(--ease);
 }
 
-::view-transition-old(root) {
+/* 退場在點擊當下就於真實 DOM 播放（script 掛 .is-leaving），與 fetch 並行 */
+html.is-leaving main,
+html.is-leaving .site-footer {
   animation: vt-out 0.2s var(--ease) both;
+}
+
+/* 舊內容於退場階段已清空，快照毋須再動畫 */
+::view-transition-old(root) {
+  animation: none;
 }
 
 ::view-transition-new(root) {
