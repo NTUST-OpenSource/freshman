@@ -107,20 +107,14 @@ const updatedLines = calendars
               const key = `${y}-${pad(m)}-${pad(day)}`;
               const dayEvents = byDay.get(key);
               return dayEvents ? (
-                <button
-                  class="cal__cell cal__cell--event"
-                  type="button"
-                  data-date={key}
-                  aria-label={`${y} 年 ${m} 月 ${day} 日，${dayEvents.length} 個事件`}
-                  aria-haspopup="dialog"
-                >
+                <span class="cal__cell cal__cell--event" data-date={key}>
                   <span class="cal__num">{day}</span>
                   <span class="cal__dots" aria-hidden="true">
                     {dayEvents.slice(0, 3).map(() => (
                       <i />
                     ))}
                   </span>
-                </button>
+                </span>
               ) : (
                 <span class="cal__cell" data-date={key}>
                   <span class="cal__num">{day}</span>
@@ -139,12 +133,6 @@ const updatedLines = calendars
     <p class="cal__pop-date" id="cal-pop-date"></p>
     <ul class="cal__pop-list" id="cal-pop-list"></ul>
   </div>
-
-  {/* 點擊（含 Enter）開原生 dialog：hover popup 對鍵盤與螢幕報讀器不可達 */}
-  <dialog class="cal__dialog" id="cal-dialog">
-    <p class="cal__pop-date" id="cal-dialog-date"></p>
-    <ul class="cal__pop-list" id="cal-dialog-list"></ul>
-  </dialog>
 
   {/* < 跳脫：ics 來源或人工欄位含 </script> 也不會截斷資料塊 */}
   <script type="application/json" id="cal-data" is:inline set:html={JSON.stringify(payload).replace(/</g, '\\u003c')} />
@@ -221,15 +209,15 @@ const updatedLines = calendars
     ).observe(todayCell);
   }
 
-  // ---- hover 顯示事件 popup；點擊（含 Enter）開原生 dialog ----
+  // ---- hover 顯示事件 popup ----
   let hideTimer: number | undefined;
   let fadeTimer: number | undefined;
 
-  function fillPop(key: string, dateEl: HTMLElement = popDate, listEl: HTMLElement = popList) {
+  function fillPop(key: string) {
     const [y, m, d] = key.split('-').map(Number);
     const weekday = '日一二三四五六'[new Date(y, m - 1, d).getDay()];
-    dateEl.textContent = `${y} 年 ${m} 月 ${d} 日（週${weekday}）`;
-    listEl.replaceChildren(
+    popDate.textContent = `${y} 年 ${m} 月 ${d} 日（週${weekday}）`;
+    popList.replaceChildren(
       ...(data[key] ?? []).map((ev) => {
         const li = document.createElement('li');
         const title = document.createElement('p');
@@ -284,22 +272,9 @@ const updatedLines = calendars
 
   // popup 移出 .cal，徹底避開 overflow/stacking/containing block 影響
   document.body.appendChild(pop);
-  const dialog = document.getElementById('cal-dialog') as HTMLDialogElement;
-  const dialogDate = document.getElementById('cal-dialog-date')!;
-  const dialogList = document.getElementById('cal-dialog-list')!;
-  dialog.addEventListener('click', (e) => {
-    if (e.target === dialog) dialog.close(); // backdrop 點擊關閉；Escape 為 dialog 原生行為
-  });
   for (const cell of document.querySelectorAll<HTMLElement>('.cal__cell--event')) {
     cell.addEventListener('pointerenter', () => showPop(cell));
     cell.addEventListener('pointerleave', () => hidePop());
-    cell.addEventListener('focus', () => showPop(cell));
-    cell.addEventListener('blur', () => hidePop());
-    cell.addEventListener('click', () => {
-      hidePop(0);
-      fillPop(cell.dataset.date!, dialogDate, dialogList);
-      dialog.showModal();
-    });
   }
   pop.addEventListener('pointerenter', () => clearTimeout(hideTimer));
   pop.addEventListener('pointerleave', () => hidePop());
@@ -539,21 +514,6 @@ const updatedLines = calendars
     background: color-mix(in oklab, var(--brand) 7%, var(--paper));
   }
 
-
-  /* ---- 事件 dialog（點擊開啟；樣式沿用 pop 內部類） ---- */
-  .cal__dialog {
-    width: min(22rem, calc(100vw - 2rem));
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    background: var(--paper);
-    color: var(--ink);
-    padding: 1rem 1.2rem;
-    box-shadow: 0 18px 50px rgb(20 18 24 / 0.22);
-  }
-
-  .cal__dialog::backdrop {
-    background: rgb(20 18 24 / 0.28);
-  }
 
   /* ---- hover popup ---- */
   .cal__pop {
