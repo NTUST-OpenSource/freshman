@@ -141,6 +141,21 @@ const ogImage = new URL('/logo.png', Astro.site);
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') closeDeptMenu();
       });
+      // 指向當前頁的連結（如 header 上的本頁 pill）直接吞掉，不重跑導航與轉場；
+      // capture 階段先於 ClientRouter 的 click 監聽，preventDefault 後它會放行不導航
+      document.addEventListener(
+        'click',
+        (e) => {
+          const link = (e.target as Element | null)?.closest?.('a[href]');
+          if (!(link instanceof HTMLAnchorElement) || link.origin !== location.origin) return;
+          if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || link.target) return;
+          if (link.pathname === location.pathname && link.search === location.search && !link.hash) {
+            e.preventDefault();
+          }
+        },
+        true,
+      );
+
       // 返回鍵等導航前強制收合：persist header 不得帶著展開選單進新頁
       document.addEventListener('astro:before-swap', () => {
         closeDeptMenu();
