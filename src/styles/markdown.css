@@ -703,8 +703,8 @@ html:not([data-dept='csie']) [data-dept-only='csie'] {
   background-color: var(--shiki-light-bg);
 }
 
-/* token 不各自帶背景，反白行才不會浮出方框 */
-.md pre.astro-code span {
+/* token 不各自帶背景，反白行才不會浮出方框；限 code 內，別掃到複製鈕 icon */
+.md pre.astro-code code span {
   color: var(--shiki-light);
   background-color: transparent;
 }
@@ -747,10 +747,10 @@ html:not([data-dept='csie']) [data-dept-only='csie'] {
   position: absolute;
   top: 0.55rem;
   right: 0.55rem;
-  min-height: 1.5rem; /* 目標尺寸 >= 24px */
-  font-family: var(--font-sans);
-  font-size: var(--text-tiny);
-  padding: 0.3em 0.7em;
+  min-width: 1.5rem; /* 目標尺寸 >= 24px */
+  min-height: 1.5rem;
+  display: grid;
+  place-items: center;
   border-radius: 7px;
   border: 1px solid var(--line);
   background: var(--paper);
@@ -759,6 +759,20 @@ html:not([data-dept='csie']) [data-dept-only='csie'] {
   opacity: 0;
   transition: opacity var(--dur) var(--ease), color 0.35s var(--ease),
     border-color 0.35s var(--ease), scale 0.35s var(--ease);
+}
+
+.code-copy__icon {
+  width: 1rem;
+  height: 1rem;
+  background: currentColor;
+  mask: url('/icons/copy.svg') no-repeat center / contain;
+  -webkit-mask: url('/icons/copy.svg') no-repeat center / contain;
+}
+
+/* 單行且無標題列的 code block：按鈕對整塊垂直置中 */
+.md pre.astro-code:not([data-title]):has(> code > .line:only-of-type) .code-copy {
+  top: 50%;
+  translate: 0 -50%;
 }
 
 .md pre.astro-code:hover .code-copy,
@@ -783,6 +797,12 @@ html:not([data-dept='csie']) [data-dept-only='csie'] {
   border-color: var(--clr-tip);
   scale: 1.05; /* 移除 class 時由 transition 平滑縮回 */
   animation: copy-pop 0.35s var(--ease);
+}
+
+.code-copy--fail {
+  opacity: 1;
+  color: var(--clr-danger);
+  border-color: var(--clr-danger);
 }
 
 @keyframes copy-pop {

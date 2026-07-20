@@ -289,20 +289,20 @@ const ogImage = new URL('/logo.png', Astro.site);
           const btn = document.createElement('button');
           btn.className = 'code-copy';
           btn.type = 'button';
-          btn.textContent = '複製';
+          btn.setAttribute('aria-label', '複製程式碼');
+          const icon = document.createElement('span');
+          icon.className = 'code-copy__icon';
+          icon.setAttribute('aria-hidden', 'true');
+          btn.appendChild(icon);
           btn.addEventListener('click', async () => {
             try {
-              // 按鈕自身在 pre 內，抓 code 才不會把按鈕文字一起複製
+              // 按鈕自身在 pre 內，抓 code 才不會把按鈕內容一起複製
               await navigator.clipboard.writeText(pre.querySelector('code')?.textContent ?? '');
-              btn.textContent = '已複製';
               btn.classList.add('code-copy--done');
             } catch {
-              btn.textContent = '複製失敗'; // 非 https 或權限拒絕
+              btn.classList.add('code-copy--fail'); // 非 https 或權限拒絕
             }
-            setTimeout(() => {
-              btn.textContent = '複製';
-              btn.classList.remove('code-copy--done');
-            }, 1400);
+            setTimeout(() => btn.classList.remove('code-copy--done', 'code-copy--fail'), 1400);
           });
           pre.appendChild(btn);
         }
