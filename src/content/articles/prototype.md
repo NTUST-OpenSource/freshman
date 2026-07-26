@@ -124,7 +124,7 @@ H4 是最小層級，字級貼近內文、色調偏分類色，適合補充性�
 
 右側帶示意圖片的寫法（`img` 屬性）：
 
-::card[公館站步行路線]{href="https://www.google.com/maps/dir/Gongguan+Station,+Taipei/NTUST" desc="二號出口出來就是台大舟山路校門，穿過台大約十分鐘" img="https://i.imgur.com/i9qq6ut.jpg"}
+::card[公館站步行路線]{href="https://www.google.com/maps/dir/Gongguan+Station,+Taipei/NTUST" desc="二號出口出來就是台大舟山路校門，穿過台大約十分鐘" img="/images/transportation/gongguan-walk.webp"}
 
 ## YouTube 影片
 
@@ -206,7 +206,7 @@ graph LR;
 
 ## 圖片與說明
 
-![校園配置示意](https://i.imgur.com/i9qq6ut.jpg "公館站二號出口到臺科的步行路線")
+![校園配置示意](/images/transportation/gongguan-walk.webp "公館站二號出口到臺科的步行路線")
 
 ## 系別限定內容
 
