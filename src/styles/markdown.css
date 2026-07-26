@@ -127,6 +127,10 @@
 
 /* ---- 圖片 ---- */
 .md img {
+  display: block;
+  max-width: 100%;
+  height: auto; /* 搭配 rehype-post 標上的 width/height，縮放時維持比例 */
+  margin-inline: auto;
   border-radius: var(--radius);
   border: 1px solid var(--line);
 }
