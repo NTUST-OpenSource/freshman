@@ -178,6 +178,44 @@ html.is-leaving .site-footer {
   gap: 1rem;
 }
 
+/* 漢堡鍵：頁首最左，開啟全站目錄抽屜 */
+.navdrawer__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 2.2rem;
+  height: 2.2rem;
+  margin-right: -0.35rem; /* 視覺上貼齊 logo，點擊區維持 44px 目標 */
+  padding: 0;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  color: var(--ink);
+  cursor: pointer;
+  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease),
+    color var(--dur) var(--ease), scale var(--dur) var(--ease);
+}
+
+.navdrawer__btn:hover,
+.navdrawer__btn.vt-hover {
+  border-color: var(--line);
+  background: color-mix(in oklab, var(--brand) 6%, var(--paper));
+  color: var(--brand);
+}
+
+.navdrawer__btn:active {
+  scale: 0.92;
+}
+
+.navdrawer__btn-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  background: currentColor;
+  mask: url('/icons/menu.svg') no-repeat center / contain;
+  -webkit-mask: url('/icons/menu.svg') no-repeat center / contain;
+}
+
 .brand {
   display: flex;
   align-items: center;
@@ -202,6 +240,7 @@ html.is-leaving .site-footer {
   align-items: center;
   gap: 1.1rem;
   font-size: var(--text-small);
+  margin-left: auto; /* 吸收剩餘空間：漢堡與 logo 靠左成組，其餘靠右 */
 }
 
 .site-header__links a.nav-pill {
@@ -332,6 +371,164 @@ html.is-leaving .site-footer {
 
 .dept-picker__menu li[aria-selected='true']::before {
   background: var(--brand);
+}
+
+/* ---- 全站目錄抽屜（原生 popover，top-layer） ---- */
+.navdrawer {
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: min(19rem, 82vw);
+  max-height: 100dvh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  margin: 0;
+  padding: 1.15rem 1.1rem 2.4rem;
+  background: var(--paper);
+  color: var(--ink);
+  border: 0;
+  border-right: 1px solid var(--line);
+  border-radius: 0 var(--radius-l) var(--radius-l) 0;
+  box-shadow: 0 18px 60px rgb(20 18 24 / 0.18);
+  translate: -100% 0;
+  opacity: 0;
+  /* allow-discrete：display/overlay 為離散屬性，不宣告就沒有關閉動畫 */
+  transition: translate var(--dur) var(--ease), opacity var(--dur) var(--ease),
+    display var(--dur) allow-discrete, overlay var(--dur) allow-discrete;
+}
+
+.navdrawer:popover-open {
+  translate: 0 0;
+  opacity: 1;
+}
+
+@starting-style {
+  .navdrawer:popover-open {
+    translate: -100% 0;
+    opacity: 0;
+  }
+}
+
+.navdrawer::backdrop {
+  background: rgb(20 18 24 / 0.3);
+  opacity: 0;
+  transition: opacity var(--dur) var(--ease), display var(--dur) allow-discrete,
+    overlay var(--dur) allow-discrete;
+}
+
+.navdrawer:popover-open::backdrop {
+  opacity: 1;
+}
+
+@starting-style {
+  .navdrawer:popover-open::backdrop {
+    opacity: 0;
+  }
+}
+
+.navdrawer__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.7rem;
+  margin-bottom: 0.4rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.navdrawer__title {
+  margin: 0;
+  font-size: var(--text-small);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+}
+
+.navdrawer__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  padding: 0;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease),
+    color var(--dur) var(--ease);
+}
+
+.navdrawer__close:hover {
+  border-color: var(--line);
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.navdrawer__close-icon {
+  width: 1.05rem;
+  height: 1.05rem;
+  background: currentColor;
+  mask: url('/icons/close.svg') no-repeat center / contain;
+  -webkit-mask: url('/icons/close.svg') no-repeat center / contain;
+}
+
+.navdrawer__group + .navdrawer__group {
+  margin-top: 1.05rem;
+}
+
+.navdrawer__group-label {
+  display: flex;
+  align-items: center;
+  gap: 0.45em;
+  margin: 0 0 0.3rem;
+  padding-inline: 0.55rem;
+  font-size: var(--text-tiny);
+  font-weight: 700;
+  color: var(--cat, var(--ink-soft));
+}
+
+.navdrawer__group-label::before {
+  content: '';
+  width: 0.45em;
+  height: 0.45em;
+  border-radius: 50%;
+  background: var(--cat, var(--ink-soft));
+}
+
+.navdrawer__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navdrawer__list a {
+  display: block;
+  padding: 0.42rem 0.6rem;
+  border-radius: var(--radius-s);
+  color: var(--ink);
+  text-decoration: none;
+  font-size: var(--text-small);
+  font-weight: 600;
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+
+.navdrawer__list a:hover {
+  background: color-mix(in oklab, var(--cat, var(--brand)) 8%, var(--paper));
+  color: var(--cat, var(--brand));
+}
+
+.navdrawer__list a[aria-current='page'] {
+  background: color-mix(in oklab, var(--cat, var(--brand)) 12%, var(--paper));
+  color: var(--cat, var(--brand));
+  font-weight: 700;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navdrawer,
+  .navdrawer::backdrop {
+    transition-duration: 1ms;
+  }
 }
 
 /* 窄螢幕：只留 logo 與導覽控制，避免頁首溢出（320px 需可容納） */
@@ -858,6 +1055,7 @@ main {
   .site-header,
   .site-footer,
   .toc,
+  .navdrawer,
   .cal__today-btn,
   .code-copy {
     display: none !important;

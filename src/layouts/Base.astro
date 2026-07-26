@@ -1,10 +1,12 @@
 ---
 import { ClientRouter } from 'astro:transitions';
+import { getCollection } from 'astro:content';
 import '../styles/tokens.css';
 import '../styles/global.css';
 import '../styles/markdown.css';
 import '../styles/article.css';
 import { DEPTS } from '../lib/depts.mjs';
+import { CATEGORIES } from '../content.config';
 
 interface Props {
   title?: string;
@@ -24,6 +26,16 @@ const {
 const pageTitle = title ? `${title}｜臺科新生懶人包` : '臺科新生懶人包';
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = new URL('/logo.png', Astro.site);
+
+// 側邊目錄：草稿與 noindex 不列（語法示範頁不該出現在導覽）
+const navArticles = chrome
+  ? (await getCollection('articles', (e) => !e.data.draft && !e.data.noindex)).sort(
+      (a, b) => a.data.order - b.data.order,
+    )
+  : [];
+const navGroups = Object.entries(CATEGORIES)
+  .map(([key, cat]) => ({ key, label: cat.label, items: navArticles.filter((a) => a.data.category === key) }))
+  .filter((g) => g.items.length > 0);
 ---
 
 <html lang="zh-Hant">
@@ -67,6 +79,15 @@ const ogImage = new URL('/logo.png', Astro.site);
       chrome && (
         <header class="site-header" transition:persist="site-header" transition:name="site-header">
           <nav class="site-header__inner" aria-label="主選單">
+            {/* popover 走原生 top-layer：Esc 與點外側關閉皆免 JS */}
+            <button
+              class="navdrawer__btn"
+              type="button"
+              popovertarget="site-nav"
+              aria-label="開啟目錄"
+            >
+              <span class="navdrawer__btn-icon" aria-hidden="true" />
+            </button>
             {/* header 常駐視口，viewport 策略等於進頁即預抓 */}
             <a class="brand" href="/" data-astro-prefetch="viewport">
               <img class="brand__logo" src="/logo.svg" alt="" width="30" height="31" />
@@ -97,6 +118,45 @@ const ogImage = new URL('/logo.png', Astro.site);
             </div>
           </nav>
         </header>
+      )
+    }
+    {
+      chrome && (
+        /* 抽屜不進 persist：隨頁面重建，aria-current 得以在 build 時算好 */
+        <div class="navdrawer" id="site-nav" popover>
+          <div class="navdrawer__head">
+            <p class="navdrawer__title">目錄</p>
+            <button
+              class="navdrawer__close"
+              type="button"
+              popovertarget="site-nav"
+              popovertargetaction="hide"
+              aria-label="關閉目錄"
+            >
+              <span class="navdrawer__close-icon" aria-hidden="true" />
+            </button>
+          </div>
+          <nav aria-label="全站文章目錄">
+            {navGroups.map((group) => (
+              <div class={`navdrawer__group cat-${group.key}`}>
+                <p class="navdrawer__group-label">{group.label}</p>
+                <ul class="navdrawer__list">
+                  {group.items.map((a) => (
+                    <li>
+                      <a
+                        href={`/article/${a.data.slug}/`}
+                        data-astro-prefetch="hover"
+                        aria-current={Astro.url.pathname === `/article/${a.data.slug}/` ? 'page' : undefined}
+                      >
+                        {a.data.title}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </nav>
+        </div>
       )
     }
     <main id="main">
@@ -139,7 +199,7 @@ const ogImage = new URL('/logo.png', Astro.site);
       let lastMouseY = -1;
       function mirrorHeaderHover() {
         const targets = document.querySelectorAll<HTMLElement>(
-          '.site-header a.nav-pill, .site-header .brand, .dept-picker__btn',
+          '.site-header a.nav-pill, .site-header .brand, .dept-picker__btn, .navdrawer__btn',
         );
         let overAny = false;
         for (const el of targets) {
@@ -234,6 +294,12 @@ const ogImage = new URL('/logo.png', Astro.site);
         closeDeptMenu();
         const menu = document.getElementById('dept-menu');
         if (menu) menu.hidden = true; // 不等淡出計時，快照前立即隱藏
+      });
+
+      // 抽屜點連結即關：top-layer 元素會蓋過退場動畫，等 swap 才收太晚
+      document.addEventListener('astro:before-preparation', () => {
+        const drawer = document.getElementById('site-nav');
+        if (drawer?.matches(':popover-open')) drawer.hidePopover();
       });
 
       function initDeptPicker() {
