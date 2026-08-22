@@ -14,7 +14,6 @@
 - [ ] 社團清單分類為粗略歸納，待以社團系統（clubs.ntust.edu.tw）正式分類校對
 - [ ] DNS 綁定後：Cloudflare 設 `*.pages.dev` → `freshman.ntust.org` 301（`_redirects` 不支援跨網域比對，需在 dashboard 設 redirect rule）
 - [ ] prototype 恢復 `draft: true`（現為臨時公開＋noindex，使用者指示之後取消註解）
-- [ ] 銘謝頁 `src/data/credits.json`：創辦人與五位原始貢獻者的 GitHub 帳號待補（現為空字串，空的就不渲染連結）
 
 ## 明確延後（使用者指示）
 

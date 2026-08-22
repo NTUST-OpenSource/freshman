@@ -40,7 +40,7 @@
   - 圖片自託管於 `public/images/<slug>/`，不熱鏈外站
 - `docs/dump/` 為該站內容的 Markdown 存檔，供改寫與事實查證使用
 - 站內不放指向該站的導流連結或「舊版／新版」式的說明文字
-- **例外：`/thanks/` 銘謝頁**（2026-08-23 使用者決議）具名致謝該站創辦人與貢獻者 —— 「創辦人」列 Choseph Qian，「原始貢獻者」列該站五位貢獻者。此頁措辭僅寫身分，**不提對方域名、不放對方站連結**（個人網站連結為當事人自己的展示頁，不在此限），也不轉載其信箱
+- **例外：`/thanks/` 銘謝頁**（2026-08-23 使用者決議）具名致謝該站創辦人與貢獻者 —— 「創辦人」列 Choseph Qian，「原始貢獻者」列該站五位貢獻者。此頁措辭僅寫身分，**不提對方域名、不放對方站連結**；GitHub 帳號與信箱依 2026-08-23 使用者指示列出
 
 ## Git 規範
 
@@ -89,7 +89,9 @@
 - API 失敗（離線、rate limit、GitHub 掛掉）時該區塊退化成 repo 連結，**build 不中斷**；build log 留 `[thanks]` 警告
 - 匿名 API 為 60 次/小時/IP。CI 用 `secrets.GITHUB_TOKEN`；Cloudflare Pages 端目前不設 token，撞到 rate limit 再於 dashboard 加環境變數 `GITHUB_TOKEN`
 - 頭像直連 `avatars.githubusercontent.com`（CSP `img-src` 已放行）。**這是第三方帳號頭像的唯一例外，內容圖片仍一律自託管於 `public/images/<slug>/`**
-- 不放信箱：本頁只寫身分與當事人自己的展示頁連結
+- 卡片一律走 `src/components/PersonCard.astro`：頭像直連 `https://avatars.githubusercontent.com/<login>?s=160`（用帳號即可，不必查 user id），整張卡點擊開 GitHub（stretched link），右側飛機圖示 `mailto:`。`github` 留空字串者卡片不可點、頭像退化成空圓
+- 創辦人與原始貢獻者的信箱經 2026-08-23 使用者指示公開，來源為對方公開 about 頁的存檔 `docs/dump/about.md`；**其餘任何人的信箱一律不得逕自補上**
+- 有 `mailto:` 的區塊必須包在 `<!--email_off-->` 內：Cloudflare Email Obfuscation 會改寫信箱，而它的解碼 script 被 CSP 擋掉，畫面會殘留 [email protected]
 - 名單長到版面明顯過長時，再拆 `/thanks/archive/`，屆時只是搬資料
 
 ## 工作流程
