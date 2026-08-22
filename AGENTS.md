@@ -40,7 +40,7 @@
   - 圖片自託管於 `public/images/<slug>/`，不熱鏈外站
 - `docs/dump/` 為該站內容的 Markdown 存檔，供改寫與事實查證使用
 - 站內不放指向該站的導流連結或「舊版／新版」式的說明文字
-- **例外：`/thanks/` 銘謝頁**（2026-08-23 使用者決議）具名致謝該站創辦人與貢獻者 —— 「創辦人」列 Choseph Qian，「原始貢獻者」列該站五位貢獻者。此頁措辭僅寫身分，**不提對方域名、不放對方站連結**；GitHub 帳號與信箱依 2026-08-23 使用者指示列出
+- **例外：`/thanks/` 銘謝頁**（2026-08-23 使用者決議）具名致謝該站創辦人與貢獻者 —— 「原始團隊」列 Choseph Qian（標創辦人）與該站五位貢獻者。此頁措辭僅寫身分，**不提對方域名、不放對方站連結**；GitHub 帳號與信箱依 2026-08-23 使用者指示列出
 
 ## Git 規範
 
@@ -57,7 +57,7 @@
 - **圓角**為核心設計語言（radius tokens 見 `src/styles/tokens.css`）
 - 品牌色：臺科深紅；分類色：北捷路線色（選課綠、生活藍、資訊橘、其他棕）
 - 動畫：**首頁**進場與互動動畫已依使用者指示實作（進場上浮、路線描線、hover 微互動）；其他頁面新增動畫仍待指示
-- 首頁**不顯示 header 與 footer**（`Base.astro` 的 `chrome` 開關），僅保留單一入口按鈕（`/article/start/`）與行事曆
+- 首頁**不顯示 header 與 footer**（`Base.astro` 的 `chrome` 開關），只有兩顆按鈕（實心「進入懶人包」＋外框「銘謝」）與行事曆
 - 行事曆顯示**當學年 ±1 學年**（保底；client 依今日計算窗口，資料載入 113–115）、hover 顯示事件 popup、更新時間收在標題旁的 i 提示卡
 
 ## 內容架構
@@ -83,13 +83,14 @@
 
 ## 銘謝頁（`/thanks/`）
 
-- 區塊順序固定：創辦人 → 原始貢獻者 → GitHub 貢獻者。**不設專案管理員區塊**，現任維護者本來就在 GitHub 貢獻者網格裡
+- 區塊順序固定：原始團隊 → GitHub 貢獻者。**不設專案管理員區塊**，現任維護者本來就在 GitHub 貢獻者網格裡
+- 原始團隊一區內創辦人排第一張卡，靠 `chip--founder` 標籤與底色與其他人區分，不另開一節
 - **人工資料**：`src/data/credits.json`（創辦人、原始貢獻者）。這兩塊是歷史事實、不會再變動，所以版面以美觀為先，不為未來擴充預留結構
 - **自動資料**：GitHub 貢獻者名單由 `src/pages/thanks.astro` 在 build 時打 GitHub API 取得，**不落地成檔案、不進 git**。合併 PR 會觸發 Cloudflare Pages 重建，名單與頭像隨部署更新
 - API 失敗（離線、rate limit、GitHub 掛掉）時該區塊退化成 repo 連結，**build 不中斷**；build log 留 `[thanks]` 警告
 - 匿名 API 為 60 次/小時/IP。CI 用 `secrets.GITHUB_TOKEN`；Cloudflare Pages 端目前不設 token，撞到 rate limit 再於 dashboard 加環境變數 `GITHUB_TOKEN`
 - 頭像直連 `avatars.githubusercontent.com`（CSP `img-src` 已放行）。**這是第三方帳號頭像的唯一例外，內容圖片仍一律自託管於 `public/images/<slug>/`**
-- 卡片一律走 `src/components/PersonCard.astro`：頭像直連 `https://avatars.githubusercontent.com/<login>?s=160`（用帳號即可，不必查 user id），整張卡點擊開 GitHub（stretched link），右側飛機圖示 `mailto:`。`github` 留空字串者卡片不可點、頭像退化成空圓
+- 卡片一律走 `src/components/PersonCard.astro`（`founder` prop 決定標籤與底色）：頭像直連 `https://avatars.githubusercontent.com/<login>?s=160`（用帳號即可，不必查 user id），整張卡點擊開 GitHub（stretched link），右側飛機圖示 `mailto:`。`github` 留空字串者卡片不可點、頭像退化成空圓
 - 創辦人與原始貢獻者的信箱經 2026-08-23 使用者指示公開，來源為對方公開 about 頁的存檔 `docs/dump/about.md`；**其餘任何人的信箱一律不得逕自補上**
 - 有 `mailto:` 的區塊必須包在 `<!--email_off-->` 內：Cloudflare Email Obfuscation 會改寫信箱，而它的解碼 script 被 CSP 擋掉，畫面會殘留 [email protected]
 - 名單長到版面明顯過長時，再拆 `/thanks/archive/`，屆時只是搬資料

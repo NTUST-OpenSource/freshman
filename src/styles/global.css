@@ -630,11 +630,18 @@ main {
   color: var(--ink-soft);
 }
 
+.landing__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.7rem;
+  margin-top: 2.2rem;
+}
+
 .landing__cta {
   display: inline-flex;
   align-items: center;
   gap: 0.6em;
-  margin-top: 2.2rem;
   padding: 0.85em 1.7em;
   font-size: 1.05rem;
   font-weight: 750;
@@ -650,6 +657,21 @@ main {
   background: color-mix(in oklab, var(--brand) 88%, black);
   translate: 0 -2px;
   box-shadow: 0 10px 26px color-mix(in oklab, var(--brand) 35%, transparent);
+}
+
+/* border eats into the padding so both pills keep the same height */
+.landing__cta--ghost {
+  padding: calc(0.85em - 1px) calc(1.7em - 1px);
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--line-strong);
+}
+
+.landing__cta--ghost:hover {
+  color: var(--brand);
+  border-color: var(--brand);
+  background: color-mix(in oklab, var(--brand) 6%, var(--paper));
+  box-shadow: none;
 }
 
 .landing__cta-arrow {

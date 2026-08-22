@@ -15,10 +15,15 @@ import Calendar from '../components/Calendar.astro';
         <h1 class="landing__title landing-rise" style="--d: 2">
           天大地大<br />臺科大
         </h1>
-        <a class="landing__cta landing-rise" style="--d: 4" href="/article/start/">
-          進入懶人包
-          <span class="landing__cta-arrow" aria-hidden="true"></span>
-        </a>
+        <div class="landing__actions landing-rise" style="--d: 4">
+          <a class="landing__cta" href="/article/start/">
+            進入懶人包
+            <span class="landing__cta-arrow" aria-hidden="true"></span>
+          </a>
+          <a class="landing__cta landing__cta--ghost" href="/thanks/" data-astro-prefetch="hover">
+            銘謝
+          </a>
+        </div>
       </div>
 
       <div class="landing__route" aria-hidden="true">
