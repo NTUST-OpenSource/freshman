@@ -1,0 +1,39 @@
+name: Contributors
+
+# 貢獻者名單與頭像同步。產出寫回 dev（main 是線上正式版，隨下次發布一起上線）。
+on:
+  schedule:
+    - cron: '17 3 * * 1' # 每週一 03:17 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: contributors-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: dev
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - name: Ensure ImageMagick
+        run: |
+          if ! command -v magick >/dev/null && ! command -v convert >/dev/null; then
+            sudo apt-get update
+            sudo apt-get install -y --no-install-recommends imagemagick
+          fi
+      - run: node scripts/sync_contributors.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # 直接 git push 的 commit 不帶簽章；走 GraphQL 由 GitHub 代簽，分支上顯示 Verified
+      - run: node scripts/commit_signed.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: dev
