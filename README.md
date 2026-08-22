@@ -74,15 +74,7 @@ content layer 以內容 digest 快取渲染結果，快取實體在 `node_module
 
 ## 貢獻者
 
-<!-- contributors:start -->
-
-<table>
-  <tr><td align="center"><a href="https://github.com/xinshoutw"><img src="https://avatars.githubusercontent.com/u/41276723?v=4&s=80" width="80" height="80" alt=""><br><sub>xinshoutw</sub></a></td><td align="center"><a href="https://github.com/aionyx02"><img src="https://avatars.githubusercontent.com/u/217529542?v=4&s=80" width="80" height="80" alt=""><br><sub>aionyx02</sub></a></td><td align="center"><a href="https://github.com/SamWang8891"><img src="https://avatars.githubusercontent.com/u/73735177?v=4&s=80" width="80" height="80" alt=""><br><sub>SamWang8891</sub></a></td><td align="center"><a href="https://github.com/slimuCS"><img src="https://avatars.githubusercontent.com/u/125249013?v=4&s=80" width="80" height="80" alt=""><br><sub>slimuCS</sub></a></td></tr>
-</table>
-
-<!-- contributors:end -->
-
-名單由 [`.github/workflows/contributors.yml`](.github/workflows/contributors.yml) 每週自動更新。創辦人、歷屆專案管理員與完整銘謝見網站的[銘謝頁](https://freshman.ntust.org/thanks/)。
+完整名單見網站的[銘謝頁](https://freshman.ntust.org/thanks/)：創辦人、原始貢獻者，以及自動更新的 GitHub 貢獻者網格。
 
 ## 授權
 

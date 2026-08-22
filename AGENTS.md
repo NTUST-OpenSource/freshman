@@ -11,7 +11,7 @@
 - 導航：View Transitions 縱向滑動、header 獨立 group（文章間靜止、進出首頁滑入滑出）、sticky 毛玻璃 header、自訂系別下拉
 - SEO 基礎：site=https://freshman.ntust.org、canonical、sitemap、robots.txt、OG 完整、WebSite/Article JSON-LD、404 頁
 - RWD 基線：320px 起 header／landing／文章／popup 皆不溢出，文章目錄避開 sticky header
-- 銘謝頁 `/thanks/`：本屆管理員大卡、創辦人與前屆貢獻者、GitHub 貢獻者網格；名單與頭像由 workflow 每週同步（規則見「銘謝頁」一節）
+- 銘謝頁 `/thanks/`：創辦人、原始貢獻者、GitHub 貢獻者網格；GitHub 名單與頭像於 build 時向 API 取得（規則見「銘謝頁」一節）
 
 **待辦（大項）**
 - Cloudflare Pages 自訂網域 DNS 綁定（使用者操作）
@@ -21,8 +21,9 @@
 
 ## 語言規範
 
-- 網站 UI 文案、內容、註解、文件一律**繁體中文**
+- 網站 UI 文案、內容、文件一律**繁體中文**
 - 例外：程式碼識別字、網址、無慣用中文譯名的專有名詞（NTUST、GPA、Moodle）
+- **程式碼註解一律英文，且必須是斷言句**：只寫「刪掉之後下一個人會踩到」的事（非顯而易見的限制、平台怪癖、順序相依）。不寫辯護、不重述程式碼在做什麼、不記錄當初為什麼沒選另一條路。既有中文註解在動到該檔時順手換掉
 - 內容文字規範：標點符號全形、數字與英文字母半形、CJK 與數字或英文字母交界加半形空白
 
 ## 禁止事項
@@ -39,7 +40,7 @@
   - 圖片自託管於 `public/images/<slug>/`，不熱鏈外站
 - `docs/dump/` 為該站內容的 Markdown 存檔，供改寫與事實查證使用
 - 站內不放指向該站的導流連結或「舊版／新版」式的說明文字
-- **例外：`/thanks/` 銘謝頁**（2026-08-23 使用者決議）具名致謝該站創辦人與貢獻者 —— 「創辦人」列 Choseph Qian，「前屆貢獻者」列該站五位貢獻者。此頁措辭僅寫身分，**不提對方域名、不放對方站連結**（個人網站連結為當事人自己的展示頁，不在此限），也不轉載其信箱
+- **例外：`/thanks/` 銘謝頁**（2026-08-23 使用者決議）具名致謝該站創辦人與貢獻者 —— 「創辦人」列 Choseph Qian，「原始貢獻者」列該站五位貢獻者。此頁措辭僅寫身分，**不提對方域名、不放對方站連結**（個人網站連結為當事人自己的展示頁，不在此限），也不轉載其信箱
 
 ## Git 規範
 
@@ -82,14 +83,14 @@
 
 ## 銘謝頁（`/thanks/`）
 
-- 區塊順序固定：本屆專案管理員 → 創辦人與前屆貢獻者 → 歷屆專案管理員 → GitHub 貢獻者
-- **人工資料**：`src/data/credits.json`（創辦人、前屆貢獻者、各學年度管理員）。換屆時在 `terms` 陣列**新增一筆**新學年度物件即可，頁面自動把最大學年度當本屆、其餘落到「歷屆」，舊資料不刪
-- 前屆貢獻者是**依學年度分組的陣列**：`legacy: [{ years: [113, 114], people: [...] }]`。標題「前屆貢獻者」之下每組印一個學年度標籤，新增一組就往下長；`years` 會排序後收成 `113–114 學年度`，單一學年度時不畫破折號
-- **自動資料**：`src/data/contributors.json` 與 `public/images/people/*.webp` 由 `.github/workflows/contributors.yml`（每週一 cron ＋ 手動觸發）產生，**不要手改**；該目錄完全由 `scripts/sync_contributors.mjs` 管理，離開名單者的頭像會被清掉
-- 頭像一律自託管（160×160 WebP），CSP 不放行 `avatars.githubusercontent.com`；README 的貢獻者區塊不受此限（那不是本站頁面）
-- CI 的 commit 走 `scripts/commit_signed.mjs`（GraphQL `createCommitOnBranch`）寫回 **dev**，由 GitHub 代簽，維持「所有 commit 皆已簽章」
-- 管理員信箱以當事人明示提供為準，未提供者顯示「信箱尚未提供」，不得從 git 歷史或 frontmatter 逕自補上
-- 歷屆累積到約三屆或版面明顯過長時，再拆 `/thanks/archive/`，屆時只是搬資料
+- 區塊順序固定：創辦人 → 原始貢獻者 → GitHub 貢獻者。**不設專案管理員區塊**，現任維護者本來就在 GitHub 貢獻者網格裡
+- **人工資料**：`src/data/credits.json`（創辦人、原始貢獻者）。這兩塊是歷史事實、不會再變動，所以版面以美觀為先，不為未來擴充預留結構
+- **自動資料**：GitHub 貢獻者名單由 `src/pages/thanks.astro` 在 build 時打 GitHub API 取得，**不落地成檔案、不進 git**。合併 PR 會觸發 Cloudflare Pages 重建，名單與頭像隨部署更新
+- API 失敗（離線、rate limit、GitHub 掛掉）時該區塊退化成 repo 連結，**build 不中斷**；build log 留 `[thanks]` 警告
+- 匿名 API 為 60 次/小時/IP。CI 用 `secrets.GITHUB_TOKEN`；Cloudflare Pages 端目前不設 token，撞到 rate limit 再於 dashboard 加環境變數 `GITHUB_TOKEN`
+- 頭像直連 `avatars.githubusercontent.com`（CSP `img-src` 已放行）。**這是第三方帳號頭像的唯一例外，內容圖片仍一律自託管於 `public/images/<slug>/`**
+- 不放信箱：本頁只寫身分與當事人自己的展示頁連結
+- 名單長到版面明顯過長時，再拆 `/thanks/archive/`，屆時只是搬資料
 
 ## 工作流程
 
