@@ -8,7 +8,7 @@ contributors:
   - name: slimuCS
     email: slimu.cs@gmail.com 
 order: 98
-updated: 2026-08-15
+updated: 2026-08-23
 ---
 
 :::tip[不會寫程式也能參與嗎？]
@@ -222,3 +222,5 @@ noindex: false          # true 時上線但不進搜尋引擎
 :::tip
 第一次開源貢獻難免會遇到卡關，這非常正常！遇到任何問題隨時開 Issue 發問，這裡的大家都很樂意協助你。
 :::
+
+::card[銘謝]{href="/thanks/" desc="原始團隊與貢獻者名單；你的下一個 PR 合併後，名字也會出現在上面"}

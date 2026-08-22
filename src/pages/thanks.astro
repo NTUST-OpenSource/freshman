@@ -1,0 +1,162 @@
+---
+import Base from '../layouts/Base.astro';
+import PersonCard from '../components/PersonCard.astro';
+import credits from '../data/credits.json';
+import { getContributors } from '../lib/contributors.mjs';
+
+const contributors = await getContributors();
+---
+
+<Base
+  title="銘謝"
+  description="臺科新生懶人包的原始團隊與貢獻者名單。"
+>
+  <div class="thanks" data-cascade>
+    <header class="thanks__head">
+      <h1 class="thanks__h1">銘謝</h1>
+    </header>
+
+    {/* Cloudflare rewrites mailto links and its decoder is blocked by the CSP, leaving [email protected] */}
+    <Fragment set:html="<!--email_off-->" />
+
+    <section class="thanks__section">
+      <h2 class="thanks__h2">原始團隊</h2>
+      <ul class="people">
+        <PersonCard {...credits.founder} founder />
+        {credits.contributors.map((p) => <PersonCard {...p} />)}
+      </ul>
+    </section>
+
+    <Fragment set:html="<!--/email_off-->" />
+
+    <section class="thanks__section">
+      <h2 class="thanks__h2">貢獻者</h2>
+      <p class="thanks__note">
+        依貢獻數排序，詳情請見
+        <a href="/article/contribute/">如何貢獻</a>
+      </p>
+      {
+        contributors === null ? (
+          <p class="thanks__note">
+            名單暫時取不到，請直接看
+            <a href="https://github.com/NTUST-OpenSource/freshman/graphs/contributors" target="_blank" rel="noopener noreferrer">
+              GitHub 上的貢獻者
+            </a>
+            。
+          </p>
+        ) : (
+          <ul class="gh">
+            {contributors.map((c) => (
+              <li>
+                <a class="gh__item" href={c.url} target="_blank" rel="noopener noreferrer">
+                  <img
+                    class="gh__avatar"
+                    src={`https://avatars.githubusercontent.com/${c.login}?s=160`}
+                    alt=""
+                    width="160"
+                    height="160"
+                    loading="lazy"
+                  />
+                  <span class="gh__login">{c.login}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </section>
+  </div>
+</Base>
+
+<style is:global>
+  .thanks {
+    max-width: 62rem;
+    margin-inline: auto;
+    padding: clamp(2.5rem, 6vh, 4.5rem) 1.25rem 2rem;
+  }
+
+  .thanks__head {
+    margin-bottom: 2.6rem;
+  }
+
+  .thanks__h1 {
+    font-size: var(--text-h1);
+    font-weight: 800;
+    letter-spacing: 0.02em;
+  }
+
+  .thanks__section + .thanks__section {
+    margin-top: 3rem;
+  }
+
+  .thanks__h2 {
+    font-size: var(--text-h2);
+    font-weight: 700;
+  }
+
+  .thanks__note {
+    margin-top: 0.7rem;
+    max-width: var(--measure);
+    color: var(--ink-soft);
+    font-size: var(--text-small);
+    line-height: 1.85;
+  }
+
+  /* ---- GitHub contributor grid ---- */
+  .gh {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-top: 1.4rem;
+    list-style: none;
+  }
+
+  .gh__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.45rem;
+    width: 6.5rem;
+    padding: 0.9rem 0.4rem;
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    color: var(--ink);
+    text-decoration: none;
+    transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease);
+  }
+
+  .gh__item:hover {
+    border-color: var(--line);
+    background: var(--surface);
+  }
+
+  .gh__avatar {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    background: var(--surface);
+  }
+
+  .gh__login {
+    font-family: var(--font-mono);
+    font-size: var(--text-tiny);
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+
+  @media (max-width: 40rem) {
+    .gh__item {
+      width: 5.5rem;
+      padding: 0.7rem 0.3rem;
+    }
+
+    .gh__avatar {
+      width: 3rem;
+      height: 3rem;
+    }
+  }
+</style>
+

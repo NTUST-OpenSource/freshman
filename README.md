@@ -72,6 +72,10 @@ content layer 以內容 digest 快取渲染結果，快取實體在 `node_module
 
 不會用 Git 也可以參與，錯字之類的小修改全程能在 GitHub 網頁上點擊完成。完整步驟、寫作守則與送出前檢查清單見網站上的 [如何貢獻](https://freshman.ntust.org/article/contribute/)。
 
+## 貢獻者
+
+完整名單見網站的[銘謝頁](https://freshman.ntust.org/thanks/)：原始團隊，以及自動更新的貢獻者網格。
+
 ## 授權
 
 本專案以 [MIT License](LICENSE) 釋出。
