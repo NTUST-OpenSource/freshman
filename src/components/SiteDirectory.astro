@@ -1,0 +1,44 @@
+---
+interface NavItem {
+  data: {
+    slug: string;
+    title: string;
+  };
+}
+
+interface NavGroup {
+  key: string;
+  label: string;
+  items: NavItem[];
+}
+
+interface Props {
+  groups: NavGroup[];
+  currentPath: string;
+}
+
+const { groups, currentPath } = Astro.props;
+---
+
+<nav aria-label="全站文章目錄">
+  {
+    groups.map((group) => (
+      <div class={`navdrawer__group cat-${group.key}`}>
+        <p class="navdrawer__group-label">{group.label}</p>
+        <ul class="navdrawer__list">
+          {group.items.map((article) => (
+            <li>
+              <a
+                href={`/article/${article.data.slug}/`}
+                data-astro-prefetch="hover"
+                aria-current={currentPath === `/article/${article.data.slug}/` ? 'page' : undefined}
+              >
+                {article.data.title}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))
+  }
+</nav>

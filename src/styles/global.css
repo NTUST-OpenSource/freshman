@@ -374,6 +374,10 @@ html.is-leaving .site-footer {
 }
 
 /* ---- 全站目錄抽屜（原生 popover，top-layer） ---- */
+.site-directory {
+  display: none;
+}
+
 .navdrawer {
   position: fixed;
   inset: 0 auto 0 0;
@@ -394,6 +398,37 @@ html.is-leaving .site-footer {
   /* allow-discrete：display/overlay 為離散屬性，不宣告就沒有關閉動畫 */
   transition: translate var(--dur) var(--ease), opacity var(--dur) var(--ease),
     display var(--dur) allow-discrete, overlay var(--dur) allow-discrete;
+}
+
+/* 桌面版：全站目錄改為從視窗頂端到底部的常駐導覽欄 */
+@media (min-width: 1280px) {
+  .has-site-directory {
+    --site-directory-width: 16rem;
+  }
+
+  .site-directory {
+    display: block;
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 41;
+    width: var(--site-directory-width);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 1.15rem 1.1rem 2.4rem;
+    background: var(--paper);
+    border-right: 1px solid var(--line);
+  }
+
+  .has-site-directory .site-header,
+  .has-site-directory main,
+  .has-site-directory .site-footer {
+    margin-left: var(--site-directory-width);
+  }
+
+  .navdrawer__btn,
+  .navdrawer {
+    display: none !important;
+  }
 }
 
 .navdrawer:popover-open {
@@ -1055,6 +1090,7 @@ main {
   .site-header,
   .site-footer,
   .toc,
+  .site-directory,
   .navdrawer,
   .cal__today-btn,
   .code-copy {
