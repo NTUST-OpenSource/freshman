@@ -2,14 +2,14 @@
   "founder": {
     "name": "Choseph Qian",
     "alias": "FongHen",
-    "site": "https://steamcommunity.com/id/FongH3n/",
-    "github": ""
+    "github": "FongHen",
+    "email": "fonghen0@gmail.com"
   },
   "contributors": [
-    { "name": "Merlin Kuo", "site": "https://www.merlinkuo.tw/", "github": "" },
-    { "name": "Felix Chen", "site": "https://www.felixchen.tw/", "github": "" },
-    { "name": "Vic Wen", "site": "https://vicwen.app/", "github": "" },
-    { "name": "Owen Wu", "site": "https://wusandwitch.zudo.cc/", "github": "" },
-    { "name": "Keng Liao", "site": "", "github": "" }
+    { "name": "Merlin Kuo", "github": "yuchen5564", "email": "me@merlinkuo.tw" },
+    { "name": "Felix Chen", "github": "felixchen-tw", "email": "me@felixchen.tw" },
+    { "name": "Vic Wen", "github": "viiccwen", "email": "viiccwen@gmail.com" },
+    { "name": "Owen Wu", "github": "WuSandWitch", "email": "wusandwitch@gmail.com" },
+    { "name": "Keng Liao", "github": "", "email": "m11402102@mail.ntust.edu.tw" }
   ]
 }

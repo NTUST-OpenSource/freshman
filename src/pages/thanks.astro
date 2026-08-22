@@ -1,14 +1,13 @@
 ---
 import Base from '../layouts/Base.astro';
+import PersonCard from '../components/PersonCard.astro';
 import credits from '../data/credits.json';
 
 const REPO = 'NTUST-OpenSource/freshman';
-const repoUrl = `https://github.com/${REPO}`;
 
 type Contributor = {
   login: string;
   html_url: string;
-  avatar_url: string;
   contributions: number;
   type: string;
 };
@@ -28,17 +27,11 @@ async function fetchContributors(): Promise<Contributor[]> {
     .sort((a, b) => b.contributions - a.contributions || a.login.localeCompare(b.login));
 }
 
-const avatarOf = (avatarUrl: string) => {
-  const url = new URL(avatarUrl);
-  url.searchParams.set('s', '160');
-  return url.toString();
-};
-
 let contributors: Contributor[] = [];
 try {
   contributors = await fetchContributors();
 } catch (err) {
-  console.warn(`[thanks] contributor list unavailable, falling back to the repo link: ${err}`);
+  console.warn(`[thanks] contributor list unavailable, the grid is omitted: ${err}`);
 }
 ---
 
@@ -51,54 +44,30 @@ try {
       <h1 class="thanks__h1">銘謝</h1>
     </header>
 
+    {/* Cloudflare rewrites mailto links and its decoder is blocked by the CSP, leaving [email protected] */}
+    <Fragment set:html="<!--email_off-->" />
+
     <section class="thanks__section">
       <h2 class="thanks__h2">創辦人</h2>
-      <div class="person person--founder">
-        <p class="person__name">
-          {credits.founder.name}
-          {credits.founder.alias && <span class="person__alias">aka {credits.founder.alias}</span>}
-        </p>
-        <p class="person__links">
-          {credits.founder.site && (
-            <a href={credits.founder.site} target="_blank" rel="noopener noreferrer">個人網站</a>
-          )}
-          {credits.founder.github && (
-            <a href={`https://github.com/${credits.founder.github}`} target="_blank" rel="noopener noreferrer">
-              @{credits.founder.github}
-            </a>
-          )}
-        </p>
-      </div>
+      <ul class="people people--single">
+        <PersonCard {...credits.founder} />
+      </ul>
     </section>
 
     <section class="thanks__section">
       <h2 class="thanks__h2">原始貢獻者</h2>
       <ul class="people">
-        {
-          credits.contributors.map((p) => (
-            <li class="person">
-              <p class="person__name">{p.name}</p>
-              <p class="person__links">
-                {p.site && (
-                  <a href={p.site} target="_blank" rel="noopener noreferrer">個人網站</a>
-                )}
-                {p.github && (
-                  <a href={`https://github.com/${p.github}`} target="_blank" rel="noopener noreferrer">
-                    @{p.github}
-                  </a>
-                )}
-              </p>
-            </li>
-          ))
-        }
+        {credits.contributors.map((p) => <PersonCard {...p} />)}
       </ul>
     </section>
+
+    <Fragment set:html="<!--/email_off-->" />
 
     <section class="thanks__section">
       <h2 class="thanks__h2">GitHub 貢獻者</h2>
       <p class="thanks__note">
-        名單依貢獻數排序，每次網站建置時自動更新。想讓自己的名字出現在這裡，看
-        <a href="/article/contribute/">如何貢獻</a>。
+        依貢獻數排序，詳情請見
+        <a href="/article/contribute/">如何貢獻</a>
       </p>
       {
         contributors.length > 0 && (
@@ -108,7 +77,7 @@ try {
                 <a class="gh__item" href={c.html_url} target="_blank" rel="noopener noreferrer">
                   <img
                     class="gh__avatar"
-                    src={avatarOf(c.avatar_url)}
+                    src={`https://avatars.githubusercontent.com/${c.login}?s=160`}
                     alt=""
                     width="160"
                     height="160"
@@ -121,9 +90,6 @@ try {
           </ul>
         )
       }
-      <a class="thanks__repo" href={repoUrl} target="_blank" rel="noopener noreferrer">
-        {REPO}
-      </a>
     </section>
   </div>
 </Base>
@@ -160,72 +126,6 @@ try {
     color: var(--ink-soft);
     font-size: var(--text-small);
     line-height: 1.85;
-  }
-
-  /* ---- founder and original contributors ---- */
-  .people {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(10.5rem, 1fr));
-    gap: 0.7rem;
-    margin-top: 1.2rem;
-    list-style: none;
-  }
-
-  .person {
-    padding: 0.85rem 1rem 0.9rem;
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    background: var(--paper);
-    transition: border-color var(--dur) var(--ease), translate var(--dur) var(--ease);
-  }
-
-  .person:hover {
-    border-color: var(--line-strong);
-    translate: 0 -2px;
-  }
-
-  .person--founder {
-    max-width: 20rem;
-    margin-top: 1.2rem;
-    border-color: color-mix(in oklab, var(--brand) 30%, var(--line));
-    background: color-mix(in oklab, var(--brand) 4%, var(--paper));
-  }
-
-  .person__name {
-    font-weight: 700;
-    line-height: 1.5;
-  }
-
-  .person--founder .person__name {
-    font-size: var(--text-h3);
-    color: var(--brand);
-  }
-
-  .person__alias {
-    margin-left: 0.45rem;
-    font-size: var(--text-tiny);
-    font-weight: 500;
-    color: var(--ink-soft);
-  }
-
-  .person__links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.2rem 0.7rem;
-    margin-top: 0.35rem;
-    font-size: var(--text-tiny);
-  }
-
-  .person__links a {
-    color: var(--ink-soft);
-    text-decoration: none;
-    border-bottom: 1px solid var(--line);
-    transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease);
-  }
-
-  .person__links a:hover {
-    color: var(--brand);
-    border-color: var(--brand);
   }
 
   /* ---- GitHub contributor grid ---- */
@@ -272,13 +172,6 @@ try {
     white-space: nowrap;
   }
 
-  .thanks__repo {
-    display: inline-block;
-    margin-top: 1.4rem;
-    font-family: var(--font-mono);
-    font-size: var(--text-tiny);
-    color: var(--ink-soft);
-  }
 
   @media (max-width: 40rem) {
     .gh__item {

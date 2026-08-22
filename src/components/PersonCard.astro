@@ -1,0 +1,174 @@
+---
+interface Props {
+  name: string;
+  alias?: string;
+  github?: string;
+  email?: string;
+}
+
+const { name, alias, github, email } = Astro.props;
+---
+
+<li class="person">
+  {
+    github ? (
+      <img
+        class="person__avatar"
+        src={`https://avatars.githubusercontent.com/${github}?s=160`}
+        alt=""
+        width="160"
+        height="160"
+        loading="lazy"
+      />
+    ) : (
+      <span class="person__avatar" aria-hidden="true" />
+    )
+  }
+  <div class="person__id">
+    <p class="person__name">
+      {name}
+      {alias && <span class="person__alias">aka {alias}</span>}
+    </p>
+    {
+      github && (
+        <a
+          class="person__gh"
+          href={`https://github.com/${github}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          @{github}
+        </a>
+      )
+    }
+  </div>
+  {
+    email && (
+      <a class="person__mail" href={`mailto:${email}`} aria-label={`寄信給 ${name}`}>
+        <span class="person__mail-icon" aria-hidden="true" />
+      </a>
+    )
+  }
+</li>
+
+<style is:global>
+  .people {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(14.5rem, 1fr));
+    gap: 0.7rem;
+    margin-top: 1.2rem;
+    list-style: none;
+  }
+
+  .people--single {
+    grid-template-columns: minmax(0, 22rem);
+  }
+
+  .person {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.7rem 0.8rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--paper);
+    transition: border-color var(--dur) var(--ease), translate var(--dur) var(--ease);
+  }
+
+  .person:hover,
+  .person:focus-within {
+    border-color: var(--line-strong);
+    translate: 0 -2px;
+  }
+
+  .person__avatar {
+    flex: none;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    background: var(--surface);
+  }
+
+  .person__id {
+    min-width: 0; /* flex child needs it before the handle can ellipsis */
+  }
+
+  .person__name {
+    font-weight: 700;
+    line-height: 1.4;
+  }
+
+  .person__alias {
+    margin-left: 0.4rem;
+    font-size: var(--text-tiny);
+    font-weight: 500;
+    color: var(--ink-soft);
+  }
+
+  .person__gh {
+    display: block;
+    overflow: hidden;
+    font-family: var(--font-mono);
+    font-size: var(--text-tiny);
+    color: var(--ink-soft);
+    text-decoration: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: color var(--dur) var(--ease);
+  }
+
+  /* stretched to the card, so anywhere outside the mail link opens GitHub */
+  .person__gh::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+  }
+
+  .person:hover .person__gh {
+    color: var(--brand);
+  }
+
+  .person__mail {
+    position: relative; /* lifts the link above the stretched GitHub overlay */
+    z-index: 1;
+    flex: none;
+    display: inline-flex;
+    margin-left: auto;
+    padding: 0.4rem;
+    border-radius: var(--radius-s);
+    transition: background var(--dur) var(--ease);
+  }
+
+  .person__mail:hover {
+    background: color-mix(in oklab, var(--brand) 10%, var(--paper));
+  }
+
+  .person__mail-icon {
+    width: 1.05rem;
+    height: 1.05rem;
+    background: var(--ink-soft);
+    mask: url('/icons/send.svg') no-repeat center / contain;
+    -webkit-mask: url('/icons/send.svg') no-repeat center / contain;
+    transition: background var(--dur) var(--ease);
+  }
+
+  .person__mail:hover .person__mail-icon {
+    background: var(--brand);
+  }
+
+  .people--single .person {
+    border-color: color-mix(in oklab, var(--brand) 30%, var(--line));
+    background: color-mix(in oklab, var(--brand) 4%, var(--paper));
+  }
+
+  .people--single .person__avatar {
+    width: 3.25rem;
+    height: 3.25rem;
+  }
+
+  .people--single .person__name {
+    font-size: var(--text-h3);
+  }
+</style>
