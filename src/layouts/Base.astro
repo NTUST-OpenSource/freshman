@@ -362,6 +362,26 @@ const navGroups = Object.entries(CATEGORIES)
         sync();
       }
 
+      function initCascade() {
+        const blocks = document.querySelectorAll<HTMLElement>('[data-cascade] > *');
+        if (!blocks.length) return;
+        let i = 0;
+        for (const block of blocks) {
+          if (block.classList.contains('md-cascade')) continue;
+          block.classList.add('md-cascade');
+          block.style.transitionDelay = `${Math.min(i * 35, 500)}ms`;
+          i++;
+        }
+        requestAnimationFrame(() =>
+          requestAnimationFrame(() => {
+            for (const block of blocks) block.classList.add('md-cascade--in');
+            setTimeout(() => {
+              for (const block of blocks) block.style.transitionDelay = '';
+            }, 1100);
+          }),
+        );
+      }
+
       function initCodeCopy() {
         for (const pre of document.querySelectorAll('pre.astro-code')) {
           if (pre.querySelector('.code-copy')) continue;
@@ -418,6 +438,7 @@ const navGroups = Object.entries(CATEGORIES)
 
       document.addEventListener('astro:page-load', () => {
         initDeptPicker();
+        initCascade();
         initCodeCopy();
         initYt();
         initMermaid();

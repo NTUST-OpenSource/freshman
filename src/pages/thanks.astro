@@ -46,7 +46,7 @@ try {
   title="銘謝"
   description="臺科新生懶人包的創辦人、原始貢獻者與 GitHub 貢獻者名單。"
 >
-  <div class="thanks">
+  <div class="thanks" data-cascade>
     <header class="thanks__head">
       <h1 class="thanks__h1">銘謝</h1>
     </header>
@@ -293,27 +293,3 @@ try {
   }
 </style>
 
-<script>
-  // 與文章頁同一套逐塊淡入（.md-cascade 定義在 article.css），不等捲動
-  function initThanksCascade() {
-    const blocks = document.querySelectorAll<HTMLElement>('.thanks > *');
-    if (!blocks.length) return;
-    let i = 0;
-    for (const block of blocks) {
-      if (block.classList.contains('md-cascade')) continue;
-      block.classList.add('md-cascade');
-      block.style.transitionDelay = `${Math.min(i * 45, 400)}ms`;
-      i++;
-    }
-    requestAnimationFrame(() =>
-      requestAnimationFrame(() => {
-        for (const block of blocks) block.classList.add('md-cascade--in');
-        setTimeout(() => {
-          for (const block of blocks) block.style.transitionDelay = '';
-        }, 1000);
-      }),
-    );
-  }
-
-  document.addEventListener('astro:page-load', initThanksCascade);
-</script>
