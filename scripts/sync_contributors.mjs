@@ -57,8 +57,10 @@ async function fetchContributors() {
     out.push(...batch);
     if (batch.length < 100) break;
   }
-  // API 已依貢獻數由多到少排序；bot 不是人，不列入銘謝
-  return out.filter((c) => c.type !== 'Bot' && !c.login.endsWith('[bot]'));
+  // bot 不是人，不列入銘謝；排序不靠 API 預設，多頁串接後自己排一次才有保證
+  return out
+    .filter((c) => c.type !== 'Bot' && !c.login.endsWith('[bot]'))
+    .sort((a, b) => b.contributions - a.contributions || a.login.localeCompare(b.login));
 }
 
 /** 下載頭像轉 WebP；內容與現有檔相同就不寫入，避免產生無意義 diff */
