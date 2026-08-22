@@ -572,6 +572,10 @@ html.is-leaving .site-footer {
     display: none;
   }
 
+  .nav-pill--contribute {
+    display: none !important;
+  }
+
   .site-header__links {
     gap: 0.5rem;
   }
