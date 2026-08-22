@@ -26,6 +26,6 @@
 - [x] 全專案對抗審查與修復（報告 `docs/review-2026-07-19.md`；2026-07-19）
 - [x] 行事曆 110–115 全年份轉換、例外歸零、link 自動附加（2026-07-19）
 - [x] `.claude/skills/calendar-sync` skill 建立
-- [x] 銘謝頁 `/thanks/`：創辦人、原始貢獻者、GitHub 貢獻者 build 時同步（2026-08-23）
+- [x] 銘謝頁 `/thanks/`：原始團隊與貢獻者名單，build 時同步（2026-08-23）
 - [x] commit 英文重寫＋GPG 簽章驗證、AGENTS.md、logo/favicon、SVG 圖示去 emoji、
       全繁中、white mode 圓角、首頁行事曆、系別選擇器（2026-07-19）

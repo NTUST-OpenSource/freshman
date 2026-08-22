@@ -11,7 +11,7 @@
 - 導航：View Transitions 縱向滑動、header 獨立 group（文章間靜止、進出首頁滑入滑出）、sticky 毛玻璃 header、自訂系別下拉
 - SEO 基礎：site=https://freshman.ntust.org、canonical、sitemap、robots.txt、OG 完整、WebSite/Article JSON-LD、404 頁
 - RWD 基線：320px 起 header／landing／文章／popup 皆不溢出，文章目錄避開 sticky header
-- 銘謝頁 `/thanks/`：創辦人、原始貢獻者、GitHub 貢獻者網格；GitHub 名單與頭像於 build 時向 API 取得（規則見「銘謝頁」一節）
+- 銘謝頁 `/thanks/`：原始團隊（創辦人＋原始貢獻者）與貢獻者網格；後者的名單與頭像於 build 時向 GitHub API 取得（規則見「銘謝頁」一節）
 
 **待辦（大項）**
 - Cloudflare Pages 自訂網域 DNS 綁定（使用者操作）
@@ -83,10 +83,10 @@
 
 ## 銘謝頁（`/thanks/`）
 
-- 區塊順序固定：原始團隊 → GitHub 貢獻者。**不設專案管理員區塊**，現任維護者本來就在 GitHub 貢獻者網格裡
+- 區塊順序固定：原始團隊 → 貢獻者。**不設專案管理員區塊**，現任維護者本來就在貢獻者網格裡
 - 原始團隊一區內創辦人排第一張卡，靠卡片右上角的 `Founder` 角標（`.person__tag`，方角實心臺科紅）與淡紅底色區分，不另開一節。此標籤是使用者指定的英文例外
 - **人工資料**：`src/data/credits.json`（創辦人、原始貢獻者）。這兩塊是歷史事實、不會再變動，所以版面以美觀為先，不為未來擴充預留結構
-- **自動資料**：GitHub 貢獻者名單由 `src/pages/thanks.astro` 在 build 時打 GitHub API 取得，**不落地成檔案、不進 git**。合併 PR 會觸發 Cloudflare Pages 重建，名單與頭像隨部署更新
+- **自動資料**：貢獻者名單由 `src/lib/contributors.mjs` 在 build 時打 GitHub API 取得，**不落地成檔案、不進 git**。合併 PR 會觸發 Cloudflare Pages 重建，名單與頭像隨部署更新
 - API 失敗（離線、rate limit、GitHub 掛掉）時該區塊退化成 repo 連結，**build 不中斷**；build log 留 `[thanks]` 警告
 - 匿名 API 為 60 次/小時/IP。CI 用 `secrets.GITHUB_TOKEN`；Cloudflare Pages 端目前不設 token，撞到 rate limit 再於 dashboard 加環境變數 `GITHUB_TOKEN`
 - fetch 一律走 `src/lib/contributors.mjs`，**不要寫回頁面 frontmatter**：dev 每個 request 都重跑 frontmatter，沒有 memo 的話按幾次重新整理就把 60 次額度燒光（已踩過）。成功結果寫進 `node_modules/.astro/contributors-cache.json`，API 失敗時吃這份快取，連快取都沒有才顯示「名單暫時取不到」

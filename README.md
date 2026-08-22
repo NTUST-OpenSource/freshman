@@ -74,7 +74,7 @@ content layer 以內容 digest 快取渲染結果，快取實體在 `node_module
 
 ## 貢獻者
 
-完整名單見網站的[銘謝頁](https://freshman.ntust.org/thanks/)：創辦人、原始貢獻者，以及自動更新的 GitHub 貢獻者網格。
+完整名單見網站的[銘謝頁](https://freshman.ntust.org/thanks/)：原始團隊，以及自動更新的貢獻者網格。
 
 ## 授權
 
