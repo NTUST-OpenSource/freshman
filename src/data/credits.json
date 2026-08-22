@@ -1,0 +1,31 @@
+{
+  "founder": {
+    "name": "Choseph Qian",
+    "alias": "FongHen",
+    "title": "臺科新生懶人包創辦人",
+    "site": "https://steamcommunity.com/id/FongH3n/"
+  },
+  "legacy": [
+    {
+      "years": [113, 114],
+      "people": [
+        { "name": "Merlin Kuo", "site": "https://www.merlinkuo.tw/" },
+        { "name": "Felix Chen", "site": "https://www.felixchen.tw/" },
+        { "name": "Vic Wen", "site": "https://vicwen.app/" },
+        { "name": "Owen Wu", "site": "https://wusandwitch.zudo.cc/" },
+        { "name": "Keng Liao" }
+      ]
+    }
+  ],
+  "terms": [
+    {
+      "year": 115,
+      "note": "本屆由三人共同維護，沒有分工；一個人改完，其他人複核過才上線。",
+      "members": [
+        { "name": "Aionyx Huang", "github": "aionyx02", "email": "me@aionyx.me" },
+        { "name": "xinshoutw Huang", "github": "xinshoutw", "email": "me@xinshou.tw" },
+        { "name": "slimu wu", "github": "slimuCS", "email": "slimu.cs@gmail.com" }
+      ]
+    }
+  ]
+}

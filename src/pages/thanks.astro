@@ -1,0 +1,427 @@
+---
+import Base from '../layouts/Base.astro';
+import credits from '../data/credits.json';
+import contributors from '../data/contributors.json';
+
+// 學年度倒序：最新一屆是現任，其餘落到「歷屆」
+const terms = [...credits.terms].sort((a, b) => b.year - a.year);
+const [current, ...past] = terms;
+const repoUrl = `https://github.com/${contributors.repo}`;
+// 任期標籤：連續學年度收成區間（113–114 學年度），單一學年度不畫破折號
+const termLabel = (years: number[]) => {
+  const sorted = [...years].sort((a, b) => a - b);
+  return `${sorted.length > 1 ? `${sorted[0]}–${sorted.at(-1)}` : sorted[0]} 學年度`;
+};
+const avatarOf = (login: string) => `/images/people/${login.toLowerCase()}.webp`;
+---
+
+<Base
+  title="銘謝"
+  description="臺科新生懶人包的創辦人、歷屆專案管理員與 GitHub 貢獻者名單。"
+>
+  <div class="thanks">
+    <header class="thanks__head">
+      <h1 class="thanks__h1">銘謝</h1>
+      <p class="thanks__lede">
+        這份懶人包由學長姐一屆一屆接手維護。以下是把它做出來、以及讓它繼續存在的人。
+      </p>
+    </header>
+
+    <section class="thanks__section">
+      <div class="thanks__bar">
+        <h2 class="thanks__h2">本屆專案管理員</h2>
+        <span class="chip">{current.year} 學年度</span>
+      </div>
+      <p class="thanks__note">{current.note}</p>
+      {/* email_off：Cloudflare Email Obfuscation 改寫信箱後，解碼 script 在 ClientRouter
+          swap 後不會重跑，畫面會殘留 [email protected] */}
+      <Fragment set:html="<!--email_off-->" />
+      <ul class="crew">
+        {
+          current.members.map((m) => (
+            <li class="crew__card">
+              <img
+                class="crew__avatar"
+                src={avatarOf(m.github)}
+                alt=""
+                width="160"
+                height="160"
+                loading="lazy"
+              />
+              <p class="crew__name">{m.name}</p>
+              <a class="crew__handle" href={`https://github.com/${m.github}`} target="_blank" rel="noopener noreferrer">
+                @{m.github}
+              </a>
+              {m.email ? (
+                <a class="crew__mail" href={`mailto:${m.email}`}>
+                  {m.email}
+                </a>
+              ) : (
+                <span class="crew__mail crew__mail--none">信箱尚未提供</span>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+      <Fragment set:html="<!--/email_off-->" />
+    </section>
+
+    <section class="thanks__section">
+      <h2 class="thanks__h2">創辦人</h2>
+      <div class="founder">
+        <p class="founder__name">
+          {credits.founder.name}
+          {credits.founder.alias && <span class="founder__alias">aka {credits.founder.alias}</span>}
+        </p>
+        <p class="founder__title">{credits.founder.title}</p>
+        {
+          credits.founder.site && (
+            <a class="founder__link" href={credits.founder.site} target="_blank" rel="noopener noreferrer">
+              About Me
+            </a>
+          )
+        }
+      </div>
+
+      <p class="thanks__h3">前屆貢獻者</p>
+      {
+        credits.legacy.map((group) => (
+          <div class="past">
+            <p class="thanks__label">{termLabel(group.years)}</p>
+            <ul class="legacy">
+              {group.people.map((p) => (
+                <li>
+                  {p.site ? (
+                    <a href={p.site} target="_blank" rel="noopener noreferrer">
+                      {p.name}
+                    </a>
+                  ) : (
+                    <span>{p.name}</span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </section>
+
+    {
+      past.length > 0 && (
+        <section class="thanks__section">
+          <h2 class="thanks__h2">歷屆專案管理員</h2>
+          {past.map((term) => (
+            <div class="past">
+              <p class="thanks__label">{termLabel([term.year])}</p>
+              <ul class="legacy">
+                {term.members.map((m) => (
+                  <li>
+                    <a href={`https://github.com/${m.github}`} target="_blank" rel="noopener noreferrer">
+                      {m.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </section>
+      )
+    }
+
+    <section class="thanks__section">
+      <h2 class="thanks__h2">GitHub 貢獻者</h2>
+      <p class="thanks__note">
+        名單依貢獻數排序，每週自動同步。想讓自己的名字出現在這裡，看
+        <a href="/article/contribute/">如何貢獻</a>。
+      </p>
+      <ul class="gh">
+        {
+          contributors.contributors.map((c) => (
+            <li>
+              <a class="gh__item" href={c.url} target="_blank" rel="noopener noreferrer">
+                <img class="gh__avatar" src={c.avatar} alt="" width="160" height="160" loading="lazy" />
+                <span class="gh__login">{c.login}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <a class="thanks__repo" href={repoUrl} target="_blank" rel="noopener noreferrer">
+        {contributors.repo}
+      </a>
+    </section>
+  </div>
+</Base>
+
+<style is:global>
+  .thanks {
+    max-width: 62rem;
+    margin-inline: auto;
+    padding: clamp(2.5rem, 6vh, 4.5rem) 1.25rem 2rem;
+  }
+
+  .thanks__head {
+    margin-bottom: 3rem;
+  }
+
+  .thanks__h1 {
+    font-size: var(--text-h1);
+    font-weight: 800;
+    letter-spacing: 0.02em;
+  }
+
+  .thanks__lede {
+    margin-top: 0.9rem;
+    max-width: var(--measure);
+    color: var(--ink-soft);
+    line-height: 1.9;
+  }
+
+  .thanks__section + .thanks__section {
+    margin-top: 3.5rem;
+  }
+
+  .thanks__bar {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+  }
+
+  .thanks__h2 {
+    font-size: var(--text-h2);
+    font-weight: 700;
+  }
+
+  .thanks__note {
+    margin-top: 0.7rem;
+    max-width: var(--measure);
+    color: var(--ink-soft);
+    font-size: var(--text-small);
+    line-height: 1.85;
+  }
+
+  /* 群組標題（前屆貢獻者）：其下依學年度分組，換屆時往下長 */
+  .thanks__h3 {
+    margin-top: 2.4rem;
+    font-size: var(--text-h3);
+    font-weight: 700;
+  }
+
+  /* 學年度標籤：一律掛在 .past 群組內，外距由群組控制 */
+  .thanks__label {
+    font-size: var(--text-tiny);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--ink-soft);
+  }
+
+  /* ---- 本屆管理員：大卡 ---- */
+  .crew {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 1rem;
+    margin-top: 1.4rem;
+    list-style: none;
+  }
+
+  .crew__card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.35rem;
+    padding: 1.8rem 1.2rem 1.5rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-l);
+    background: var(--paper);
+    transition: border-color var(--dur) var(--ease), translate var(--dur) var(--ease);
+  }
+
+  .crew__card:hover {
+    border-color: var(--line-strong);
+    translate: 0 -3px;
+  }
+
+  .crew__avatar {
+    width: 5.5rem;
+    height: 5.5rem;
+    border-radius: 50%;
+    background: var(--surface);
+    margin-bottom: 0.6rem;
+  }
+
+  .crew__name {
+    font-weight: 700;
+    font-size: 1.05rem;
+  }
+
+  .crew__handle {
+    font-family: var(--font-mono);
+    font-size: var(--text-small);
+    color: var(--brand);
+  }
+
+  .crew__mail {
+    font-size: var(--text-tiny);
+    color: var(--ink-soft);
+    word-break: break-all;
+  }
+
+  .crew__mail--none {
+    color: var(--line-strong);
+  }
+
+  /* ---- 創辦人：中卡 ---- */
+  .founder {
+    margin-top: 1.2rem;
+    max-width: 30rem;
+    padding: 1.4rem 1.6rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+
+  .founder__name {
+    font-size: var(--text-h3);
+    font-weight: 700;
+  }
+
+  .founder__alias {
+    margin-left: 0.5rem;
+    font-size: var(--text-small);
+    font-weight: 500;
+    color: var(--ink-soft);
+  }
+
+  .founder__title {
+    margin-top: 0.3rem;
+    color: var(--ink-soft);
+    font-size: var(--text-small);
+  }
+
+  .founder__link {
+    display: inline-block;
+    margin-top: 0.8rem;
+    font-size: var(--text-small);
+    font-weight: 600;
+  }
+
+  /* ---- 前屆貢獻者與歷屆管理員：文字小列 ---- */
+  .legacy {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem 0.55rem;
+    margin-top: 0.7rem;
+    list-style: none;
+    color: var(--ink-soft);
+  }
+
+  /* 分隔點跟在名字後面（不是下一個項目前面）：換行時留在上一行行尾，不會落單在行首 */
+  .legacy li:not(:last-child)::after {
+    content: '・';
+    color: var(--line-strong);
+  }
+
+  .past {
+    margin-top: 1.1rem;
+  }
+
+  .past + .past {
+    margin-top: 1.6rem;
+  }
+
+  /* ---- GitHub 貢獻者網格 ---- */
+  .gh {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-top: 1.4rem;
+    list-style: none;
+  }
+
+  .gh__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.45rem;
+    width: 6.5rem;
+    padding: 0.9rem 0.4rem;
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    color: var(--ink);
+    text-decoration: none;
+    transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease);
+  }
+
+  .gh__item:hover {
+    border-color: var(--line);
+    background: var(--surface);
+  }
+
+  .gh__avatar {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    background: var(--surface);
+  }
+
+  .gh__login {
+    font-family: var(--font-mono);
+    font-size: var(--text-tiny);
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .thanks__repo {
+    display: inline-block;
+    margin-top: 1.4rem;
+    font-family: var(--font-mono);
+    font-size: var(--text-tiny);
+    color: var(--ink-soft);
+  }
+
+  @media (max-width: 40rem) {
+    .crew__card {
+      padding: 1.4rem 1rem 1.2rem;
+    }
+
+    /* 窄螢幕縮一階，一行放得下三個，不會只排兩個留一片空白 */
+    .gh__item {
+      width: 5.5rem;
+      padding: 0.7rem 0.3rem;
+    }
+
+    .gh__avatar {
+      width: 3rem;
+      height: 3rem;
+    }
+  }
+</style>
+
+<script>
+  // 與文章頁同一套逐塊淡入（.md-cascade 定義在 article.css），不等捲動
+  function initThanksCascade() {
+    const blocks = document.querySelectorAll<HTMLElement>('.thanks > *');
+    if (!blocks.length) return;
+    let i = 0;
+    for (const block of blocks) {
+      if (block.classList.contains('md-cascade')) continue;
+      block.classList.add('md-cascade');
+      block.style.transitionDelay = `${Math.min(i * 45, 400)}ms`;
+      i++;
+    }
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => {
+        for (const block of blocks) block.classList.add('md-cascade--in');
+        setTimeout(() => {
+          for (const block of blocks) block.style.transitionDelay = '';
+        }, 1000);
+      }),
+    );
+  }
+
+  document.addEventListener('astro:page-load', initThanksCascade);
+</script>
