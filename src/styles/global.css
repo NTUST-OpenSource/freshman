@@ -568,6 +568,37 @@ main {
   font-size: var(--text-small);
 }
 
+/* 頁尾入口：與 header 的 nav-pill 同一套語彙，小字連結在頁尾太容易被當成裝飾 */
+.site-footer__links {
+  margin-top: 1.1rem;
+}
+
+.site-footer__links a {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  font-size: var(--text-small);
+  font-weight: 650;
+  color: var(--ink);
+  text-decoration: none;
+  border: 1px solid var(--line-strong);
+  border-radius: 99px;
+  padding: 0.4rem 1.15rem;
+  transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease),
+    color var(--dur) var(--ease), scale var(--dur) var(--ease);
+}
+
+.site-footer__links a:hover {
+  border-color: var(--brand);
+  color: var(--brand);
+  background: color-mix(in oklab, var(--brand) 6%, var(--paper));
+}
+
+.site-footer__links a:active {
+  scale: 0.94;
+  background: color-mix(in oklab, var(--brand) 12%, var(--paper));
+}
+
 /* ---- 首頁 landing（無頁首頁尾：左入口、右行事曆） ---- */
 .landing {
   min-height: 100dvh;
