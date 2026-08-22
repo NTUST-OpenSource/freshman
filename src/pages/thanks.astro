@@ -37,7 +37,7 @@ try {
 
 <Base
   title="銘謝"
-  description="臺科新生懶人包的創辦人、原始貢獻者與 GitHub 貢獻者名單。"
+  description="臺科新生懶人包的原始團隊與 GitHub 貢獻者名單。"
 >
   <div class="thanks" data-cascade>
     <header class="thanks__head">
@@ -48,15 +48,9 @@ try {
     <Fragment set:html="<!--email_off-->" />
 
     <section class="thanks__section">
-      <h2 class="thanks__h2">創辦人</h2>
-      <ul class="people people--single">
-        <PersonCard {...credits.founder} />
-      </ul>
-    </section>
-
-    <section class="thanks__section">
-      <h2 class="thanks__h2">原始貢獻者</h2>
+      <h2 class="thanks__h2">原始團隊</h2>
       <ul class="people">
+        <PersonCard {...credits.founder} founder />
         {credits.contributors.map((p) => <PersonCard {...p} />)}
       </ul>
     </section>

@@ -833,6 +833,12 @@ main {
   color: var(--paper);
 }
 
+.chip--founder {
+  background: var(--brand);
+  border-color: transparent;
+  color: var(--on-brand);
+}
+
 .chip--draft {
   border-style: dashed;
   /* 比 --clr-warning 深一階：0.78rem 小字需 4.5:1（warning 原色僅 3.49） */
