@@ -2,7 +2,7 @@
 
 本檔為專案的最高行為準則（等同 CLAUDE.md），所有 AI 協作與人工開發都必須遵守。
 
-## 目前進度（2026-07-19 更新）
+## 目前進度（2026-08-23 更新）
 
 **已完成**
 - 行事曆資料管線：110–115 六學年轉換完成、例外歸零、calendar-sync skill 就緒
@@ -11,6 +11,7 @@
 - 導航：View Transitions 縱向滑動、header 獨立 group（文章間靜止、進出首頁滑入滑出）、sticky 毛玻璃 header、自訂系別下拉
 - SEO 基礎：site=https://freshman.ntust.org、canonical、sitemap、robots.txt、OG 完整、WebSite/Article JSON-LD、404 頁
 - RWD 基線：320px 起 header／landing／文章／popup 皆不溢出，文章目錄避開 sticky header
+- 銘謝頁 `/thanks/`：本屆管理員大卡、創辦人與前屆貢獻者、GitHub 貢獻者網格；名單與頭像由 workflow 每週同步（規則見「銘謝頁」一節）
 
 **待辦（大項）**
 - Cloudflare Pages 自訂網域 DNS 綁定（使用者操作）
@@ -38,6 +39,7 @@
   - 圖片自託管於 `public/images/<slug>/`，不熱鏈外站
 - `docs/dump/` 為該站內容的 Markdown 存檔，供改寫與事實查證使用
 - 站內不放指向該站的導流連結或「舊版／新版」式的說明文字
+- **例外：`/thanks/` 銘謝頁**（2026-08-23 使用者決議）具名致謝該站創辦人與貢獻者 —— 「創辦人」列 Choseph Qian，「前屆貢獻者」列該站五位貢獻者。此頁措辭僅寫身分，**不提對方域名、不放對方站連結**（個人網站連結為當事人自己的展示頁，不在此限），也不轉載其信箱
 
 ## Git 規範
 
@@ -77,6 +79,17 @@
 - 人工編輯正本：`docs/calendar/parsed/{學年}.json`；網站副本：`src/data/calendar-{113,114,115}.json`（三份一律同步）
 - 首頁右側行事曆：整學年連續月曆流、可上下捲動、過去日期降透明度、「回到今天」按鈕、點擊有事件日開 popup（原生 dialog）
 - 網站需顯示行事曆資料更新時間（`meta.parsedAt`）
+
+## 銘謝頁（`/thanks/`）
+
+- 區塊順序固定：本屆專案管理員 → 創辦人與前屆貢獻者 → 歷屆專案管理員 → GitHub 貢獻者
+- **人工資料**：`src/data/credits.json`（創辦人、前屆貢獻者、各學年度管理員）。換屆時在 `terms` 陣列**新增一筆**新學年度物件即可，頁面自動把最大學年度當本屆、其餘落到「歷屆」，舊資料不刪
+- 前屆貢獻者是**依學年度分組的陣列**：`legacy: [{ years: [113, 114], people: [...] }]`。標題「前屆貢獻者」之下每組印一個學年度標籤，新增一組就往下長；`years` 會排序後收成 `113–114 學年度`，單一學年度時不畫破折號
+- **自動資料**：`src/data/contributors.json` 與 `public/images/people/*.webp` 由 `.github/workflows/contributors.yml`（每週一 cron ＋ 手動觸發）產生，**不要手改**；該目錄完全由 `scripts/sync_contributors.mjs` 管理，離開名單者的頭像會被清掉
+- 頭像一律自託管（160×160 WebP），CSP 不放行 `avatars.githubusercontent.com`；README 的貢獻者區塊不受此限（那不是本站頁面）
+- CI 的 commit 走 `scripts/commit_signed.mjs`（GraphQL `createCommitOnBranch`）寫回 **dev**，由 GitHub 代簽，維持「所有 commit 皆已簽章」
+- 管理員信箱以當事人明示提供為準，未提供者顯示「信箱尚未提供」，不得從 git 歷史或 frontmatter 逕自補上
+- 歷屆累積到約三屆或版面明顯過長時，再拆 `/thanks/archive/`，屆時只是搬資料
 
 ## 工作流程
 
