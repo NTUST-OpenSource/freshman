@@ -1,9 +1,45 @@
 ---
 import Base from '../layouts/Base.astro';
 import credits from '../data/credits.json';
-import contributors from '../data/contributors.json';
 
-const repoUrl = `https://github.com/${contributors.repo}`;
+const REPO = 'NTUST-OpenSource/freshman';
+const repoUrl = `https://github.com/${REPO}`;
+
+type Contributor = {
+  login: string;
+  html_url: string;
+  avatar_url: string;
+  contributions: number;
+  type: string;
+};
+
+async function fetchContributors(): Promise<Contributor[]> {
+  const token = process.env.GITHUB_TOKEN;
+  const res = await fetch(`https://api.github.com/repos/${REPO}/contributors?per_page=100`, {
+    headers: {
+      accept: 'application/vnd.github+json',
+      ...(token ? { authorization: `Bearer ${token}` } : {}),
+    },
+  });
+  if (!res.ok) throw new Error(`GitHub API ${res.status} ${res.statusText}`);
+  const list: Contributor[] = await res.json();
+  return list
+    .filter((c) => c.type !== 'Bot' && !c.login.endsWith('[bot]'))
+    .sort((a, b) => b.contributions - a.contributions || a.login.localeCompare(b.login));
+}
+
+const avatarOf = (avatarUrl: string) => {
+  const url = new URL(avatarUrl);
+  url.searchParams.set('s', '160');
+  return url.toString();
+};
+
+let contributors: Contributor[] = [];
+try {
+  contributors = await fetchContributors();
+} catch (err) {
+  console.warn(`[thanks] contributor list unavailable, falling back to the repo link: ${err}`);
+}
 ---
 
 <Base
@@ -64,20 +100,29 @@ const repoUrl = `https://github.com/${contributors.repo}`;
         名單依貢獻數排序，每次網站建置時自動更新。想讓自己的名字出現在這裡，看
         <a href="/article/contribute/">如何貢獻</a>。
       </p>
-      <ul class="gh">
-        {
-          contributors.contributors.map((c) => (
-            <li>
-              <a class="gh__item" href={c.url} target="_blank" rel="noopener noreferrer">
-                <img class="gh__avatar" src={c.avatar} alt="" width="160" height="160" loading="lazy" />
-                <span class="gh__login">{c.login}</span>
-              </a>
-            </li>
-          ))
-        }
-      </ul>
+      {
+        contributors.length > 0 && (
+          <ul class="gh">
+            {contributors.map((c) => (
+              <li>
+                <a class="gh__item" href={c.html_url} target="_blank" rel="noopener noreferrer">
+                  <img
+                    class="gh__avatar"
+                    src={avatarOf(c.avatar_url)}
+                    alt=""
+                    width="160"
+                    height="160"
+                    loading="lazy"
+                  />
+                  <span class="gh__login">{c.login}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
       <a class="thanks__repo" href={repoUrl} target="_blank" rel="noopener noreferrer">
-        {contributors.repo}
+        {REPO}
       </a>
     </section>
   </div>
