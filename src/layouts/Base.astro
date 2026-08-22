@@ -359,6 +359,46 @@ const navGroups = Object.entries(CATEGORIES)
         sync();
       }
 
+      function revealCurrentDirectoryItem(container: HTMLElement, focus: boolean, center: boolean) {
+        const current = container.querySelector<HTMLAnchorElement>('a[aria-current="page"]');
+        if (!current) {
+          if (focus) container.querySelector<HTMLButtonElement>('.navdrawer__close')?.focus();
+          return;
+        }
+
+        const containerRect = container.getBoundingClientRect();
+        const currentRect = current.getBoundingClientRect();
+        const outsideView = currentRect.top < containerRect.top || currentRect.bottom > containerRect.bottom;
+        if (center || outsideView) {
+          const top =
+            container.scrollTop +
+            currentRect.top -
+            containerRect.top -
+            (container.clientHeight - currentRect.height) / 2;
+          container.scrollTo({ top: Math.max(0, top), behavior: 'auto' });
+        }
+        if (focus) current.focus({ preventScroll: true });
+      }
+
+      function initDirectoryPosition() {
+        const directory = document.querySelector<HTMLElement>('.site-directory');
+        if (directory && getComputedStyle(directory).display !== 'none') {
+          // 常駐欄只在目前文章超出畫面時定位，不搶走正文的鍵盤焦點。
+          revealCurrentDirectoryItem(directory, false, false);
+        }
+
+        const drawer = document.getElementById('site-nav');
+        if (!drawer || drawer.dataset.bound) return;
+        drawer.dataset.bound = '1';
+        drawer.addEventListener('toggle', () => {
+          if (!drawer.matches(':popover-open')) return;
+          requestAnimationFrame(() => {
+            // 抽屜每次開啟都以目前文章為中心，並讓鍵盤操作可直接從此處繼續。
+            revealCurrentDirectoryItem(drawer, true, true);
+          });
+        });
+      }
+
       function initCodeCopy() {
         for (const pre of document.querySelectorAll('pre.astro-code')) {
           if (pre.querySelector('.code-copy')) continue;
@@ -415,6 +455,7 @@ const navGroups = Object.entries(CATEGORIES)
 
       document.addEventListener('astro:page-load', () => {
         initDeptPicker();
+        initDirectoryPosition();
         initCodeCopy();
         initYt();
         initMermaid();
