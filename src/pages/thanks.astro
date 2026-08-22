@@ -2,37 +2,9 @@
 import Base from '../layouts/Base.astro';
 import PersonCard from '../components/PersonCard.astro';
 import credits from '../data/credits.json';
+import { getContributors } from '../lib/contributors.mjs';
 
-const REPO = 'NTUST-OpenSource/freshman';
-
-type Contributor = {
-  login: string;
-  html_url: string;
-  contributions: number;
-  type: string;
-};
-
-async function fetchContributors(): Promise<Contributor[]> {
-  const token = process.env.GITHUB_TOKEN;
-  const res = await fetch(`https://api.github.com/repos/${REPO}/contributors?per_page=100`, {
-    headers: {
-      accept: 'application/vnd.github+json',
-      ...(token ? { authorization: `Bearer ${token}` } : {}),
-    },
-  });
-  if (!res.ok) throw new Error(`GitHub API ${res.status} ${res.statusText}`);
-  const list: Contributor[] = await res.json();
-  return list
-    .filter((c) => c.type !== 'Bot' && !c.login.endsWith('[bot]'))
-    .sort((a, b) => b.contributions - a.contributions || a.login.localeCompare(b.login));
-}
-
-let contributors: Contributor[] = [];
-try {
-  contributors = await fetchContributors();
-} catch (err) {
-  console.warn(`[thanks] contributor list unavailable, the grid is omitted: ${err}`);
-}
+const contributors = await getContributors();
 ---
 
 <Base
@@ -64,11 +36,19 @@ try {
         <a href="/article/contribute/">如何貢獻</a>
       </p>
       {
-        contributors.length > 0 && (
+        contributors === null ? (
+          <p class="thanks__note">
+            名單暫時取不到，請直接看
+            <a href="https://github.com/NTUST-OpenSource/freshman/graphs/contributors" target="_blank" rel="noopener noreferrer">
+              GitHub 上的貢獻者
+            </a>
+            。
+          </p>
+        ) : (
           <ul class="gh">
             {contributors.map((c) => (
               <li>
-                <a class="gh__item" href={c.html_url} target="_blank" rel="noopener noreferrer">
+                <a class="gh__item" href={c.url} target="_blank" rel="noopener noreferrer">
                   <img
                     class="gh__avatar"
                     src={`https://avatars.githubusercontent.com/${c.login}?s=160`}

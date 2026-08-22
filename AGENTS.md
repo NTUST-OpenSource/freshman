@@ -89,6 +89,8 @@
 - **自動資料**：GitHub 貢獻者名單由 `src/pages/thanks.astro` 在 build 時打 GitHub API 取得，**不落地成檔案、不進 git**。合併 PR 會觸發 Cloudflare Pages 重建，名單與頭像隨部署更新
 - API 失敗（離線、rate limit、GitHub 掛掉）時該區塊退化成 repo 連結，**build 不中斷**；build log 留 `[thanks]` 警告
 - 匿名 API 為 60 次/小時/IP。CI 用 `secrets.GITHUB_TOKEN`；Cloudflare Pages 端目前不設 token，撞到 rate limit 再於 dashboard 加環境變數 `GITHUB_TOKEN`
+- fetch 一律走 `src/lib/contributors.mjs`，**不要寫回頁面 frontmatter**：dev 每個 request 都重跑 frontmatter，沒有 memo 的話按幾次重新整理就把 60 次額度燒光（已踩過）。成功結果寫進 `node_modules/.astro/contributors-cache.json`，API 失敗時吃這份快取，連快取都沒有才顯示「名單暫時取不到」
+- 頭像不經 `unavatar.io` 這類代理：免費層 25 次/IP，一次進站就用掉九個，而且比直連慢三倍
 - 頭像直連 `avatars.githubusercontent.com`（CSP `img-src` 已放行）。**這是第三方帳號頭像的唯一例外，內容圖片仍一律自託管於 `public/images/<slug>/`**
 - 卡片一律走 `src/components/PersonCard.astro`（`founder` prop 決定標籤與底色）：頭像直連 `https://avatars.githubusercontent.com/<login>?s=160`（用帳號即可，不必查 user id），整張卡點擊開 GitHub（stretched link），右側飛機圖示 `mailto:`。`github` 留空字串者卡片不可點、頭像退化成空圓
 - 創辦人與原始貢獻者的信箱經 2026-08-23 使用者指示公開，來源為對方公開 about 頁的存檔 `docs/dump/about.md`；**其餘任何人的信箱一律不得逕自補上**
