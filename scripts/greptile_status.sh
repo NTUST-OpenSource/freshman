@@ -5,6 +5,10 @@
 # Open threads are counted regardless of author: an unresolved human comment
 # blocks completion the same way a Greptile finding does, which is intended.
 #
+# Only a score posted after the head commit counts. Greptile leaves the previous
+# score standing while it re-reviews a push, so trusting the newest one reports a
+# stale pass for work nothing has looked at yet.
+#
 # The state has to come from GraphQL: `gh pr view` returns conversation comments
 # only, never inline review threads, so it cannot see whether findings are
 # resolved. Greptile also posts its review with an empty body and the score in a
@@ -36,19 +40,23 @@ status() {
 query($owner:String!,$name:String!,$pr:Int!){
   repository(owner:$owner,name:$name){
     pullRequest(number:$pr){
-      comments(last:100){nodes{author{login} body}}
+      commits(last:1){nodes{commit{committedDate}}}
+      comments(last:100){nodes{author{login} body createdAt}}
       reviewThreads(first:100){nodes{isResolved comments(first:1){nodes{path line body}}}}
     }
   }
 }' --jq '
 .data.repository.pullRequest as $pr
+| ($pr.commits.nodes[0].commit.committedDate) as $head
 | ([$pr.comments.nodes[]
     | select((.author.login // "") | test("greptile";"i"))
+    | select(.createdAt > $head)
     | .body | match("(?i)confidence score[^0-9]*([0-9]+)\\s*/\\s*5")
     | .captures[0].string] | last) as $score
 | [$pr.reviewThreads.nodes[] | select(.isResolved | not)] as $open
 | {score: ($score // "none"),
    unresolved: ($open | length),
+   head: $head,
    threads: [$open[] | {path: .comments.nodes[0].path,
                         line: .comments.nodes[0].line,
                         body: (.comments.nodes[0].body | gsub("<[^>]*>";"") | .[0:400])}]}'

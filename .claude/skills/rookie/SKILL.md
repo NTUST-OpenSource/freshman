@@ -207,10 +207,14 @@ scripts/greptile_status.sh <PR 編號> --watch    # 每 30 秒一次直到通過
 {"score":"4","unresolved":1,"threads":[{"path":".claude/skills/rookie/SKILL.md","line":204,"body":"..."}]}
 ```
 
-通過時印 `GREPTILE_PASS` 並以 0 結束；`score` 為 `none` 代表 Greptile 還沒開始審。`unresolved` 不分作者，維護者留的未解決留言一樣會擋住通過，這是刻意的。
+通過時印 `GREPTILE_PASS` 並以 0 結束。
+
+- `score` 為 `none` 代表這一版還沒有審查結果。**只有比 head commit 新的分數才算數**：Greptile 重審期間舊分數還掛在 PR 上，照收會對根本沒人看過的 code 報通過
+- `unresolved` 不分作者，維護者留的未解決留言一樣會擋住通過，這是刻意的
+- push 之後 `score` 會回到 `none`，等新審查落地才會有新分數，這是正常的
 
 > **不要用 `gh pr view` 自己重寫，這裡踩過兩個坑。**
-> `gh pr view --json comments,reviews` 看不到 inline review thread，查不到留言解沒解決，只看分數會在還有未處理留言時誤報通過。
+> `gh pr view --json comments,reviews` 看不到 inline review thread，查不到留言解沒解決，只看分數會在還有未處理留言時誤報通過。舊分數也會在重審期間繼續掛著，不比對 head commit 就會對沒審過的 code 報通過。
 > 而且 Greptile 的 review 本體 body 是空的、分數在另一則 conversation comment，取「最後一則 greptile 留言」永遠抓到空字串。
 
 分數低於 5/5 或還有未解決留言時：
