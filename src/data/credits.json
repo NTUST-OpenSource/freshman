@@ -1,0 +1,14 @@
+{
+  "founder": {
+    "name": "Choseph Qian",
+    "github": "FongHen",
+    "email": "fonghen0@gmail.com"
+  },
+  "contributors": [
+    { "name": "Merlin Kuo", "github": "yuchen5564", "email": "me@merlinkuo.tw" },
+    { "name": "Felix Chen", "github": "felixchen-tw", "email": "me@felixchen.tw" },
+    { "name": "Vic Wen", "github": "viiccwen", "email": "viiccwen@gmail.com" },
+    { "name": "Owen Wu", "github": "WuSandWitch", "email": "wusandwitch@gmail.com" },
+    { "name": "Keng Liao", "github": "", "email": "m11402102@mail.ntust.edu.tw" }
+  ]
+}

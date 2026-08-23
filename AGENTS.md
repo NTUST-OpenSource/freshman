@@ -2,7 +2,7 @@
 
 本檔為專案的最高行為準則（等同 CLAUDE.md），所有 AI 協作與人工開發都必須遵守。
 
-## 目前進度（2026-07-19 更新）
+## 目前進度（2026-08-23 更新）
 
 **已完成**
 - 行事曆資料管線：110–115 六學年轉換完成、例外歸零、calendar-sync skill 就緒
@@ -11,6 +11,7 @@
 - 導航：View Transitions 縱向滑動、header 獨立 group（文章間靜止、進出首頁滑入滑出）、sticky 毛玻璃 header、自訂系別下拉
 - SEO 基礎：site=https://freshman.ntust.org、canonical、sitemap、robots.txt、OG 完整、WebSite/Article JSON-LD、404 頁
 - RWD 基線：320px 起 header／landing／文章／popup 皆不溢出，文章目錄避開 sticky header
+- 銘謝頁 `/thanks/`：原始團隊（創辦人＋原始貢獻者）與貢獻者網格；後者的名單與頭像於 build 時向 GitHub API 取得（規則見「銘謝頁」一節）
 
 **待辦（大項）**
 - Cloudflare Pages 自訂網域 DNS 綁定（使用者操作）
@@ -20,8 +21,9 @@
 
 ## 語言規範
 
-- 網站 UI 文案、內容、註解、文件一律**繁體中文**
+- 網站 UI 文案、內容、文件一律**繁體中文**
 - 例外：程式碼識別字、網址、無慣用中文譯名的專有名詞（NTUST、GPA、Moodle）
+- **程式碼註解一律英文，且必須是斷言句**：只寫「刪掉之後下一個人會踩到」的事（非顯而易見的限制、平台怪癖、順序相依）。不寫辯護、不重述程式碼在做什麼、不記錄當初為什麼沒選另一條路。既有中文註解在動到該檔時順手換掉
 - 內容文字規範：標點符號全形、數字與英文字母半形、CJK 與數字或英文字母交界加半形空白
 
 ## 禁止事項
@@ -38,6 +40,7 @@
   - 圖片自託管於 `public/images/<slug>/`，不熱鏈外站
 - `docs/dump/` 為該站內容的 Markdown 存檔，供改寫與事實查證使用
 - 站內不放指向該站的導流連結或「舊版／新版」式的說明文字
+- **例外：`/thanks/` 銘謝頁**（2026-08-23 使用者決議）具名致謝該站創辦人與貢獻者 —— 「原始團隊」列 Choseph Qian（標創辦人）與該站五位貢獻者。此頁措辭僅寫身分，**不提對方域名、不放對方站連結**；GitHub 帳號與信箱依 2026-08-23 使用者指示列出
 
 ## Git 規範
 
@@ -54,7 +57,7 @@
 - **圓角**為核心設計語言（radius tokens 見 `src/styles/tokens.css`）
 - 品牌色：臺科深紅；分類色：北捷路線色（選課綠、生活藍、資訊橘、其他棕）
 - 動畫：**首頁**進場與互動動畫已依使用者指示實作（進場上浮、路線描線、hover 微互動）；其他頁面新增動畫仍待指示
-- 首頁**不顯示 header 與 footer**（`Base.astro` 的 `chrome` 開關），僅保留單一入口按鈕（`/article/start/`）與行事曆
+- 首頁**不顯示 header 與 footer**（`Base.astro` 的 `chrome` 開關），只有兩顆按鈕（實心「進入懶人包」＋外框「銘謝」）與行事曆
 - 行事曆顯示**當學年 ±1 學年**（保底；client 依今日計算窗口，資料載入 113–115）、hover 顯示事件 popup、更新時間收在標題旁的 i 提示卡
 
 ## 內容架構
@@ -77,6 +80,22 @@
 - 人工編輯正本：`docs/calendar/parsed/{學年}.json`；網站副本：`src/data/calendar-{113,114,115}.json`（三份一律同步）
 - 首頁右側行事曆：整學年連續月曆流、可上下捲動、過去日期降透明度、「回到今天」按鈕、點擊有事件日開 popup（原生 dialog）
 - 網站需顯示行事曆資料更新時間（`meta.parsedAt`）
+
+## 銘謝頁（`/thanks/`）
+
+- 區塊順序固定：原始團隊 → 貢獻者。**不設專案管理員區塊**，現任維護者本來就在貢獻者網格裡
+- 原始團隊一區內創辦人排第一張卡，靠卡片右上角的 `Founder` 角標（`.person__tag`，方角實心臺科紅）與淡紅底色區分，不另開一節。此標籤是使用者指定的英文例外
+- **人工資料**：`src/data/credits.json`（創辦人、原始貢獻者）。這兩塊是歷史事實、不會再變動，所以版面以美觀為先，不為未來擴充預留結構
+- **自動資料**：貢獻者名單由 `src/lib/contributors.mjs` 在 build 時打 GitHub API 取得，**不落地成檔案、不進 git**。合併 PR 會觸發 Cloudflare Pages 重建，名單與頭像隨部署更新
+- API 失敗（離線、rate limit、GitHub 掛掉）時該區塊退化成 repo 連結，**build 不中斷**；build log 留 `[thanks]` 警告
+- 匿名 API 為 60 次/小時/IP。CI 用 `secrets.GITHUB_TOKEN`；Cloudflare Pages 端目前不設 token，撞到 rate limit 再於 dashboard 加環境變數 `GITHUB_TOKEN`
+- fetch 一律走 `src/lib/contributors.mjs`，**不要寫回頁面 frontmatter**：dev 每個 request 都重跑 frontmatter，沒有 memo 的話按幾次重新整理就把 60 次額度燒光（已踩過）。成功結果寫進 `node_modules/.astro/contributors-cache.json`，API 失敗時吃這份快取，連快取都沒有才顯示「名單暫時取不到」
+- 頭像不經 `unavatar.io` 這類代理：免費層 25 次/IP，一次進站就用掉九個，而且比直連慢三倍
+- 頭像直連 `avatars.githubusercontent.com`（CSP `img-src` 已放行）。**這是第三方帳號頭像的唯一例外，內容圖片仍一律自託管於 `public/images/<slug>/`**
+- 卡片一律走 `src/components/PersonCard.astro`（`founder` prop 決定標籤與底色）：頭像直連 `https://avatars.githubusercontent.com/<login>?s=160`（用帳號即可，不必查 user id），整張卡點擊開 GitHub（stretched link），右側飛機圖示 `mailto:`。`github` 留空字串者卡片不可點、頭像退化成空圓
+- 創辦人與原始貢獻者的信箱經 2026-08-23 使用者指示公開，來源為對方公開 about 頁的存檔 `docs/dump/about.md`；**其餘任何人的信箱一律不得逕自補上**
+- 有 `mailto:` 的區塊必須包在 `<!--email_off-->` 內：Cloudflare Email Obfuscation 會改寫信箱，而它的解碼 script 被 CSP 擋掉，畫面會殘留 [email protected]
+- 名單長到版面明顯過長時，再拆 `/thanks/archive/`，屆時只是搬資料
 
 ## 工作流程
 

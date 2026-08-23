@@ -80,7 +80,7 @@ const articleLd = {
         </div>
         <h1 class="article__title">{article.data.title}</h1>
       </header>
-      <div class="md">
+      <div class="md" data-cascade>
         <Content />
       </div>
     </article>
@@ -102,26 +102,6 @@ const articleLd = {
   </div>
 
   <script>
-    // 內容一口氣逐塊淡入（不等捲動），與註腳 hover 預覽；掛 astro:page-load
-    function initCascade() {
-      const blocks = document.querySelectorAll<HTMLElement>('.md > *');
-      let i = 0;
-      for (const block of blocks) {
-        if (block.classList.contains('md-cascade')) continue;
-        block.classList.add('md-cascade');
-        block.style.transitionDelay = `${Math.min(i * 35, 500)}ms`;
-        i++;
-      }
-      requestAnimationFrame(() =>
-        requestAnimationFrame(() => {
-          for (const block of blocks) block.classList.add('md-cascade--in');
-          setTimeout(() => {
-            for (const block of blocks) block.style.transitionDelay = '';
-          }, 1100);
-        }),
-      );
-    }
-
     let fnPopHide: ((delay?: number) => void) | null = null;
     function initFootnotePreview() {
       const refs = document.querySelectorAll<HTMLAnchorElement>('.md sup a[data-footnote-ref]');
@@ -223,7 +203,6 @@ const articleLd = {
 
     document.addEventListener('astro:page-load', () => {
       if (!document.querySelector('.article-layout')) return;
-      initCascade();
       initFootnotePreview();
       initContributors();
     });
