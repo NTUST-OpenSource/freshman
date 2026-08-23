@@ -78,4 +78,4 @@ content layer 以內容 digest 快取渲染結果，快取實體在 `node_module
 
 ## 授權
 
-本專案以 [MIT License](LICENSE) 釋出。
+本專案以 [GNU Affero General Public License v3.0](LICENSE) 釋出。第三方素材的授權見 [`NOTICE`](NOTICE)。
