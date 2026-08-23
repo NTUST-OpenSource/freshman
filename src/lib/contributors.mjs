@@ -33,6 +33,16 @@ function writeCache(list) {
   }
 }
 
+/* an interrupted write leaves truncated JSON; throwing here would fail the build
+   the fallback exists to protect */
+function readCache() {
+  try {
+    return JSON.parse(fs.readFileSync(CACHE, 'utf8'));
+  } catch {
+    return null;
+  }
+}
+
 /**
  * Returns null when there is no list to show at all.
  * Memoised per process: dev re-runs page frontmatter on every request, and the
@@ -46,9 +56,7 @@ export function getContributors() {
     })
     .catch((err) => {
       console.warn(`[thanks] GitHub API unavailable: ${err}`);
-      if (!fs.existsSync(CACHE)) return null;
-      console.warn('[thanks] falling back to the cached contributor list');
-      return JSON.parse(fs.readFileSync(CACHE, 'utf8'));
+      return readCache();
     });
   return pending;
 }
