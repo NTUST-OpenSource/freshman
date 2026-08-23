@@ -19,18 +19,17 @@ interface Props {
 
 const {
   title,
-  description = '臺灣科技大學新生的開學前指南：選課、住宿、生活與資訊帳號整理，附三學年行事曆與系別專屬內容，開學前照著看完就緒。',
+  description = '開學前指南，包含選課、住宿、生活、還有更多常見的問題整理。',
   chrome = true,
   noindex = false,
   ogType = 'website',
   modified,
 } = Astro.props;
-// 無 title 者＝首頁：補上全名，「臺灣科技大學」是搜尋量最大的字串，站名本身不含
-const pageTitle = title ? `${title}｜臺科新生懶人包` : '臺科新生懶人包｜臺灣科技大學新生指南';
+
+const pageTitle = title ? `${title}｜臺科新生懶人包` : '新生懶人包｜臺灣科技大學新生指南';
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = new URL('/og.png', Astro.site);
 
-// 側邊目錄：草稿與 noindex 不列（語法示範頁不該出現在導覽）
 const navArticles = chrome
   ? (await getCollection('articles', (e) => !e.data.draft && !e.data.noindex)).sort(
       (a, b) => a.data.order - b.data.order,
@@ -71,7 +70,6 @@ const navGroups = Object.entries(CATEGORIES)
         '@context': 'https://schema.org',
         '@type': 'WebSite',
         name: '臺科新生懶人包',
-        // 機器讀的別名欄位，非 UI 文案：「台」字變體照收，該寫法的搜尋量遠高於「臺」
         alternateName: [
           '臺灣科技大學新生懶人包',
           '台灣科技大學新生懶人包',
@@ -97,7 +95,6 @@ const navGroups = Object.entries(CATEGORIES)
       chrome && (
         <header class="site-header" transition:persist="site-header">
           <nav class="site-header__inner" aria-label="主選單">
-            {/* popover 走原生 top-layer：Esc 與點外側關閉皆免 JS */}
             <button
               class="icon-btn navdrawer__btn"
               type="button"
@@ -106,7 +103,6 @@ const navGroups = Object.entries(CATEGORIES)
             >
               <span class="icon-btn__icon navdrawer__btn-icon" aria-hidden="true" />
             </button>
-            {/* header 常駐視口，viewport 策略等於進頁即預抓 */}
             <a class="brand" href="/" data-astro-prefetch="viewport">
               <img class="brand__logo" src="/logo.svg" alt="" width="30" height="31" />
               <span class="brand__text">臺科新生懶人包</span>
@@ -155,7 +151,6 @@ const navGroups = Object.entries(CATEGORIES)
     }
     {
       chrome && (
-        /* 抽屜不進 persist：隨頁面重建，aria-current 得以在 build 時算好 */
         <div class="navdrawer" id="site-nav" popover>
           <div class="navdrawer__head">
             <p class="navdrawer__title">目錄</p>
@@ -169,7 +164,7 @@ const navGroups = Object.entries(CATEGORIES)
               <span class="navdrawer__close-icon" aria-hidden="true" />
             </button>
           </div>
-          <nav aria-label="全站文章目錄">
+          <nav aria-label="文章目錄">
             {navGroups.map((group) => (
               <div class={`navdrawer__group cat-${group.key}`}>
                 <p class="navdrawer__group-label">{group.label}</p>
