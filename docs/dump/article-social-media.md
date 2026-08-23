@@ -25,8 +25,6 @@ lastEdited: 2025-7-18
   - 準時畢業的好幫手。
 - [111臺科大新生群](https://line.me/ti/g2/g_ULm-Qrabm5By7v9pMnlBmO4yxViRti1VLX4g?utm_source=invitation&utm_medium=link_copy&utm_campaign=default)
   - 參雜很多熱心學長姊。
-- [臺科大中友會](https://www.instagram.com/ntust.midfamily/)
-  - 讚。
 - 各系新生群
   - 請找各系系學會加入
 > 💡 還有學校的電子信箱，不要忽略它的存在，雖然很多垃圾訊息，**但偶爾會摻雜一些重要的資訊(ex. 停電通知)。且記得要設置轉寄到自己的慣用信箱，方便很多!**

@@ -35,8 +35,8 @@ updated: 2026-07-27
 
 輸入各等第的學分數，直接算出 GPA（4.3 制），要抓推甄門檻或估算能不能超修時很方便。
 
-::card[GPA 計算機]{href="https://gpa-calculator.vicwen.app/" desc="GP 4.3 制，無須登入、純前端"}
-::card[原始碼（GitHub）]{href="https://github.com/viiccwen/GPA-calculator" desc="viiccwen／GPA-calculator"}
+::card[GPA 計算機]{href="https://gpa.ntust.org/" desc="即時取得歷年成績與計算 GPA"}
+::card[原始碼（GitHub）]{href="https://github.com/xinshoutw/gpacalculator" desc="xinshoutw／GPA-calculator"}
 
 ## 選課研究
 
