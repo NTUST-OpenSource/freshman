@@ -167,6 +167,9 @@ html.is-leaving .site-footer {
 
 /* ---- 頁首（凍結於畫面頂端） ---- */
 .site-header {
+  /* not transition:name — its generated scope index counts the page's other
+     transition elements, and swap keeps the persisted node's stale attribute */
+  view-transition-name: site-header;
   position: sticky;
   top: 0;
   z-index: 40;

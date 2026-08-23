@@ -101,6 +101,7 @@
 
 - **修改 `astro.config.mjs` 或 `src/plugins/` 後必須：停 dev server → `rm -rf .astro node_modules/.astro node_modules/.vite` → 重啟**。content layer 以內容 digest 快取渲染結果，快取實體在 `node_modules/.astro`（漏清它連 `npm run build` 都會吃舊 serializer 輸出，已踩過四次）
 - 全站使用 ClientRouter（View Transitions）：**所有 client script 必須掛 `astro:page-load`**，persist 元素（如 site-header）要用 `dataset.bound` 防重複綁定
+- **`transition:persist` 的元素不可以再加 `transition:name`**：`transition:name` 產生的 `data-astro-transition-scope` 帶一個依「該頁 transition 元素數量」遞增的索引（文章頁的 header 是 `-3`，`/thanks/` 與 404 是 `-1`），而 swap 是把舊節點搬進新頁、不會更新這個屬性。索引一對不上，header 就失去 `view-transition-name`、掉回 root 快照，畫面上會同時出現一個滑走的舊 header 與一個跟著整頁滑入的新 header。persist 元素的 `view-transition-name` 一律寫在 CSS class 上（見 `.site-header`），才不隨頁面內容浮動
 - 待補資料與待決事項記錄於 `TODO.md`，補齊後刪除該項
 - 內容與 md style 的調整以使用者指示為準，不自行擴充語法
 - 檔案版本相關決策先以 context7 驗證

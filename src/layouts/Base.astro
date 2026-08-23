@@ -77,7 +77,7 @@ const navGroups = Object.entries(CATEGORIES)
     <a class="skip-link" href="#main">跳到主要內容</a>
     {
       chrome && (
-        <header class="site-header" transition:persist="site-header" transition:name="site-header">
+        <header class="site-header" transition:persist="site-header">
           <nav class="site-header__inner" aria-label="主選單">
             {/* popover 走原生 top-layer：Esc 與點外側關閉皆免 JS */}
             <button
