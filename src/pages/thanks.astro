@@ -21,6 +21,9 @@ const contributors = await getContributors();
 
     <section class="thanks__section">
       <h2 class="thanks__h2">原始團隊</h2>
+      <p class="thanks__note">
+        文章內容來源，感謝他們無償撰寫與經驗分享，在此致謝！
+      </p>
       <ul class="people">
         <PersonCard {...credits.founder} founder />
         {credits.contributors.map((p) => <PersonCard {...p} />)}
