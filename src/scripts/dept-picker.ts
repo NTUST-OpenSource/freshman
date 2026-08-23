@@ -104,6 +104,13 @@ export function initDeptHint() {
   const { signal } = dismissal;
   document.getElementById('dept-hint-close')?.addEventListener('click', dismiss, { signal });
   btn.addEventListener('click', dismiss, { signal });
+  document.addEventListener(
+    'keydown',
+    (e) => {
+      if (e.key === 'Escape') dismiss();
+    },
+    { signal },
+  );
 
   setTimeout(() => {
     hint.hidden = false;
