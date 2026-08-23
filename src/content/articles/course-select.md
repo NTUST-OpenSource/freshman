@@ -4,9 +4,6 @@ slug: course-select
 category: course
 tags: [課程]
 description: 志願序怎麼填、加退選加簽在幹嘛？從專有名詞到實戰技巧，臺科選課制度一篇搞懂
-contributors:
-  - name: xinshoutw
-    email: me@xinshou.tw
 order: 1
 updated: 2026-07-19
 ---

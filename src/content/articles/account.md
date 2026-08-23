@@ -4,9 +4,6 @@ slug: account
 category: info
 tags: [帳號, 資訊]
 description: 學校信箱、學生資訊系統、Google Workspace 與 Office 365，四組帳號一次開好
-contributors:
-  - name: xinshoutw
-    email: me@xinshou.tw
 order: 2
 updated: 2026-07-27
 ---

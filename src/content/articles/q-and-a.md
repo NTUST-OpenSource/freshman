@@ -4,9 +4,6 @@ slug: q-and-a
 category: misc
 tags: [問答]
 description: 歷年新生提問與學長姐回覆的存檔，選課、課程、社團、住宿都有
-contributors:
-  - name: xinshoutw
-    email: me@xinshou.tw
 order: 4
 updated: 2026-07-27
 ---

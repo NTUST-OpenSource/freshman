@@ -15,9 +15,6 @@ slug: dorm              # 路由 /article/dorm；僅小寫英數與連字號
 category: life          # course | life | info | misc（決定 nav 分區）
 tags: [住, 宿舍]
 description: 入住流程、宿舍網路、冷氣卡與門禁的完整指南   # SEO + 列表卡片摘要
-contributors:           # 貢獻人卡（可空）；email 需合法格式
-    - name: xinshou
-      email: user@example.com
 order: 3                # 同分區內排序
 updated: 2025-08-01     # 顯示「最後更新」章；亦作 sitemap lastmod
 draft: false            # true 時 production 不 build
