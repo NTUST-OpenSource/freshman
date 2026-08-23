@@ -170,7 +170,9 @@ gh pr create --repo NTUST-OpenSource/freshman \
 `npm run build` 通過。'
 ```
 
-label 沿用 Issue 那顆。`Closes #N` 建立與 Issue 的關聯；因為 repo 的預設分支是 `main`，合進 `dev` 時 Issue 還不會自動關閉，等 `dev` 併進 `main` 才會。這是預期行為，不用改寫法。
+label 沿用 Issue 那顆。作者本人就是 `xinshoutw` 的時候要拿掉 `--reviewer`：GitHub 不接受自己指派自己審查，而且 `gh` 不會報錯，是**靜默忽略**，事後看起來就像指定成功但 reviewer 是空的。
+
+`Closes #N` 建立與 Issue 的關聯；因為 repo 的預設分支是 `main`，合進 `dev` 時 Issue 還不會自動關閉，等 `dev` 併進 `main` 才會。這是預期行為，不用改寫法。
 
 ## 9. 盯 Greptile 到 5/5
 
