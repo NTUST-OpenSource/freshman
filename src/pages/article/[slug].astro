@@ -29,10 +29,6 @@ const articleLd = {
   mainEntityOfPage: url,
   image: new URL('/og.png', Astro.site).toString(),
   publisher: { '@type': 'Organization', name: '臺科新生懶人包', url: Astro.site?.toString() },
-  // email 不進 LD：對 rich result 零貢獻、徒增收割面；mailto 管道在貢獻人卡
-  ...(article.data.contributors.length
-    ? { author: article.data.contributors.map((c) => ({ '@type': 'Person', name: c.name })) }
-    : {}),
 };
 // 麵包屑讓 SERP 顯示「臺科新生懶人包 › 選課 › 選課」而非裸網址；分類無獨立頁面，故只兩層
 const breadcrumbLd = {
@@ -61,36 +57,7 @@ const breadcrumbLd = {
         <div class="article__eyebrow">
           <span class="chip chip--cat">{cat.label}</span>
           {article.data.draft && <span class="chip chip--draft">草稿</span>}
-          <span class="article__meta">
-            {updated} 更新
-            {
-              article.data.contributors.length > 0 && (
-                <span class="contrib">
-                  <button
-                    class="contrib__btn"
-                    id="contrib-btn"
-                    type="button"
-                    aria-expanded="false"
-                    aria-label="貢獻人列表"
-                  >
-                    <span aria-hidden="true" />
-                  </button>
-                  {/* email_off：Cloudflare Email Obfuscation 不得改寫信箱，
-                      解碼 script 在 ClientRouter swap 後不會重跑，會殘留 [email protected] */}
-                  <Fragment set:html="<!--email_off-->" />
-                  <span class="contrib__card" id="contrib-card" hidden>
-                    {article.data.contributors.map((c) => (
-                      <a href={`mailto:${c.email}`}>
-                        {c.name}
-                        <span class="contrib__mail">{c.email}</span>
-                      </a>
-                    ))}
-                  </span>
-                  <Fragment set:html="<!--/email_off-->" />
-                </span>
-              )
-            }
-          </span>
+          <span class="article__meta">{updated} 更新</span>
         </div>
         <h1 class="article__title">{article.data.title}</h1>
       </header>
@@ -173,23 +140,6 @@ const breadcrumbLd = {
       fnPop.addEventListener('pointerleave', () => hide());
     }
 
-    // document 監聽掛模組層一次、以 id 查當前元素，不隨導航累積
-    let contribCloseTimer: number | undefined;
-    function closeContrib() {
-      const card = document.getElementById('contrib-card');
-      if (!card || card.hidden) return;
-      card.classList.remove('contrib__card--open');
-      document.getElementById('contrib-btn')?.setAttribute('aria-expanded', 'false');
-      contribCloseTimer = window.setTimeout(() => (card.hidden = true), 170);
-    }
-    document.addEventListener('click', (e) => {
-      const card = document.getElementById('contrib-card');
-      if (card && !card.hidden && !card.contains(e.target as Node)) closeContrib();
-    });
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeContrib();
-    });
-
     // 捲動即隱藏註腳預覽（走 hide 淡出）：fn-pop 為 fixed 定位，參考點捲走後不會觸發 pointerleave
     window.addEventListener(
       'scroll',
@@ -199,26 +149,9 @@ const breadcrumbLd = {
       { passive: true, capture: true },
     );
 
-    function initContributors() {
-      const btn = document.getElementById('contrib-btn');
-      const card = document.getElementById('contrib-card');
-      if (!btn || !card) return;
-      const open = () => {
-        clearTimeout(contribCloseTimer);
-        card.hidden = false;
-        requestAnimationFrame(() => card.classList.add('contrib__card--open'));
-        btn.setAttribute('aria-expanded', 'true');
-      };
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        btn.getAttribute('aria-expanded') === 'true' ? closeContrib() : open();
-      });
-    }
-
     document.addEventListener('astro:page-load', () => {
       if (!document.querySelector('.article-layout')) return;
       initFootnotePreview();
-      initContributors();
     });
   </script>
 </Base>

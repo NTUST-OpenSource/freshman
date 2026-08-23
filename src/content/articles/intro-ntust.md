@@ -4,9 +4,6 @@ slug: intro-ntust
 category: info
 tags: [校園, 導覽]
 description: 臺科大是什麼樣的學校、校園怎麼走、教室代號怎麼看，開學前先把地理位置搞懂
-contributors:
-  - name: xinshoutw
-    email: me@xinshou.tw
 order: 1
 updated: 2026-07-27
 ---

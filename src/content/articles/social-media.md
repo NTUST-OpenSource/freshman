@@ -4,9 +4,6 @@ slug: social-media
 category: info
 tags: [社群, 資訊]
 description: 頭殼板、二手市集、換課選課社團與新生群，臺科的消息其實都在這些地方流通
-contributors:
-  - name: xinshoutw
-    email: me@xinshou.tw
 order: 4
 updated: 2026-07-27
 ---

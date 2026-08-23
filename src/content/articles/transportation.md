@@ -4,9 +4,6 @@ slug: transportation
 category: life
 tags: [行, 生活]
 description: 從臺北車站到臺科怎麼走、YouBike 與共享運具怎麼用、機車停車位怎麼申請
-contributors:
-  - name: xinshoutw
-    email: me@xinshou.tw
 order: 3
 updated: 2026-07-27
 ---

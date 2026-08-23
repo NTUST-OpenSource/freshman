@@ -4,9 +4,6 @@ slug: life
 category: life
 tags: [生活]
 description: 校內提款機分佈、平板與筆電怎麼選，以及校園裡那幾隻貓
-contributors:
-  - name: xinshoutw
-    email: me@xinshou.tw
 order: 5
 updated: 2026-07-27
 ---

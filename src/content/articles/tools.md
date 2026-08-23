@@ -4,9 +4,6 @@ slug: tools
 category: info
 tags: [工具, 資訊]
 description: 學長姐做的課表轉日曆、GPA 計算機、GPA 分佈與課程評價，非官方但很好用
-contributors:
-  - name: xinshoutw
-    email: me@xinshou.tw
 order: 3
 updated: 2026-07-27
 ---

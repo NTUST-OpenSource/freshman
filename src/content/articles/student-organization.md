@@ -4,9 +4,6 @@ slug: student-organization
 category: info
 tags: [系學會, 社群]
 description: 各系系學會的 Facebook 與 Instagram 一覽，新生群、迎新茶會、系上公告都靠它們
-contributors:
-  - name: xinshoutw
-    email: me@xinshou.tw
 order: 5
 updated: 2026-07-27
 ---

@@ -4,9 +4,6 @@ slug: exchange
 category: misc
 tags: [交換, 國際]
 description: 交換學生要準備什麼、修課與生活會遇到什麼差異，來自實際去過的學長姐分享
-contributors:
-  - name: xinshoutw
-    email: me@xinshou.tw
 order: 3
 updated: 2026-07-27
 ---
