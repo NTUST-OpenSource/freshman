@@ -81,12 +81,12 @@ const navGroups = Object.entries(CATEGORIES)
           <nav class="site-header__inner" aria-label="主選單">
             {/* popover 走原生 top-layer：Esc 與點外側關閉皆免 JS */}
             <button
-              class="navdrawer__btn"
+              class="icon-btn navdrawer__btn"
               type="button"
               popovertarget="site-nav"
               aria-label="開啟目錄"
             >
-              <span class="navdrawer__btn-icon" aria-hidden="true" />
+              <span class="icon-btn__icon navdrawer__btn-icon" aria-hidden="true" />
             </button>
             {/* header 常駐視口，viewport 策略等於進頁即預抓 */}
             <a class="brand" href="/" data-astro-prefetch="viewport">
@@ -95,7 +95,7 @@ const navGroups = Object.entries(CATEGORIES)
             </a>
             <div class="site-header__links">
               <a class="nav-pill" href="/article/start/#%E7%9B%AE%E9%8C%84" data-astro-prefetch="viewport">目錄</a>
-              <a class="nav-pill" href="/article/contribute/" data-astro-prefetch="viewport">如何貢獻</a>
+              <a class="nav-pill" href="/article/contribute/" data-astro-prefetch="viewport">貢獻</a>
               <div class="dept-picker" id="dept-picker">
                 <button
                   class="dept-picker__btn"
@@ -114,7 +114,22 @@ const navGroups = Object.entries(CATEGORIES)
                     </li>
                   ))}
                 </ul>
+                <div class="dept-hint" id="dept-hint" role="status" hidden>
+                  <span>選擇系別，看看學長姐們的建議</span>
+                  <button class="dept-hint__close" id="dept-hint-close" type="button" aria-label="關閉提示">
+                    <span class="dept-hint__close-icon" aria-hidden="true" />
+                  </button>
+                </div>
               </div>
+              <a
+                class="icon-btn icon-btn--github"
+                href="https://github.com/NTUST-OpenSource/freshman"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub 專案"
+              >
+                <span class="icon-btn__icon icon-btn__icon--github" aria-hidden="true" />
+              </a>
             </div>
           </nav>
         </header>
@@ -181,6 +196,21 @@ const navGroups = Object.entries(CATEGORIES)
         document.documentElement.dataset.dept = localStorage.getItem('dept') || 'all';
       });
 
+      // smooth scrolling only around an in-page anchor click; anything else, history
+      // restoration included, lands instantly
+      let smoothScrollTimer: number | undefined;
+      document.addEventListener('click', (e) => {
+        const link = (e.target as Element | null)?.closest?.('a[href*="#"]');
+        if (!(link instanceof HTMLAnchorElement) || !link.hash) return;
+        if (link.origin !== location.origin || link.pathname !== location.pathname) return;
+        document.documentElement.classList.add('scroll-smooth');
+        clearTimeout(smoothScrollTimer);
+        smoothScrollTimer = window.setTimeout(
+          () => document.documentElement.classList.remove('scroll-smooth'),
+          1200,
+        );
+      });
+
       // 轉場中整頁退出 hit-testing，點擊退化到 <html>：跳過動畫後以座標找回目標重新觸發
       let activeViewTransition: TransitionBeforeSwapEvent['viewTransition'] | undefined;
       document.addEventListener('astro:before-swap', (e) => {
@@ -202,7 +232,7 @@ const navGroups = Object.entries(CATEGORIES)
       let lastMouseY = -1;
       function mirrorHeaderHover() {
         const targets = document.querySelectorAll<HTMLElement>(
-          '.site-header a.nav-pill, .site-header .brand, .dept-picker__btn, .navdrawer__btn',
+          '.site-header a.nav-pill, .site-header .brand, .dept-picker__btn, .site-header .icon-btn',
         );
         let overAny = false;
         for (const el of targets) {
@@ -362,6 +392,27 @@ const navGroups = Object.entries(CATEGORIES)
         sync();
       }
 
+      function initDeptHint() {
+        const hint = document.getElementById('dept-hint');
+        const btn = document.getElementById('dept-btn');
+        if (!hint || !btn || hint.dataset.bound) return; // header persists across navigation
+        hint.dataset.bound = '1';
+        if (localStorage.getItem('dept') || localStorage.getItem('deptHintDone')) return;
+
+        const dismiss = () => {
+          localStorage.setItem('deptHintDone', '1');
+          hint.classList.remove('dept-hint--show');
+          setTimeout(() => (hint.hidden = true), 200);
+        };
+        document.getElementById('dept-hint-close')?.addEventListener('click', dismiss);
+        btn.addEventListener('click', dismiss, { once: true });
+
+        setTimeout(() => {
+          hint.hidden = false;
+          requestAnimationFrame(() => hint.classList.add('dept-hint--show'));
+        }, 1400);
+      }
+
       function initCascade() {
         const blocks = document.querySelectorAll<HTMLElement>('[data-cascade] > *');
         if (!blocks.length) return;
@@ -438,6 +489,7 @@ const navGroups = Object.entries(CATEGORIES)
 
       document.addEventListener('astro:page-load', () => {
         initDeptPicker();
+        initDeptHint();
         initCascade();
         initCodeCopy();
         initYt();

@@ -1,5 +1,5 @@
 ---
-title: 如何貢獻
+title: 貢獻
 slug: contribute
 category: info
 tags: [導覽]

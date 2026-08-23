@@ -57,7 +57,7 @@ content layer 以內容 digest 快取渲染結果，快取實體在 `node_module
 
 | 檔案 | 內容 |
 |---|---|
-| [如何貢獻](https://freshman.ntust.org/article/contribute/) | 貢獻指南：兩種修改方式的逐步教學、分支命名、送出前檢查清單（正文在 `src/content/articles/contribute.md`） |
+| [貢獻](https://freshman.ntust.org/article/contribute/) | 貢獻指南：兩種修改方式的逐步教學、分支命名、送出前檢查清單（正文在 `src/content/articles/contribute.md`） |
 | [`AGENTS.md`](AGENTS.md) | 專案最高行為準則：語言規範、設計語言、內容架構、Git 規範 |
 | [`docs/spec/SPEC.md`](docs/spec/SPEC.md) | 自訂 Markdown 語法規格書 |
 | [`docs/README.md`](docs/README.md) | 內容涵蓋狀態、已知源資料問題、改寫守則 |
@@ -70,7 +70,7 @@ content layer 以內容 digest 快取渲染結果，快取實體在 `node_module
 - 發現問題但不確定正確答案，或不方便自己動手改 → 開一則 [Issue](https://github.com/NTUST-OpenSource/freshman/issues)
 - 已經知道怎麼修（錯字、失效連結、過期金額）→ 直接發 Pull Request
 
-不會用 Git 也可以參與，錯字之類的小修改全程能在 GitHub 網頁上點擊完成。完整步驟、寫作守則與送出前檢查清單見網站上的 [如何貢獻](https://freshman.ntust.org/article/contribute/)。
+不會用 Git 也可以參與，錯字之類的小修改全程能在 GitHub 網頁上點擊完成。完整步驟、寫作守則與送出前檢查清單見網站上的 [貢獻](https://freshman.ntust.org/article/contribute/)。
 
 ## 貢獻者
 
