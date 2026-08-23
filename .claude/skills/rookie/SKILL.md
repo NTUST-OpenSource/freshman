@@ -71,7 +71,7 @@ label 從 repo 現有這組挑，不要自創：
 | 知道有問題但不知道正確答案 | `help wanted` |
 | 改動單純、適合第一次貢獻的人接手 | `good first issue` |
 
-記下回傳的 Issue 編號，步驟 8 要用。
+記下回傳的 Issue 編號，步驟 9 要用。
 
 ## 3. 問使用者要不要順手修
 
@@ -91,7 +91,7 @@ git fetch origin
 git switch -c fix/dorm-taipei-typo origin/dev
 ```
 
-分支名為 `<type>/<簡短英文說明>`，後半小寫英文加連字號。type 用 `feat`、`fix`、`docs`、`refactor`、`perf`、`chore`、`ci`。
+分支名為 `<type>/<簡短英文說明>`，後半小寫英文加連字號。type 與 Conventional Commits 共用同一組：`feat`、`fix`、`docs`、`refactor`、`perf`、`chore`、`ci`。
 
 沒有寫入權限的話先 fork：
 
@@ -133,9 +133,23 @@ rm -rf .astro node_modules/.astro node_modules/.vite
 
 build 不過就修到過，不要把紅燈推上去。
 
-## 7. Commit 與推送
+## 7. 本機 code review
 
-commit 訊息**一律純英文**，格式 `type(Scope): short description`，需要細節就在下面補 bullet。一件事一個 commit，不要把數項修改塞成一筆。不加 `Co-Authored-By` 之類的 trailer。
+**PR 開出去之前一定要先在本機審過。** 不要把 Greptile 抓得到的東西留給 Greptile 抓，那只會讓分數卡在 4/5 然後多繞一輪。
+
+```
+/code-review
+```
+
+處理原則：
+
+- 有 finding 就修完再往下，不要帶著紅字開 PR
+- 判斷為誤判的，記下理由，步驟 9 寫進 PR body，Greptile 提同一件事時直接引用
+- 改的是文章內容而非程式碼時，改對照步驟 5 的寫作規範自查一遍：全形標點、半形空白、無 emoji、學年標註、`updated` 日期
+
+## 8. Commit 與推送
+
+commit 訊息遵循 [Conventional Commits](https://www.conventionalcommits.org/)，格式 `type(Scope): description`，需要細節就在下面補 bullet。**一律純英文**，Scope 首字大寫是本專案慣例。一件事一個 commit，不要把數項修改塞成一筆。不加 `Co-Authored-By` 之類的 trailer。
 
 ```bash
 git commit -m 'fix(Content): use the standard 臺 form in the dorm address sample
@@ -145,7 +159,7 @@ git commit -m 'fix(Content): use the standard 臺 form in the dorm address sampl
 git push -u origin fix/dorm-taipei-typo      # fork 的話推到 fork remote
 ```
 
-## 8. 建 PR
+## 9. 建 PR
 
 base 一律 `dev`。GitHub 預設會指向 `main`，這步最容易錯。
 
@@ -174,7 +188,7 @@ label 沿用 Issue 那顆。作者本人就是 `xinshoutw` 的時候要拿掉 `-
 
 `Closes #N` 建立與 Issue 的關聯；因為 repo 的預設分支是 `main`，合進 `dev` 時 Issue 還不會自動關閉，等 `dev` 併進 `main` 才會。這是預期行為，不用改寫法。
 
-## 9. 盯 Greptile 到 5/5
+## 10. 盯 Greptile 到 5/5
 
 PR 一開，Greptile 會自動觸發審查並給一個信心分數。**只有 5/5 且沒有未處理的留言，才算提交完成。** 要明確告訴使用者這件事，不要開完 PR 就說「好了」。
 
