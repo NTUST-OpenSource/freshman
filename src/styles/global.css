@@ -123,6 +123,11 @@ html.is-leaving .site-footer {
   animation: none !important;
 }
 
+/* the pair blends with plus-lighter, so two opaque snapshots wash the header out */
+::view-transition-old(site-header):not(:only-child) {
+  opacity: 0;
+}
+
 ::view-transition-old(site-header):only-child {
   animation: vt-header-out 0.32s var(--ease) both;
 }
