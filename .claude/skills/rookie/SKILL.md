@@ -192,14 +192,14 @@ label 沿用 Issue 那顆。作者本人就是 `xinshoutw` 的時候要拿掉 `-
 
 PR 一開，Greptile 會自動觸發審查並給一個信心分數。**分數 5/5、而且沒有未解決的 review thread，兩個條件同時成立才算提交完成。** 要明確告訴使用者這件事，不要開完 PR 就說「好了」。
 
-狀態一律用 `scripts/greptile_status.sh` 查，不要自己拼 `gh` 指令：
+狀態一律用 `scripts/greptile_status.py` 查，不要自己拼 `gh` 指令：
 
 ```bash
-scripts/greptile_status.sh <PR 編號>            # 查一次，印 JSON
-scripts/greptile_status.sh <PR 編號> --watch    # 每 30 秒一次直到通過，用 run_in_background 跑
+scripts/greptile_status.py <PR 編號>            # 查一次，印 JSON
+scripts/greptile_status.py <PR 編號> --watch    # 每 30 秒一次直到通過，用 run_in_background 跑
 ```
 
-`--interval <秒>` 與 `--max <次數>` 可調輪詢節奏，順序不拘。
+`--interval <秒>`、`--max <次數>`、`--repo <owner/name>` 可調。
 
 輸出長這樣，`threads` 會列出每一則未解決留言的檔案、行號與內容：
 
@@ -209,13 +209,17 @@ scripts/greptile_status.sh <PR 編號> --watch    # 每 30 秒一次直到通過
 
 通過時印 `GREPTILE_PASS` 並以 0 結束。
 
-- `score` 為 `none` 代表這一版還沒有審查結果。**只有比 head commit 新的分數才算數**：Greptile 重審期間舊分數還掛在 PR 上，照收會對根本沒人看過的 code 報通過
+- `score` 為 `none` 代表這一版還沒有審查結果。**只有針對現在這顆 head commit 的審查才算數**：Greptile 重審期間舊分數還掛在 PR 上，照收會對根本沒人看過的 code 報通過
 - `unresolved` 不分作者，維護者留的未解決留言一樣會擋住通過，這是刻意的
 - push 之後 `score` 會回到 `none`，等新審查落地才會有新分數，這是正常的
 
-> **不要用 `gh pr view` 自己重寫，這裡踩過兩個坑。**
-> `gh pr view --json comments,reviews` 看不到 inline review thread，查不到留言解沒解決，只看分數會在還有未處理留言時誤報通過。舊分數也會在重審期間繼續掛著，不比對 head commit 就會對沒審過的 code 報通過。
-> 而且 Greptile 的 review 本體 body 是空的、分數在另一則 conversation comment，取「最後一則 greptile 留言」永遠抓到空字串。
+> **不要用 `gh pr view` 自己重寫，這裡踩過五個坑，每一個都會造成誤報通過。**
+>
+> 1. `gh pr view --json comments,reviews` 看不到 inline review thread，查不到留言解沒解決
+> 2. Greptile 的 review 本體 body 是空的、分數在另一則 conversation comment，取「最後一則 greptile 留言」永遠抓到空字串
+> 3. Greptile 重審是**原地編輯**同一則留言，所以要取 `updatedAt` 最大的那則，不是列表最後一則
+> 4. 新舊要比對 review 的 `commit.oid` 與 `headRefOid`，**不能比時間**。`committedDate` 是本機 commit 時間，rebase 或晚一點才 push，舊分數的時間就會比它新，於是對沒審過的 code 報通過
+> 5. `reviewThreads` 要分頁抓完，只取第一頁會漏算未解決留言
 
 分數低於 5/5 或還有未解決留言時：
 
