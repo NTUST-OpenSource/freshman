@@ -166,4 +166,9 @@ const { name, github, email, founder = false } = Astro.props;
     border-color: color-mix(in oklab, var(--brand) 35%, var(--line));
     background: color-mix(in oklab, var(--brand) 5%, var(--paper));
   }
+
+  /* the badge overhangs the id column by about 1.2rem */
+  .person--founder .person__name {
+    padding-right: 1.5rem;
+  }
 </style>
