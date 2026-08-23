@@ -30,7 +30,6 @@ STATE_Q = """
 query($owner:String!,$name:String!,$pr:Int!){
   repository(owner:$owner,name:$name){pullRequest(number:$pr){
     headRefOid
-    reviews(last:30){nodes{author{login} submittedAt commit{oid}}}
     comments(last:100){nodes{author{login} body updatedAt}}
   }}}
 """
@@ -98,20 +97,16 @@ def status(repo: str, pr: int) -> dict[str, Any]:
     state = gql(STATE_Q, repo, pr)
     head = state["headRefOid"]
 
-    # The score is only current when the comment carrying it was edited at or
-    # after the review of this head was submitted. Checking the two separately
-    # pairs a fresh review with the previous revision's score.
-    submitted = [
-        r["submittedAt"] for r in state["reviews"]["nodes"]
-        if by_greptile(r) and ((r.get("commit") or {}).get("oid") == head)
-    ]
+    # The summary comment links the commit it reviewed, so requiring the head oid
+    # in the same body that holds the score binds the two atomically. Timestamps
+    # cannot do this: the comment is edited in place, and a re-review does not
+    # always publish a review node to compare against.
     scored: list[tuple[str, str]] = []
-    if submitted:
-        floor = max(submitted)
-        for comment in state["comments"]["nodes"]:
-            found = SCORE_RE.search(comment.get("body") or "")
-            if by_greptile(comment) and found and comment["updatedAt"] >= floor:
-                scored.append((comment["updatedAt"], found.group(1)))
+    for comment in state["comments"]["nodes"]:
+        body = comment.get("body") or ""
+        found = SCORE_RE.search(body)
+        if by_greptile(comment) and found and head in body:
+            scored.append((comment["updatedAt"], found.group(1)))
     scored.sort()
 
     threads = open_threads(repo, pr)
