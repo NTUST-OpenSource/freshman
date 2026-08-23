@@ -709,10 +709,6 @@ html.is-leaving .site-footer {
     gap: 0.6rem;
   }
 
-  .nav-pill--contribute {
-    display: none !important;
-  }
-
   .site-header__links {
     gap: 0.4rem;
   }
@@ -725,6 +721,10 @@ html.is-leaving .site-footer {
 
 /* 窄螢幕：只留 logo 與導覽控制 */
 @media (max-width: 520px) {
+  .nav-pill--contribute {
+    display: none !important;
+  }
+
   .brand__text {
     display: none;
   }
