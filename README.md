@@ -2,7 +2,7 @@
 
 給臺灣科技大學新生的開學前指南：選課、住宿、生活與資訊帳號整理，附三學年行事曆與系別專屬內容。
 
-網站：<https://freshman.ntust.org>
+網站：<https://rookie.ntust.org>
 
 本專案為獨立創作的開源網站，內容由在校生共同維護。校內制度年年變動、連結年年失效，因此我們把整份懶人包放在 GitHub 上：任何人都能回報錯誤或直接提交修正，讓它不依賴特定個人也能一屆一屆傳下去。
 
@@ -57,7 +57,7 @@ content layer 以內容 digest 快取渲染結果，快取實體在 `node_module
 
 | 檔案 | 內容 |
 |---|---|
-| [貢獻](https://freshman.ntust.org/article/contribute/) | 貢獻指南：兩種修改方式的逐步教學、分支命名、送出前檢查清單（正文在 `src/content/articles/contribute.md`） |
+| [貢獻](https://rookie.ntust.org/article/contribute/) | 貢獻指南：兩種修改方式的逐步教學、分支命名、送出前檢查清單（正文在 `src/content/articles/contribute.md`） |
 | [`AGENTS.md`](AGENTS.md) | 專案最高行為準則：語言規範、設計語言、內容架構、Git 規範 |
 | [`docs/spec/SPEC.md`](docs/spec/SPEC.md) | 自訂 Markdown 語法規格書 |
 | [`docs/README.md`](docs/README.md) | 內容涵蓋狀態、已知源資料問題、改寫守則 |
@@ -70,11 +70,11 @@ content layer 以內容 digest 快取渲染結果，快取實體在 `node_module
 - 發現問題但不確定正確答案，或不方便自己動手改 → 開一則 [Issue](https://github.com/NTUST-OpenSource/freshman/issues)
 - 已經知道怎麼修（錯字、失效連結、過期金額）→ 直接發 Pull Request
 
-不會用 Git 也可以參與，錯字之類的小修改全程能在 GitHub 網頁上點擊完成。完整步驟、寫作守則與送出前檢查清單見網站上的 [貢獻](https://freshman.ntust.org/article/contribute/)。
+不會用 Git 也可以參與，錯字之類的小修改全程能在 GitHub 網頁上點擊完成。完整步驟、寫作守則與送出前檢查清單見網站上的 [貢獻](https://rookie.ntust.org/article/contribute/)。
 
 ## 貢獻者
 
-完整名單見網站的[銘謝頁](https://freshman.ntust.org/thanks/)：原始團隊，以及自動更新的貢獻者網格。
+完整名單見網站的[銘謝頁](https://rookie.ntust.org/thanks/)：原始團隊，以及自動更新的貢獻者網格。
 
 ## 授權
 

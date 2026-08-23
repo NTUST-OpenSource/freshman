@@ -6,7 +6,7 @@
 ## 專案是什麼
 
 臺科大新生指南網站，獨立重新創作（與其他同類站點無任何關聯，關係說明見 AGENTS.md）。內容以自訂 Markdown 語法撰寫（規格 `docs/spec/SPEC.md`），
-由 remark serializer 渲染。目標網域 `https://freshman.ntust.org`，部署至 Cloudflare Pages（DNS 綁定待使用者操作）。
+由 remark serializer 渲染。目標網域 `https://rookie.ntust.org`，部署至 Cloudflare Pages（DNS 綁定待使用者操作）。
 
 ## 技術棧與指令
 

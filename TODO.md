@@ -12,7 +12,8 @@
 - [ ] contribute 頁補完貢獻流程與聯絡方式（現為佔位稿，header 直連）
 - [ ] 新移植 13 篇的年度性資料查證（停車費、YouBike 費率、學餐政策、英文修課辦法連結等），換學年時逐條核對
 - [ ] 社團清單分類為粗略歸納，待以社團系統（clubs.ntust.edu.tw）正式分類校對
-- [ ] DNS 綁定後：Cloudflare 設 `*.pages.dev` → `freshman.ntust.org` 301（`_redirects` 不支援跨網域比對，需在 dashboard 設 redirect rule）
+- [ ] DNS 綁定後：Cloudflare 設 `*.pages.dev` → `rookie.ntust.org` 301（`_redirects` 不支援跨網域比對，需在 dashboard 設 redirect rule）
+- [ ] 網域收斂：主網域 `rookie.ntust.org`，別名 `freshman.ntust.org`、`rookie-guide.ntust.org` 同樣可訪問，目前僅靠 canonical 指回主網域。SEO 上 301 更乾淨，若無保留別名內容的需求，改設 301
 - [ ] prototype 恢復 `draft: true`（現為臨時公開＋noindex，使用者指示之後取消註解）
 
 ## 明確延後（使用者指示）
