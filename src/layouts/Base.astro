@@ -189,23 +189,26 @@ const navGroups = Object.entries(CATEGORIES)
     }
 
     <script>
-      import type {
-        TransitionBeforePreparationEvent,
-        TransitionBeforeSwapEvent,
-      } from 'astro:transitions/client';
+      import type { TransitionBeforeSwapEvent } from 'astro:transitions/client';
 
       // swap 會清掉 <html> 自訂屬性且 is:inline 不重跑，導航後還原系別
       document.addEventListener('astro:after-swap', () => {
         document.documentElement.dataset.dept = localStorage.getItem('dept') || 'all';
       });
 
-      // scroll-behavior: smooth turns the restored history offset into a slow glide
-      document.addEventListener('astro:before-preparation', (e) => {
-        if ((e as TransitionBeforePreparationEvent).navigationType !== 'traverse') return;
-        document.documentElement.style.scrollBehavior = 'auto';
-      });
-      document.addEventListener('astro:page-load', () => {
-        requestAnimationFrame(() => (document.documentElement.style.scrollBehavior = ''));
+      // smooth scrolling only around an in-page anchor click; anything else, history
+      // restoration included, lands instantly
+      let smoothScrollTimer: number | undefined;
+      document.addEventListener('click', (e) => {
+        const link = (e.target as Element | null)?.closest?.('a[href*="#"]');
+        if (!(link instanceof HTMLAnchorElement) || !link.hash) return;
+        if (link.origin !== location.origin || link.pathname !== location.pathname) return;
+        document.documentElement.classList.add('scroll-smooth');
+        clearTimeout(smoothScrollTimer);
+        smoothScrollTimer = window.setTimeout(
+          () => document.documentElement.classList.remove('scroll-smooth'),
+          1200,
+        );
       });
 
       // 轉場中整頁退出 hit-testing，點擊退化到 <html>：跳過動畫後以座標找回目標重新觸發
