@@ -141,6 +141,17 @@ html.is-leaving .site-footer {
   animation: vt-header-in 0.4s var(--ease) both;
 }
 
+/* keep the desktop directory still when both pages render the same navigation rail */
+::view-transition-old(site-directory):not(:only-child),
+::view-transition-new(site-directory):not(:only-child) {
+  animation: none !important;
+}
+
+/* only the new snapshot remains visible while the active article marker updates */
+::view-transition-old(site-directory):not(:only-child) {
+  opacity: 0;
+}
+
 @keyframes vt-header-out {
   to {
     opacity: 0;
@@ -160,7 +171,9 @@ html.is-leaving .site-footer {
   ::view-transition-old(root),
   ::view-transition-new(root),
   ::view-transition-old(site-header),
-  ::view-transition-new(site-header) {
+  ::view-transition-new(site-header),
+  ::view-transition-old(site-directory),
+  ::view-transition-new(site-directory) {
     animation: none !important; /* VT 偽元素不吃 * 選擇器，header 滑動需獨立停用 */
   }
 }
@@ -509,6 +522,7 @@ html.is-leaving .site-footer {
 
   .site-directory {
     display: block;
+    view-transition-name: site-directory;
     position: fixed;
     inset: 0 auto 0 0;
     z-index: 41;
