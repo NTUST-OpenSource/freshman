@@ -33,6 +33,7 @@ const navArticles = chrome
       (a, b) => a.data.order - b.data.order,
     )
   : [];
+const onCredits = Astro.url.pathname.replace(/\/$/, '') === '/thanks';
 const navGroups = Object.entries(CATEGORIES)
   .map(([key, cat]) => ({ key, label: cat.label, items: navArticles.filter((a) => a.data.category === key) }))
   .filter((g) => g.items.length > 0);
@@ -181,9 +182,11 @@ const navGroups = Object.entries(CATEGORIES)
       chrome && (
         <footer class="site-footer">
           <p>天大地大臺科大，你滑到底了</p>
-          <a class="nav-pill" href="/thanks/" data-astro-prefetch="hover">
-            銘謝
-          </a>
+          {!onCredits && (
+            <a class="nav-pill" href="/thanks/" data-astro-prefetch="hover">
+              銘謝
+            </a>
+          )}
         </footer>
       )
     }
