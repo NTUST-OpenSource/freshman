@@ -4,9 +4,6 @@ slug: other-question
 category: misc
 tags: [新生]
 description: 新生入學指導要不要去、兵役調查表怎麼填、學籍資料要填多完整、紀念品哪裡買
-contributors:
-  - name: xinshoutw
-    email: me@xinshou.tw
 order: 2
 updated: 2026-07-27
 ---

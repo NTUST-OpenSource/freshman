@@ -4,9 +4,6 @@ slug: clubs
 category: life
 tags: [育樂, 社團]
 description: 怎麼找社團、社團博覽會怎麼逛，以及目前還在活動的社團一覽
-contributors:
-  - name: xinshoutw
-    email: me@xinshou.tw
 order: 4
 updated: 2026-07-27
 ---

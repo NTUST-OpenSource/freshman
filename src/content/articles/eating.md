@@ -4,9 +4,6 @@ slug: eating
 category: life
 tags: [食, 生活]
 description: 校內餐廳與超商、公館師大商圈、宵夜與早餐名單，還有一個月要準備多少伙食費
-contributors:
-  - name: xinshoutw
-    email: me@xinshou.tw
 order: 2
 updated: 2026-07-27
 ---
