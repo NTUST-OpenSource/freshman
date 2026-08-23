@@ -637,13 +637,10 @@ html.is-leaving .site-footer {
     display: none;
   }
 
-  .site-header__links {
-    gap: 0.5rem;
+  .site-header__inner {
+    gap: 0.6rem;
   }
-}
 
-/* 320px 極窄：實算 329px 仍超寬，再縮 pill 內距與間距 */
-@media (max-width: 360px) {
   .site-header__links {
     gap: 0.4rem;
   }
@@ -652,9 +649,11 @@ html.is-leaving .site-footer {
   .dept-picker__btn {
     padding-inline: 0.6rem;
   }
+}
 
+@media (max-width: 360px) {
   .icon-btn--github {
-    display: none; /* header already overflows at 320px without it */
+    display: none; /* 320px 只放得下漢堡、logo 與三個導覽控制 */
   }
 }
 
