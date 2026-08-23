@@ -632,12 +632,8 @@ html.is-leaving .site-footer {
   }
 }
 
-/* 窄螢幕：只留 logo 與導覽控制，避免頁首溢出（320px 需可容納） */
-@media (max-width: 520px) {
-  .brand__text {
-    display: none;
-  }
-
+/* 未壓縮的頁首需要約 560px；斷點留在 640px 才有餘裕 */
+@media (max-width: 640px) {
   .site-header__inner {
     gap: 0.6rem;
   }
@@ -649,6 +645,13 @@ html.is-leaving .site-footer {
   .nav-pill,
   .dept-picker__btn {
     padding-inline: 0.6rem;
+  }
+}
+
+/* 窄螢幕：只留 logo 與導覽控制 */
+@media (max-width: 520px) {
+  .brand__text {
+    display: none;
   }
 }
 
