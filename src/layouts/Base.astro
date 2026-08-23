@@ -81,12 +81,12 @@ const navGroups = Object.entries(CATEGORIES)
           <nav class="site-header__inner" aria-label="主選單">
             {/* popover 走原生 top-layer：Esc 與點外側關閉皆免 JS */}
             <button
-              class="navdrawer__btn"
+              class="icon-btn navdrawer__btn"
               type="button"
               popovertarget="site-nav"
               aria-label="開啟目錄"
             >
-              <span class="navdrawer__btn-icon" aria-hidden="true" />
+              <span class="icon-btn__icon navdrawer__btn-icon" aria-hidden="true" />
             </button>
             {/* header 常駐視口，viewport 策略等於進頁即預抓 */}
             <a class="brand" href="/" data-astro-prefetch="viewport">
@@ -115,6 +115,15 @@ const navGroups = Object.entries(CATEGORIES)
                   ))}
                 </ul>
               </div>
+              <a
+                class="icon-btn icon-btn--github"
+                href="https://github.com/NTUST-OpenSource/freshman"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub 專案"
+              >
+                <span class="icon-btn__icon icon-btn__icon--github" aria-hidden="true" />
+              </a>
             </div>
           </nav>
         </header>
@@ -202,7 +211,7 @@ const navGroups = Object.entries(CATEGORIES)
       let lastMouseY = -1;
       function mirrorHeaderHover() {
         const targets = document.querySelectorAll<HTMLElement>(
-          '.site-header a.nav-pill, .site-header .brand, .dept-picker__btn, .navdrawer__btn',
+          '.site-header a.nav-pill, .site-header .brand, .dept-picker__btn, .site-header .icon-btn',
         );
         let overAny = false;
         for (const el of targets) {

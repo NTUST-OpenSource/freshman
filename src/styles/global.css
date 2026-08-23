@@ -178,40 +178,56 @@ html.is-leaving .site-footer {
   gap: 1rem;
 }
 
-/* 漢堡鍵：頁首最左，開啟全站目錄抽屜 */
-.navdrawer__btn {
+/* ---- 圓形圖示鍵（漢堡、GitHub） ---- */
+.icon-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   flex: none;
   width: 2.2rem;
   height: 2.2rem;
-  margin-right: -0.35rem; /* 視覺上貼齊 logo，點擊區維持 44px 目標 */
   padding: 0;
   background: none;
   border: 1px solid transparent;
   border-radius: 50%;
   color: var(--ink);
+  text-decoration: none;
   cursor: pointer;
   transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease),
     color var(--dur) var(--ease), scale var(--dur) var(--ease);
 }
 
-.navdrawer__btn:hover,
-.navdrawer__btn.vt-hover {
+/* :hover stops resolving mid view transition; the script mirrors it as .vt-hover */
+.icon-btn:hover,
+.icon-btn.vt-hover {
   border-color: var(--line);
   background: color-mix(in oklab, var(--brand) 6%, var(--paper));
   color: var(--brand);
 }
 
-.navdrawer__btn:active {
+.icon-btn:active {
   scale: 0.92;
 }
 
-.navdrawer__btn-icon {
+.icon-btn__icon {
   width: 1.25rem;
   height: 1.25rem;
   background: currentColor;
+}
+
+/* the mark is a solid glyph, so it reads heavier than the stroke icons at the same size */
+.icon-btn__icon--github {
+  width: 1.1rem;
+  height: 1.1rem;
+  mask: url('/icons/github.svg') no-repeat center / contain;
+  -webkit-mask: url('/icons/github.svg') no-repeat center / contain;
+}
+
+.navdrawer__btn {
+  margin-right: -0.35rem; /* 視覺上貼齊 logo，點擊區維持 44px 目標 */
+}
+
+.navdrawer__btn-icon {
   mask: url('/icons/menu.svg') no-repeat center / contain;
   -webkit-mask: url('/icons/menu.svg') no-repeat center / contain;
 }
@@ -550,6 +566,10 @@ html.is-leaving .site-footer {
   .nav-pill,
   .dept-picker__btn {
     padding-inline: 0.6rem;
+  }
+
+  .icon-btn--github {
+    display: none; /* header already overflows at 320px without it */
   }
 }
 
