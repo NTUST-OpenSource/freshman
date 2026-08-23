@@ -308,6 +308,7 @@ html.is-leaving .site-footer {
   display: flex;
   align-items: center;
   gap: 0.45em;
+  white-space: nowrap; /* CJK inside a pill must not wrap */
   font: inherit;
   font-size: var(--text-small);
   font-weight: 650;
