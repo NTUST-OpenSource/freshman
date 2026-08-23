@@ -38,6 +38,7 @@
 - 首頁以外的新動畫等指示
 - 首頁不顯示 header 與 footer（`Base.astro` 的 `chrome`），只有「進入懶人包」與「銘謝」兩顆按鈕與行事曆
 - 藥丸用 `.nav-pill`，圓形圖示鍵用 `.icon-btn`，兩者等高
+- 銘謝頁的 footer 不重複顯示銘謝連結
 
 ## 內容架構
 
@@ -79,6 +80,7 @@
 - fetch 只能放在 `src/lib/contributors.mjs`，不得寫回頁面 frontmatter
 - API 失敗時該區塊退化為說明文字，build 不中斷
 - 匿名 API 60 次/小時/IP；CI 用 `secrets.GITHUB_TOKEN`，Pages 端撞到 rate limit 才在 dashboard 加 `GITHUB_TOKEN`
+- 第三方素材的授權聲明記在 `NOTICE`
 - 頭像直連 `https://avatars.githubusercontent.com/<login>?s=160`，不經 `unavatar.io` 這類代理。這是第三方帳號頭像的唯一例外，內容圖片仍一律自託管
 - 信箱只列 `docs/dump/about.md` 已載明的那幾位，其餘任何人一律不得補上
 - 含 `mailto:` 的區塊必須包在 `<!--email_off-->` 內
@@ -87,6 +89,7 @@
 ## 工作流程
 
 - 改 `astro.config.mjs` 或 `src/plugins/` 後：停 dev server → `rm -rf .astro node_modules/.astro node_modules/.vite` → 重啟
+- client script 放 `src/scripts/*.ts`，`Base.astro` 只保留 import 與 `astro:page-load` 註冊
 - client script 一律掛 `astro:page-load`，persist 元素用 `dataset.bound` 防重複綁定
 - document 層級監聽器在模組頂層註冊一次，handler 內以 id 取當前元素
 - `transition:persist` 的元素不得再加 `transition:name`，其 `view-transition-name` 寫在 CSS class 上
