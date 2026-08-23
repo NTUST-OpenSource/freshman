@@ -19,17 +19,60 @@ function revealCurrentItem(container: HTMLElement, focus: boolean, center: boole
   if (focus) current.focus({ preventScroll: true });
 }
 
-export function initDirectoryPosition() {
+const desktopDirectory = matchMedia('(min-width: 1024px)');
+let desktopDirectoryOpen = true;
+
+function syncDirectoryState() {
+  const drawer = document.getElementById('site-nav');
+  const toggle = document.getElementById('directory-toggle');
+  const onDesktop = desktopDirectory.matches;
+
+  document.body.classList.toggle('directory-collapsed', onDesktop && !desktopDirectoryOpen);
+  if (onDesktop && drawer?.matches(':popover-open')) drawer.hidePopover();
+
+  const expanded = onDesktop ? desktopDirectoryOpen : drawer?.matches(':popover-open') === true;
+  toggle?.setAttribute('aria-expanded', String(expanded));
+}
+
+function revealDesktopCurrentItem() {
   const directory = document.querySelector<HTMLElement>('.site-directory');
-  if (directory && getComputedStyle(directory).display !== 'none') {
+  if (directory && desktopDirectoryOpen && getComputedStyle(directory).display !== 'none') {
     // The persistent rail keeps the current item visible without stealing content focus.
     revealCurrentItem(directory, false, false);
   }
+}
+
+desktopDirectory.addEventListener('change', () => {
+  syncDirectoryState();
+  if (desktopDirectory.matches) requestAnimationFrame(revealDesktopCurrentItem);
+});
+document.addEventListener('astro:after-swap', syncDirectoryState);
+
+export function initDirectoryPosition() {
+  const toggle = document.getElementById('directory-toggle');
+  if (toggle && !toggle.dataset.bound) {
+    toggle.dataset.bound = '1';
+    toggle.addEventListener('click', () => {
+      const drawer = document.getElementById('site-nav');
+      if (desktopDirectory.matches) {
+        desktopDirectoryOpen = !desktopDirectoryOpen;
+        syncDirectoryState();
+        if (desktopDirectoryOpen) requestAnimationFrame(revealDesktopCurrentItem);
+      } else {
+        drawer?.matches(':popover-open') ? drawer.hidePopover() : drawer?.showPopover();
+        syncDirectoryState();
+      }
+    });
+  }
+
+  syncDirectoryState();
+  revealDesktopCurrentItem();
 
   const drawer = document.getElementById('site-nav');
   if (!drawer || drawer.dataset.bound) return;
   drawer.dataset.bound = '1';
   drawer.addEventListener('toggle', () => {
+    syncDirectoryState();
     if (!drawer.matches(':popover-open')) return;
     requestAnimationFrame(() => {
       // The temporary drawer transfers context and keyboard control to the current item.
