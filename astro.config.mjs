@@ -30,7 +30,7 @@ const articleMeta = Object.fromEntries(
 const articleSlugOf = (url) => url.match(/\/article\/([^/]+)\//)?.[1];
 
 export default defineConfig({
-  site: 'https://freshman.ntust.org',
+  site: 'https://rookie.ntust.org',
   integrations: [
     sitemap({
       filter: (page) => !articleMeta[articleSlugOf(page) ?? '']?.noindex, // noindex 頁不進 sitemap

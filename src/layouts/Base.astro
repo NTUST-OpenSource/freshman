@@ -14,18 +14,21 @@ interface Props {
   chrome?: boolean;
   noindex?: boolean;
   ogType?: 'website' | 'article';
+  modified?: Date;
 }
 
 const {
   title,
-  description = '臺科新生的開學前指南：選課、住宿、生活與資訊帳號整理，附三學年行事曆與系別專屬內容，開學前照著看完就緒。',
+  description = '臺灣科技大學新生的開學前指南：選課、住宿、生活與資訊帳號整理，附三學年行事曆與系別專屬內容，開學前照著看完就緒。',
   chrome = true,
   noindex = false,
   ogType = 'website',
+  modified,
 } = Astro.props;
-const pageTitle = title ? `${title}｜臺科新生懶人包` : '臺科新生懶人包';
+// 無 title 者＝首頁：補上全名，「臺灣科技大學」是搜尋量最大的字串，站名本身不含
+const pageTitle = title ? `${title}｜臺科新生懶人包` : '臺科新生懶人包｜臺灣科技大學新生指南';
 const canonical = new URL(Astro.url.pathname, Astro.site);
-const ogImage = new URL('/logo.png', Astro.site);
+const ogImage = new URL('/og.png', Astro.site);
 
 // 側邊目錄：草稿與 noindex 不列（語法示範頁不該出現在導覽）
 const navArticles = chrome
@@ -47,6 +50,7 @@ const navGroups = Object.entries(CATEGORIES)
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
     <link rel="canonical" href={canonical} />
+    <meta name="google-site-verification" content="HTzujumbf6X-a1nulhb1Vqr1xrI8eNTjpLRuoZKUnP4" />
     {noindex && <meta name="robots" content="noindex" />}
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
@@ -55,7 +59,11 @@ const navGroups = Object.entries(CATEGORIES)
     <meta property="og:site_name" content="臺科新生懶人包" />
     <meta property="og:locale" content="zh_TW" />
     <meta property="og:image" content={ogImage} />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="臺科新生懶人包" />
+    {modified && <meta property="article:modified_time" content={modified.toISOString()} />}
+    <meta name="twitter:card" content="summary_large_image" />
     <script
       type="application/ld+json"
       is:inline
@@ -63,6 +71,15 @@ const navGroups = Object.entries(CATEGORIES)
         '@context': 'https://schema.org',
         '@type': 'WebSite',
         name: '臺科新生懶人包',
+        // 機器讀的別名欄位，非 UI 文案：「台」字變體照收，該寫法的搜尋量遠高於「臺」
+        alternateName: [
+          '臺灣科技大學新生懶人包',
+          '台灣科技大學新生懶人包',
+          '臺科大新生懶人包',
+          '台科大新生懶人包',
+          '台科新生懶人包',
+          'NTUST 新生懶人包',
+        ],
         url: Astro.site?.toString(),
         inLanguage: 'zh-Hant',
       }).replace(/</g, '\\u003c')}
