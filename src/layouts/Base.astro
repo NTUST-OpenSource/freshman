@@ -114,6 +114,12 @@ const navGroups = Object.entries(CATEGORIES)
                     </li>
                   ))}
                 </ul>
+                <div class="dept-hint" id="dept-hint" role="status" hidden>
+                  <span>選你的系，內容跟著換</span>
+                  <button class="dept-hint__close" id="dept-hint-close" type="button" aria-label="關閉提示">
+                    <span class="dept-hint__close-icon" aria-hidden="true" />
+                  </button>
+                </div>
               </div>
               <a
                 class="icon-btn icon-btn--github"
@@ -371,6 +377,27 @@ const navGroups = Object.entries(CATEGORIES)
         sync();
       }
 
+      function initDeptHint() {
+        const hint = document.getElementById('dept-hint');
+        const btn = document.getElementById('dept-btn');
+        if (!hint || !btn || hint.dataset.bound) return; // header persists across navigation
+        hint.dataset.bound = '1';
+        if (localStorage.getItem('dept') || localStorage.getItem('deptHintDone')) return;
+
+        const dismiss = () => {
+          localStorage.setItem('deptHintDone', '1');
+          hint.classList.remove('dept-hint--show');
+          setTimeout(() => (hint.hidden = true), 200);
+        };
+        document.getElementById('dept-hint-close')?.addEventListener('click', dismiss);
+        btn.addEventListener('click', dismiss, { once: true });
+
+        setTimeout(() => {
+          hint.hidden = false;
+          requestAnimationFrame(() => hint.classList.add('dept-hint--show'));
+        }, 1400);
+      }
+
       function initCascade() {
         const blocks = document.querySelectorAll<HTMLElement>('[data-cascade] > *');
         if (!blocks.length) return;
@@ -447,6 +474,7 @@ const navGroups = Object.entries(CATEGORIES)
 
       document.addEventListener('astro:page-load', () => {
         initDeptPicker();
+        initDeptHint();
         initCascade();
         initCodeCopy();
         initYt();

@@ -326,6 +326,77 @@ html.is-leaving .site-footer {
   rotate: -90deg;
 }
 
+/* ---- 系別提示：沒選過系時的一次性提醒 ---- */
+.dept-hint {
+  position: absolute;
+  top: calc(100% + 0.6rem);
+  right: 0;
+  z-index: 44;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  width: max-content;
+  max-width: min(15rem, calc(100vw - 2rem));
+  padding: 0.5rem 0.5rem 0.5rem 0.85rem;
+  background: var(--brand);
+  color: var(--on-brand);
+  border-radius: var(--radius);
+  box-shadow: 0 12px 30px color-mix(in oklab, var(--brand) 32%, transparent);
+  font-size: var(--text-tiny);
+  line-height: 1.6;
+  opacity: 0;
+  scale: 0.94;
+  translate: 0 -6px;
+  transform-origin: top right;
+  transition: opacity var(--dur) var(--ease), scale var(--dur) var(--ease),
+    translate var(--dur) var(--ease);
+}
+
+.dept-hint--show {
+  opacity: 1;
+  scale: 1;
+  translate: 0 0;
+}
+
+.dept-hint::before {
+  content: '';
+  position: absolute;
+  top: -0.28rem;
+  right: 1.1rem;
+  width: 0.6rem;
+  height: 0.6rem;
+  background: var(--brand);
+  border-radius: 2px;
+  rotate: 45deg;
+}
+
+.dept-hint__close {
+  flex: none;
+  display: inline-flex;
+  width: 1.4rem;
+  height: 1.4rem;
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: 50%;
+  color: inherit;
+  cursor: pointer;
+  transition: background var(--dur) var(--ease);
+}
+
+.dept-hint__close:hover {
+  background: color-mix(in oklab, black 16%, transparent);
+}
+
+.dept-hint__close-icon {
+  width: 0.8rem;
+  height: 0.8rem;
+  margin: auto;
+  background: currentColor;
+  mask: url('/icons/close.svg') no-repeat center / contain;
+  -webkit-mask: url('/icons/close.svg') no-repeat center / contain;
+}
+
 .dept-picker__menu {
   position: absolute;
   top: calc(100% + 0.5rem);
