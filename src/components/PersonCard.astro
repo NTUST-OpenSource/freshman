@@ -9,7 +9,7 @@ interface Props {
 const { name, github, email, founder = false } = Astro.props;
 ---
 
-<li class:list={['person', founder && 'person--founder']}>
+<li class:list={['person', github && 'person--linked', founder && 'person--founder']}>
   {
     github ? (
       <img
@@ -70,7 +70,7 @@ const { name, github, email, founder = false } = Astro.props;
     transition: border-color var(--dur) var(--ease), translate var(--dur) var(--ease);
   }
 
-  .person:hover,
+  .person--linked:hover,
   .person:focus-within {
     border-color: var(--line-strong);
     translate: 0 -2px;
