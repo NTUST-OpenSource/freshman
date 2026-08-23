@@ -190,29 +190,37 @@ label 沿用 Issue 那顆。作者本人就是 `xinshoutw` 的時候要拿掉 `-
 
 ## 10. 盯 Greptile 到 5/5
 
-PR 一開，Greptile 會自動觸發審查並給一個信心分數。**只有 5/5 且沒有未處理的留言，才算提交完成。** 要明確告訴使用者這件事，不要開完 PR 就說「好了」。
+PR 一開，Greptile 會自動觸發審查並給一個信心分數。**分數 5/5、而且沒有未解決的 review thread，兩個條件同時成立才算提交完成。** 要明確告訴使用者這件事，不要開完 PR 就說「好了」。
 
-開背景 shell 輪詢，不要讓使用者自己去按重新整理：
+狀態一律用 `scripts/greptile_status.sh` 查，不要自己拼 `gh` 指令：
 
 ```bash
-PR=<PR 編號>
-for i in $(seq 1 60); do
-  body=$(gh pr view "$PR" --repo NTUST-OpenSource/freshman --json comments,reviews \
-    --jq '[(.comments[]?, .reviews[]?) | select(((.author.login // "") | ascii_downcase) | contains("greptile"))] | last // {} | .body // ""')
-  score=$(printf '%s' "$body" | grep -oiE 'confidence score[^0-9]*[0-9]+/5' | tail -1)
-  printf '[%s] %s\n' "$i" "${score:-waiting for greptile}"
-  printf '%s\n' "$body" | tail -60
-  case "$score" in *5/5*) echo GREPTILE_PASS; exit 0;; esac
-  sleep 60
-done
-echo GREPTILE_TIMEOUT
+scripts/greptile_status.sh <PR 編號>            # 查一次，印 JSON
+scripts/greptile_status.sh <PR 編號> --watch    # 每 30 秒一次直到通過，用 run_in_background 跑
 ```
 
-以 `run_in_background` 執行。它印出的是 Greptile 最新那則留言全文，分數低於 5/5 時：
+`--interval <秒>` 與 `--max <次數>` 可調輪詢節奏，順序不拘。
 
-1. 讀留言指出的問題，判斷哪些是真的要改（Greptile 也會誤判，不要照單全收）
+輸出長這樣，`threads` 會列出每一則未解決留言的檔案、行號與內容：
+
+```json
+{"score":"4","unresolved":1,"threads":[{"path":".claude/skills/rookie/SKILL.md","line":204,"body":"..."}]}
+```
+
+通過時印 `GREPTILE_PASS` 並以 0 結束；`score` 為 `none` 代表 Greptile 還沒開始審。`unresolved` 不分作者，維護者留的未解決留言一樣會擋住通過，這是刻意的。
+
+> **不要用 `gh pr view` 自己重寫，這裡踩過兩個坑。**
+> `gh pr view --json comments,reviews` 看不到 inline review thread，查不到留言解沒解決，只看分數會在還有未處理留言時誤報通過。
+> 而且 Greptile 的 review 本體 body 是空的、分數在另一則 conversation comment，取「最後一則 greptile 留言」永遠抓到空字串。
+
+分數低於 5/5 或還有未解決留言時：
+
+1. 讀 `threads` 裡的每一則，判斷哪些是真的要改。Greptile 也會誤判，不要照單全收
 2. 主動向使用者說明它抓到什麼、你打算怎麼修，改完 commit 並 push 到同一個分支
-3. push 後 Greptile 會重審，輪詢會接著印新分數，重複直到 `GREPTILE_PASS`
-4. 判斷為誤判的項目，在 PR 留言說明理由，不要默默略過
+3. push 後 Greptile 會自動重審，`--watch` 會接著印新分數，重複直到 `GREPTILE_PASS`
+4. 判斷為誤判的項目，在該則 thread 底下回覆說明理由再標記 resolved，不要默默略過
+5. 已修好的 thread 要手動 resolve，Greptile 不會自己關
+
+Greptile 安裝之前就開好的 PR 不會自動審，在 PR 留一則 `@greptileai review` 觸發即可。
 
 最後把 Issue 與 PR 兩個網址交給使用者。
