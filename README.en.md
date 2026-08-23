@@ -1,10 +1,6 @@
 <div align="center">
 
-<a href="https://rookie.ntust.org/">
-
-# NTUST Freshman Guide
-
-</a>
+# [NTUST Freshman Guide](https://rookie.ntust.org/)
 
 [![License](https://img.shields.io/github/license/NTUST-OpenSource/freshman?style=for-the-badge)](LICENSE)
 [![Astro](https://img.shields.io/badge/Astro-7-BC52EE?style=for-the-badge&logo=astro&logoColor=white)](https://astro.build)
