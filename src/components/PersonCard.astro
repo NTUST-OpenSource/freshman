@@ -9,7 +9,7 @@ interface Props {
 const { name, github, email, founder = false } = Astro.props;
 ---
 
-<li class:list={['person', founder && 'person--founder']}>
+<li class:list={['person', github && 'person--linked', founder && 'person--founder']}>
   {
     github ? (
       <img
@@ -70,7 +70,7 @@ const { name, github, email, founder = false } = Astro.props;
     transition: border-color var(--dur) var(--ease), translate var(--dur) var(--ease);
   }
 
-  .person:hover,
+  .person--linked:hover,
   .person:focus-within {
     border-color: var(--line-strong);
     translate: 0 -2px;
@@ -165,5 +165,10 @@ const { name, github, email, founder = false } = Astro.props;
   .person--founder {
     border-color: color-mix(in oklab, var(--brand) 35%, var(--line));
     background: color-mix(in oklab, var(--brand) 5%, var(--paper));
+  }
+
+  /* the badge overhangs the id column by about 1.2rem */
+  .person--founder .person__name {
+    padding-right: 1.5rem;
   }
 </style>

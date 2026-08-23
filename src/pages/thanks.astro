@@ -36,7 +36,7 @@ const contributors = await getContributors();
         <a href="/article/contribute/">貢獻</a>
       </p>
       {
-        contributors === null ? (
+        !contributors?.length ? (
           <p class="thanks__note">
             名單暫時取不到，請直接看
             <a href="https://github.com/NTUST-OpenSource/freshman/graphs/contributors" target="_blank" rel="noopener noreferrer">

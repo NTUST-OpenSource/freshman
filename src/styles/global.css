@@ -167,6 +167,9 @@ html.is-leaving .site-footer {
 
 /* ---- 頁首（凍結於畫面頂端） ---- */
 .site-header {
+  /* not transition:name — its generated scope index counts the page's other
+     transition elements, and swap keeps the persisted node's stale attribute */
+  view-transition-name: site-header;
   position: sticky;
   top: 0;
   z-index: 40;
@@ -305,6 +308,7 @@ html.is-leaving .site-footer {
   display: flex;
   align-items: center;
   gap: 0.45em;
+  white-space: nowrap; /* CJK inside a pill must not wrap */
   font: inherit;
   font-size: var(--text-small);
   font-weight: 650;
@@ -628,19 +632,12 @@ html.is-leaving .site-footer {
   }
 }
 
-/* 窄螢幕：只留 logo 與導覽控制，避免頁首溢出（320px 需可容納） */
-@media (max-width: 520px) {
-  .brand__text {
-    display: none;
+/* 未壓縮的頁首需要約 560px；斷點留在 640px 才有餘裕 */
+@media (max-width: 640px) {
+  .site-header__inner {
+    gap: 0.6rem;
   }
 
-  .site-header__links {
-    gap: 0.5rem;
-  }
-}
-
-/* 320px 極窄：實算 329px 仍超寬，再縮 pill 內距與間距 */
-@media (max-width: 360px) {
   .site-header__links {
     gap: 0.4rem;
   }
@@ -649,9 +646,18 @@ html.is-leaving .site-footer {
   .dept-picker__btn {
     padding-inline: 0.6rem;
   }
+}
 
+/* 窄螢幕：只留 logo 與導覽控制 */
+@media (max-width: 520px) {
+  .brand__text {
+    display: none;
+  }
+}
+
+@media (max-width: 360px) {
   .icon-btn--github {
-    display: none; /* header already overflows at 320px without it */
+    display: none; /* 320px 只放得下漢堡、logo 與三個導覽控制 */
   }
 }
 
