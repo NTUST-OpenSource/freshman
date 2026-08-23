@@ -4,9 +4,6 @@ slug: dorm
 category: life
 tags: [住宿, 宿舍]
 description: 入住文件、宿舍分配、洗衣用電、冷氣卡與宿舍網路，臺科住宿生活一篇搞懂
-contributors:
-  - name: xinshoutw
-    email: me@xinshou.tw
 order: 1
 updated: 2026-07-19
 ---

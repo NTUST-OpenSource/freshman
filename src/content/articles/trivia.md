@@ -4,9 +4,6 @@ slug: trivia
 category: misc
 tags: [冷知識]
 description: 學號九碼各代表什麼、創校三大系是哪三個，沒人會特別告訴你的小事
-contributors:
-  - name: xinshoutw
-    email: me@xinshou.tw
 order: 1
 updated: 2026-07-27
 ---

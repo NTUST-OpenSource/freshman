@@ -15,25 +15,28 @@ interface Props {
   chrome?: boolean;
   noindex?: boolean;
   ogType?: 'website' | 'article';
+  modified?: Date;
 }
 
 const {
   title,
-  description = '臺科新生的開學前指南：選課、住宿、生活與資訊帳號整理，附三學年行事曆與系別專屬內容，開學前照著看完就緒。',
+  description = '開學前指南，包含選課、住宿、生活、還有更多常見的問題整理。',
   chrome = true,
   noindex = false,
   ogType = 'website',
+  modified,
 } = Astro.props;
-const pageTitle = title ? `${title}｜臺科新生懶人包` : '臺科新生懶人包';
-const canonical = new URL(Astro.url.pathname, Astro.site);
-const ogImage = new URL('/logo.png', Astro.site);
 
-// 側邊目錄：草稿與 noindex 不列（語法示範頁不該出現在導覽）
+const pageTitle = title ? `${title}｜臺科新生懶人包` : '新生懶人包｜臺灣科技大學新生指南';
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL('/og.png', Astro.site);
+
 const navArticles = chrome
   ? (await getCollection('articles', (e) => !e.data.draft && !e.data.noindex)).sort(
       (a, b) => a.data.order - b.data.order,
     )
   : [];
+const onCredits = Astro.url.pathname.replace(/\/$/, '') === '/thanks';
 const navGroups = Object.entries(CATEGORIES)
   .map(([key, cat]) => ({ key, label: cat.label, items: navArticles.filter((a) => a.data.category === key) }))
   .filter((g) => g.items.length > 0);
@@ -47,6 +50,7 @@ const navGroups = Object.entries(CATEGORIES)
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
     <link rel="canonical" href={canonical} />
+    <meta name="google-site-verification" content="HTzujumbf6X-a1nulhb1Vqr1xrI8eNTjpLRuoZKUnP4" />
     {noindex && <meta name="robots" content="noindex" />}
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
@@ -55,7 +59,11 @@ const navGroups = Object.entries(CATEGORIES)
     <meta property="og:site_name" content="臺科新生懶人包" />
     <meta property="og:locale" content="zh_TW" />
     <meta property="og:image" content={ogImage} />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="臺科新生懶人包" />
+    {modified && <meta property="article:modified_time" content={modified.toISOString()} />}
+    <meta name="twitter:card" content="summary_large_image" />
     <script
       type="application/ld+json"
       is:inline
@@ -63,6 +71,14 @@ const navGroups = Object.entries(CATEGORIES)
         '@context': 'https://schema.org',
         '@type': 'WebSite',
         name: '臺科新生懶人包',
+        alternateName: [
+          '臺灣科技大學新生懶人包',
+          '台灣科技大學新生懶人包',
+          '臺科大新生懶人包',
+          '台科大新生懶人包',
+          '台科新生懶人包',
+          'NTUST 新生懶人包',
+        ],
         url: Astro.site?.toString(),
         inLanguage: 'zh-Hant',
       }).replace(/</g, '\\u003c')}
@@ -78,18 +94,16 @@ const navGroups = Object.entries(CATEGORIES)
     <a class="skip-link" href="#main">跳到主要內容</a>
     {
       chrome && (
-        <header class="site-header" transition:persist="site-header" transition:name="site-header">
+        <header class="site-header" transition:persist="site-header">
           <nav class="site-header__inner" aria-label="主選單">
-            {/* popover 走原生 top-layer：Esc 與點外側關閉皆免 JS */}
             <button
-              class="navdrawer__btn"
+              class="icon-btn navdrawer__btn"
               type="button"
               popovertarget="site-nav"
               aria-label="開啟目錄"
             >
-              <span class="navdrawer__btn-icon" aria-hidden="true" />
+              <span class="icon-btn__icon navdrawer__btn-icon" aria-hidden="true" />
             </button>
-            {/* header 常駐視口，viewport 策略等於進頁即預抓 */}
             <a class="brand" href="/" data-astro-prefetch="viewport">
               <img class="brand__logo" src="/logo.svg" alt="" width="30" height="31" />
               <span class="brand__text">臺科新生懶人包</span>
@@ -103,7 +117,7 @@ const navGroups = Object.entries(CATEGORIES)
                 href="/article/contribute/"
                 data-astro-prefetch="viewport"
               >
-                如何貢獻
+                貢獻
               </a>
               <div class="dept-picker" id="dept-picker">
                 <button
@@ -123,7 +137,22 @@ const navGroups = Object.entries(CATEGORIES)
                     </li>
                   ))}
                 </ul>
+                <div class="dept-hint" id="dept-hint" role="status" hidden>
+                  <span>選擇系別，看看學長姐們的建議</span>
+                  <button class="dept-hint__close" id="dept-hint-close" type="button" aria-label="關閉提示">
+                    <span class="dept-hint__close-icon" aria-hidden="true" />
+                  </button>
+                </div>
               </div>
+              <a
+                class="icon-btn icon-btn--github"
+                href="https://github.com/NTUST-OpenSource/freshman"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub 專案"
+              >
+                <span class="icon-btn__icon icon-btn__icon--github" aria-hidden="true" />
+              </a>
             </div>
           </nav>
         </header>
@@ -141,7 +170,6 @@ const navGroups = Object.entries(CATEGORIES)
     }
     {
       chrome && (
-        /* 抽屜不進 persist：隨頁面重建，aria-current 得以在 build 時算好 */
         <div class="navdrawer" id="site-nav" popover>
           <div class="navdrawer__head">
             <p class="navdrawer__title">目錄</p>
@@ -165,297 +193,27 @@ const navGroups = Object.entries(CATEGORIES)
     {
       chrome && (
         <footer class="site-footer">
-          <p>天大地大臺科大，你滑到底了欸！</p>
+          <p>天大地大臺科大，你滑到底了</p>
+          {!onCredits && (
+            <a class="nav-pill" href="/thanks/" data-astro-prefetch="hover">
+              銘謝
+            </a>
+          )}
         </footer>
       )
     }
 
     <script>
-      import type { TransitionBeforeSwapEvent } from 'astro:transitions/client';
-
-      // swap 會清掉 <html> 自訂屬性且 is:inline 不重跑，導航後還原系別
-      document.addEventListener('astro:after-swap', () => {
-        document.documentElement.dataset.dept = localStorage.getItem('dept') || 'all';
-      });
-
-      // 轉場中整頁退出 hit-testing，點擊退化到 <html>：跳過動畫後以座標找回目標重新觸發
-      let activeViewTransition: TransitionBeforeSwapEvent['viewTransition'] | undefined;
-      document.addEventListener('astro:before-swap', (e) => {
-        const vt = (e as TransitionBeforeSwapEvent).viewTransition;
-        activeViewTransition = vt;
-        vt?.finished
-          .catch(() => {
-            /* 中斷的轉場 finished 會 reject */
-          })
-          .finally(() => {
-            if (activeViewTransition === vt) activeViewTransition = undefined;
-            for (const el of document.querySelectorAll('.vt-hover')) el.classList.remove('vt-hover');
-            document.documentElement.style.cursor = '';
-          });
-      });
-
-      // 轉場中 :hover 與游標失效：以最後座標鏡射 .vt-hover 樣式與 html 上的手型
-      let lastMouseX = -1;
-      let lastMouseY = -1;
-      function mirrorHeaderHover() {
-        const targets = document.querySelectorAll<HTMLElement>(
-          '.site-header a.nav-pill, .site-header .brand, .dept-picker__btn, .navdrawer__btn',
-        );
-        let overAny = false;
-        for (const el of targets) {
-          const r = el.getBoundingClientRect();
-          const over =
-            lastMouseX >= r.left &&
-            lastMouseX <= r.right &&
-            lastMouseY >= r.top &&
-            lastMouseY <= r.bottom;
-          el.classList.toggle('vt-hover', over);
-          overAny = overAny || over;
-        }
-        document.documentElement.style.cursor = overAny ? 'pointer' : '';
-      }
-      document.addEventListener('mousemove', (e) => {
-        lastMouseX = e.clientX;
-        lastMouseY = e.clientY;
-        if (activeViewTransition) mirrorHeaderHover();
-      });
-      // 滑鼠靜止時無 mousemove：導航起點先鏡射，swap 重建 <html> 屬性後同步補回；
-      // 退場動畫點擊當下即播（不等請求），loader 等 fetch 與退場都完成才 swap
-      document.addEventListener('astro:before-preparation', (e) => {
-        mirrorHeaderHover();
-        const ev = e as Event & { loader: () => Promise<void> };
-        const loader = ev.loader;
-        ev.loader = async () => {
-          document.documentElement.classList.add('is-leaving');
-          const exits = document.querySelector('main')?.getAnimations() ?? [];
-          await Promise.all([loader(), Promise.allSettled(exits.map((a) => a.finished))]);
-        };
-      });
-      document.addEventListener('astro:after-swap', () => {
-        if (activeViewTransition) mirrorHeaderHover();
-      });
-      document.addEventListener('click', async (e) => {
-        if (e.target !== document.documentElement || !activeViewTransition) return;
-        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return; // 修飾鍵語意無法轉發，放棄救援
-        const vt = activeViewTransition;
-        vt.skipTransition();
-        try {
-          await vt.finished;
-        } catch {
-          /* 被中斷的轉場 finished 會 reject，不影響後續命中 */
-        }
-        document
-          .elementFromPoint(e.clientX, e.clientY)
-          ?.closest<HTMLAnchorElement>('a[href]')
-          ?.click();
-      });
-
-      // document 監聽掛模組層一次、以 id 查當前元素，header 重建時才不重複註冊
-      let deptCloseTimer: number | undefined;
-      function closeDeptMenu() {
-        const menu = document.getElementById('dept-menu');
-        if (!menu || menu.hidden) return;
-        menu.classList.remove('dept-picker__menu--open');
-        document.getElementById('dept-btn')?.setAttribute('aria-expanded', 'false');
-        deptCloseTimer = window.setTimeout(() => (menu.hidden = true), 170);
-      }
-      function openDeptMenu() {
-        const menu = document.getElementById('dept-menu');
-        if (!menu) return;
-        clearTimeout(deptCloseTimer);
-        menu.hidden = false;
-        requestAnimationFrame(() => menu.classList.add('dept-picker__menu--open'));
-        document.getElementById('dept-btn')?.setAttribute('aria-expanded', 'true');
-      }
-      document.addEventListener('click', (e) => {
-        const menu = document.getElementById('dept-menu');
-        if (menu && !menu.hidden && !menu.contains(e.target as Node)) closeDeptMenu();
-      });
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') closeDeptMenu();
-      });
-      // 指向當前頁的連結（如 header 上的本頁 pill）直接吞掉，不重跑導航與轉場；
-      // capture 階段先於 ClientRouter 的 click 監聽，preventDefault 後它會放行不導航
-      document.addEventListener(
-        'click',
-        (e) => {
-          const link = (e.target as Element | null)?.closest?.('a[href]');
-          if (!(link instanceof HTMLAnchorElement) || link.origin !== location.origin) return;
-          if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || link.target) return;
-          if (link.pathname === location.pathname && link.search === location.search && !link.hash) {
-            e.preventDefault();
-          }
-        },
-        true,
-      );
-
-      // 返回鍵等導航前強制收合：persist header 不得帶著展開選單進新頁
-      document.addEventListener('astro:before-swap', () => {
-        closeDeptMenu();
-        const menu = document.getElementById('dept-menu');
-        if (menu) menu.hidden = true; // 不等淡出計時，快照前立即隱藏
-      });
-
-      // 抽屜點連結即關：top-layer 元素會蓋過退場動畫，等 swap 才收太晚
-      document.addEventListener('astro:before-preparation', () => {
-        const drawer = document.getElementById('site-nav');
-        if (drawer?.matches(':popover-open')) drawer.hidePopover();
-      });
-
-      function initDeptPicker() {
-        const deptBtn = document.getElementById('dept-btn');
-        const deptMenu = document.getElementById('dept-menu');
-        const deptLabel = document.getElementById('dept-btn-label');
-        if (!deptBtn || !deptMenu || !deptLabel) return;
-        if (deptBtn.dataset.bound) return; // header 為 persist 元素，避免重複綁定
-        deptBtn.dataset.bound = '1';
-
-        const options = [...deptMenu.querySelectorAll<HTMLElement>('[role="option"]')];
-        const sync = () => {
-          const code = localStorage.getItem('dept') ?? 'all';
-          for (const opt of options) {
-            const selected = opt.dataset.code === code;
-            opt.setAttribute('aria-selected', String(selected));
-            if (selected) deptLabel.textContent = opt.textContent?.trim() ?? '全部';
-          }
-        };
-        deptBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          deptBtn.getAttribute('aria-expanded') === 'true' ? closeDeptMenu() : openDeptMenu();
-        });
-        deptBtn.addEventListener('keydown', (e) => {
-          if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-            e.preventDefault();
-            openDeptMenu();
-            options[0]?.focus();
-          }
-        });
-        deptMenu.addEventListener('keydown', (e) => {
-          const i = options.indexOf(document.activeElement as HTMLElement);
-          if (e.key === 'ArrowDown') {
-            e.preventDefault();
-            options[Math.min(i + 1, options.length - 1)]?.focus();
-          } else if (e.key === 'ArrowUp') {
-            e.preventDefault();
-            options[Math.max(i - 1, 0)]?.focus();
-          } else if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            (document.activeElement as HTMLElement | null)?.click();
-            deptBtn.focus();
-          } else if (e.key === 'Escape') {
-            closeDeptMenu();
-            deptBtn.focus();
-          }
-        });
-        for (const opt of options) {
-          opt.addEventListener('click', () => {
-            const code = opt.dataset.code ?? 'all';
-            localStorage.setItem('dept', code);
-            document.documentElement.dataset.dept = code;
-            sync();
-            closeDeptMenu();
-          });
-        }
-        sync();
-      }
-
-      function revealCurrentDirectoryItem(container: HTMLElement, focus: boolean, center: boolean) {
-        const current = container.querySelector<HTMLAnchorElement>('a[aria-current="page"]');
-        if (!current) {
-          if (focus) container.querySelector<HTMLButtonElement>('.navdrawer__close')?.focus();
-          return;
-        }
-
-        const containerRect = container.getBoundingClientRect();
-        const currentRect = current.getBoundingClientRect();
-        const outsideView = currentRect.top < containerRect.top || currentRect.bottom > containerRect.bottom;
-        if (center || outsideView) {
-          const top =
-            container.scrollTop +
-            currentRect.top -
-            containerRect.top -
-            (container.clientHeight - currentRect.height) / 2;
-          container.scrollTo({ top: Math.max(0, top), behavior: 'auto' });
-        }
-        if (focus) current.focus({ preventScroll: true });
-      }
-
-      function initDirectoryPosition() {
-        const directory = document.querySelector<HTMLElement>('.site-directory');
-        if (directory && getComputedStyle(directory).display !== 'none') {
-          // 常駐欄只在目前文章超出畫面時定位，不搶走正文的鍵盤焦點。
-          revealCurrentDirectoryItem(directory, false, false);
-        }
-
-        const drawer = document.getElementById('site-nav');
-        if (!drawer || drawer.dataset.bound) return;
-        drawer.dataset.bound = '1';
-        drawer.addEventListener('toggle', () => {
-          if (!drawer.matches(':popover-open')) return;
-          requestAnimationFrame(() => {
-            // 抽屜每次開啟都以目前文章為中心，並讓鍵盤操作可直接從此處繼續。
-            revealCurrentDirectoryItem(drawer, true, true);
-          });
-        });
-      }
-
-      function initCodeCopy() {
-        for (const pre of document.querySelectorAll('pre.astro-code')) {
-          if (pre.querySelector('.code-copy')) continue;
-          const btn = document.createElement('button');
-          btn.className = 'code-copy';
-          btn.type = 'button';
-          btn.setAttribute('aria-label', '複製程式碼');
-          const icon = document.createElement('span');
-          icon.className = 'code-copy__icon';
-          icon.setAttribute('aria-hidden', 'true');
-          btn.appendChild(icon);
-          btn.addEventListener('click', async () => {
-            try {
-              // 按鈕自身在 pre 內，抓 code 才不會把按鈕內容一起複製
-              await navigator.clipboard.writeText(pre.querySelector('code')?.textContent ?? '');
-              btn.classList.add('code-copy--done');
-            } catch {
-              btn.classList.add('code-copy--fail'); // 非 https 或權限拒絕
-            }
-            setTimeout(() => btn.classList.remove('code-copy--done', 'code-copy--fail'), 1400);
-          });
-          pre.appendChild(btn);
-        }
-      }
-
-      function initYt() {
-        for (const a of document.querySelectorAll('a.yt[data-yt-id]')) {
-          a.addEventListener('click', (e) => {
-            // 修飾鍵交還瀏覽器；替換後元素消失毋須 once
-            if (e.metaKey || e.ctrlKey || e.shiftKey) return;
-            e.preventDefault();
-            const id = (a as HTMLElement).dataset.ytId;
-            const iframe = document.createElement('iframe');
-            iframe.className = 'yt__iframe';
-            iframe.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1`;
-            iframe.allow = 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture';
-            iframe.allowFullscreen = true;
-            iframe.title = a.querySelector('.yt__title')?.textContent ?? 'YouTube';
-            a.replaceWith(iframe);
-          });
-        }
-      }
-
-      async function initMermaid() {
-        if (!document.querySelector('pre.mermaid')) return;
-        try {
-          const { default: mermaid } = await import('mermaid');
-          mermaid.initialize({ startOnLoad: false, theme: 'neutral', fontFamily: 'inherit' });
-          await mermaid.run({ querySelector: 'pre.mermaid', suppressErrors: false });
-        } catch (err) {
-          console.error('[mermaid] 渲染失敗：', err);
-        }
-      }
+      import '../scripts/view-transitions';
+      import { initDeptPicker, initDeptHint } from '../scripts/dept-picker';
+      import { initCascade, initCodeCopy, initYt, initMermaid } from '../scripts/content';
+      import { initDirectoryPosition } from '../scripts/directory';
 
       document.addEventListener('astro:page-load', () => {
         initDeptPicker();
+        initDeptHint();
         initDirectoryPosition();
+        initCascade();
         initCodeCopy();
         initYt();
         initMermaid();

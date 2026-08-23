@@ -4,9 +4,6 @@ slug: pay
 category: info
 tags: [繳費, 資訊]
 description: 學雜費、宿舍費、學生會費、系學會費與社費，哪些必繳、哪些看意願
-contributors:
-  - name: xinshoutw
-    email: me@xinshou.tw
 order: 6
 updated: 2026-07-27
 ---

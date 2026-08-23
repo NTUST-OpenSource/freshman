@@ -1,87 +1,66 @@
 # 臺科新生懶人包 — 專案規則
 
-本檔為專案的最高行為準則（等同 CLAUDE.md），所有 AI 協作與人工開發都必須遵守。
+專案最高行為準則，AI 協作與人工開發皆須遵守。
 
-## 目前進度（2026-07-19 更新）
+## 語言
 
-**已完成**
-- 行事曆資料管線：110–115 六學年轉換完成、例外歸零、calendar-sync skill 就緒
-- 首頁：單一入口設計、捷運路線列車循環動畫、三學年行事曆 rail（hover popup、i 更新卡、回到今天）
-- 文章系統：全套自訂 Markdown 語法（callout／spoiler／qa／tabs／steps 形色／card 圖片／dept／table 對齊框線／行號／註腳 hover 預覽）
-- 導航：View Transitions 縱向滑動、header 獨立 group（文章間靜止、進出首頁滑入滑出）、sticky 毛玻璃 header、自訂系別下拉
-- SEO 基礎：site=https://freshman.ntust.org、canonical、sitemap、robots.txt、OG 完整、WebSite/Article JSON-LD、404 頁
-- RWD 基線：320px 起 header／landing／文章／popup 皆不溢出，文章目錄避開 sticky header
+- UI、內容、文件一律繁體中文；例外為程式碼識別字、網址、無慣用譯名的專有名詞（NTUST、GPA、Moodle）
+- 標點全形，數字與英文半形，CJK 與數字或英文交界加半形空白
+- 程式碼註解一律英文、斷言句，只寫非顯而易見的限制與順序相依，不重述程式碼
 
-**待辦（大項）**
-- Cloudflare Pages 自訂網域 DNS 綁定（使用者操作）
-- og-image 1200×630 設計資產（目前暫用 logo.png）
-- qa 區塊輸出 FAQPage JSON-LD（規格已載明，未實作）
-- dark mode、非首頁新動畫（依指示延後）
+## 禁止
 
-## 語言規範
+- emoji：UI、內容、commit 訊息皆不得出現
+- 未討論過的執行期依賴，優先原生平台能力
+- 直接搬用 `docs/dump/` 的字句
 
-- 網站 UI 文案、內容、註解、文件一律**繁體中文**
-- 例外：程式碼識別字、網址、無慣用中文譯名的專有名詞（NTUST、GPA、Moodle）
-- 內容文字規範：標點符號全形、數字與英文字母半形、CJK 與數字或英文字母交界加半形空白
+## Git
 
-## 禁止事項
+- 遵循 [Conventional Commits](https://www.conventionalcommits.org/)，格式 `type(Scope): description`，細節補在下方 bullet
+- type：feat、fix、refactor、docs、test、chore、perf、ci。Scope 首字大寫為本專案慣例
+- 訊息純英文，一個功能一個 commit，不加 Co-Authored-By 等 trailer
+- PR 一律 target `dev`；開 PR 前先跑本機 code review，流程見 `.claude/skills/rookie`
 
-- **全站禁止 emoji**：UI、內容、commit 訊息皆不得出現。圖示一律使用 `public/icons/` 下的 SVG（svgrepo stroke-width 2 版、24×24、round cap/join，來源 `docs/svg2/`），以 CSS mask 上色
-- 不引入未討論過的執行期依賴；優先原生平台能力
+## 設計
 
-## 與另一專案（ntust.merlinkuo.tw）的關係
+- 僅 white mode，桌面優先（≥1280px），320px 起不得溢出
+- 圓角為核心語彙，tokens 見 `src/styles/tokens.css`
+- 品牌色臺科深紅；分類色取北捷路線色（選課綠、生活藍、資訊橘、其他棕）
+- 首頁不顯示 header 與 footer（`Base.astro` 的 `chrome`）
+- 圖示一律 `public/icons/` 的 SVG 以 CSS mask 上色；描邊取 svgrepo stroke-width 2、24×24，來源存 `docs/svg2/`
 
-- 本站是**獨立的重新創作**，與 ntust.merlinkuo.tw（他人維護的新生懶人包）在營運上互不隸屬：不是其新版、續作、分支或接手維護
-- 2026-07-27 起，該站**已授權本站使用其內容與圖片素材**（使用者轉達）。授權範圍限於素材使用，仍維持以下作法：
-  - 內容一律**改寫**成本站語氣與自訂語法，不原樣搬字
-  - 引用歷年問答時只留日期與泛稱（「臺科學長姐」），不寫入原始貼文者姓名
-  - 圖片自託管於 `public/images/<slug>/`，不熱鏈外站
-- `docs/dump/` 為該站內容的 Markdown 存檔，供改寫與事實查證使用
-- 站內不放指向該站的導流連結或「舊版／新版」式的說明文字
+## 內容
 
-## Git 規範
-
-- Commit 訊息**純英文**，格式：`type(Scope): short description` ＋ bullet points
-- type：feat、fix、refactor、docs、test、chore、perf、ci
-- **每完成一個功能就 commit** 當作 checkpoint，不堆積
-- **必須 GPG 簽章**（全域 config 已設定，簽章驗證 `git log --format='%h %G? %s'` 應為 G）
-- 不加 Co-Authored-By 等 trailer
-
-## 設計語言
-
-- 現階段**僅 white mode**（dark mode 未來再做）
-- **桌面版優先**（≥1280px）；行動裝置自適應基線已完成並經使用者驗收（320px 起）
-- **圓角**為核心設計語言（radius tokens 見 `src/styles/tokens.css`）
-- 品牌色：臺科深紅；分類色：北捷路線色（選課綠、生活藍、資訊橘、其他棕）
-- 動畫：**首頁**進場與互動動畫已依使用者指示實作（進場上浮、路線描線、hover 微互動）；其他頁面新增動畫仍待指示
-- 首頁**不顯示 header 與 footer**（`Base.astro` 的 `chrome` 開關），僅保留單一入口按鈕（`/article/start/`）與行事曆
-- 行事曆顯示**當學年 ±1 學年**（保底；client 依今日計算窗口，資料載入 113–115）、hover 顯示事件 popup、更新時間收在標題旁的 i 提示卡
-
-## 內容架構
-
-- 文章：`src/content/articles/*.md`，檔名＝slug，自訂語法規格見 `docs/spec/SPEC.md`
-- serializer：`src/plugins/remark-custom.mjs`（directive → HTML 映射）
-- 外部參考素材存檔：`docs/dump/`（僅供主題涵蓋比對與借鑑改寫，禁止直接複製）
-- 主題涵蓋狀態與已知源資料問題：`docs/README.md`
+- 文章 `src/content/articles/*.md`，檔名＝slug
+- 自訂語法規格 `docs/spec/SPEC.md`，serializer `src/plugins/remark-custom.mjs`，不自行擴充
+- 涵蓋狀態與源資料問題見 `docs/README.md`；待辦記於 `TODO.md`，補齊即刪
+- 圖片自託管於 `public/images/<slug>/`，不熱鏈
 
 ## 系別選擇器
 
-- 系別清單：`src/lib/depts.mjs`，**「所有系」（all）永遠排第一**，新增系別即擴充此陣列
-- 目前支援：`all`（所有系）、`csie`（資工系）
-- 使用者選擇存於 `localStorage.dept`，預設 `all`；`<html data-dept="...">` 由 head 內 inline script 於繪製前設定
-- 內容條件顯示語法：`:::dept{for="csie"}`（區塊僅該系別選擇者可見），渲染為 `data-dept-only` 屬性＋CSS 顯隱；新增系別需在 `src/styles/markdown.css` 增加對應顯隱規則
+- 清單 `src/lib/depts.mjs`，`all` 永遠第一；選擇存 `localStorage.dept`
+- `<html data-dept>` 由 head 內 inline script 於繪製前設定
+- `:::dept{for="csie"}` 渲染為 `data-dept-only`，新增系別要同步補 `src/styles/markdown.css` 的顯隱規則
 
 ## 行事曆
 
-- 資料管線見 `.claude/skills/calendar-sync`（ics 更新時觸發）；轉換腳本 `scripts/parse_ics.py` 的 docstring 為規則唯一真相源
-- 人工編輯正本：`docs/calendar/parsed/{學年}.json`；網站副本：`src/data/calendar-{113,114,115}.json`（三份一律同步）
-- 首頁右側行事曆：整學年連續月曆流、可上下捲動、過去日期降透明度、「回到今天」按鈕、點擊有事件日開 popup（原生 dialog）
-- 網站需顯示行事曆資料更新時間（`meta.parsedAt`）
+- 管線見 `.claude/skills/calendar-sync`，規則真相源為 `scripts/parse_ics.py` 的 docstring
+- 正本 `docs/calendar/parsed/{學年}.json`，副本 `src/data/calendar-{113,114,115}.json`，三份同步
+- 須顯示 `meta.parsedAt`
+
+## 銘謝頁（`/thanks/`）
+
+- 貢獻者名單由 `src/lib/contributors.mjs` 於 build 時取得，不落地成檔案；fetch 只能放這裡，不得寫回頁面 frontmatter
+- API 失敗時該區塊退化為說明文字，build 不中斷
+- 頭像直連 `https://avatars.githubusercontent.com/<login>?s=160`，為自託管原則的唯一例外
+- 信箱只列 `docs/dump/about.md` 已載明的那幾位；含 `mailto:` 的區塊必須包在 `<!--email_off-->` 內
+- 第三方素材授權記在 `NOTICE`
 
 ## 工作流程
 
-- **修改 `astro.config.mjs` 或 `src/plugins/` 後必須：停 dev server → `rm -rf .astro node_modules/.astro node_modules/.vite` → 重啟**。content layer 以內容 digest 快取渲染結果，快取實體在 `node_modules/.astro`（漏清它連 `npm run build` 都會吃舊 serializer 輸出，已踩過四次）
-- 全站使用 ClientRouter（View Transitions）：**所有 client script 必須掛 `astro:page-load`**，persist 元素（如 site-header）要用 `dataset.bound` 防重複綁定
-- 待補資料與待決事項記錄於 `TODO.md`，補齊後刪除該項
-- 內容與 md style 的調整以使用者指示為準，不自行擴充語法
-- 檔案版本相關決策先以 context7 驗證
+- 改 `astro.config.mjs`、`src/plugins/` 或 `src/content.config.ts` 後：停 dev server → `rm -rf .astro node_modules/.astro node_modules/.vite` → 重啟
+- client script 放 `src/scripts/*.ts`，一律掛 `astro:page-load`；persist 元素用 `dataset.bound` 防重複綁定
+- document 層級監聽器在模組頂層註冊一次，handler 內以 id 取當前元素
+- `transition:persist` 的元素不得再加 `transition:name`，其 `view-transition-name` 寫在 CSS class 上
+- `scroll-behavior` 不掛在 `html` 上，只在同頁錨點點擊時短暫掛 `.scroll-smooth`
+- 版本相關決策先以 context7 驗證

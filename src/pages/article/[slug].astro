@@ -18,6 +18,7 @@ const { Content, headings } = await render(article);
 const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
 const cat = CATEGORIES[article.data.category];
 const updated = article.data.updated.toLocaleDateString('zh-TW');
+const url = new URL(`/article/${article.data.slug}/`, Astro.site).toString();
 const articleLd = {
   '@context': 'https://schema.org',
   '@type': 'Article',
@@ -25,11 +26,18 @@ const articleLd = {
   description: article.data.description,
   dateModified: article.data.updated.toISOString(),
   inLanguage: 'zh-Hant',
-  mainEntityOfPage: new URL(`/article/${article.data.slug}/`, Astro.site).toString(),
-  // email 不進 LD：對 rich result 零貢獻、徒增收割面；mailto 管道在貢獻人卡
-  ...(article.data.contributors.length
-    ? { author: article.data.contributors.map((c) => ({ '@type': 'Person', name: c.name })) }
-    : {}),
+  mainEntityOfPage: url,
+  image: new URL('/og.png', Astro.site).toString(),
+  publisher: { '@type': 'Organization', name: '臺科新生懶人包', url: Astro.site?.toString() },
+};
+// 麵包屑讓 SERP 顯示「臺科新生懶人包 › 選課 › 選課」而非裸網址；分類無獨立頁面，故只兩層
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: '臺科新生懶人包', item: Astro.site?.toString() },
+    { '@type': 'ListItem', position: 2, name: article.data.title, item: url },
+  ],
 };
 ---
 
@@ -38,49 +46,22 @@ const articleLd = {
   description={article.data.description}
   noindex={article.data.noindex}
   ogType="article"
+  modified={article.data.updated}
 >
   {/* < 跳脫：內容含 </script> 也不會截斷資料塊 */}
   <script type="application/ld+json" is:inline set:html={JSON.stringify(articleLd).replace(/</g, '\\u003c')} />
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(breadcrumbLd).replace(/</g, '\\u003c')} />
   <div class={`article-layout cat-${article.data.category}`}>
     <article class="article">
       <header class="article__header" transition:name="article-head">
         <div class="article__eyebrow">
           <span class="chip chip--cat">{cat.label}</span>
           {article.data.draft && <span class="chip chip--draft">草稿</span>}
-          <span class="article__meta">
-            {updated} 更新
-            {
-              article.data.contributors.length > 0 && (
-                <span class="contrib">
-                  <button
-                    class="contrib__btn"
-                    id="contrib-btn"
-                    type="button"
-                    aria-expanded="false"
-                    aria-label="貢獻人列表"
-                  >
-                    <span aria-hidden="true" />
-                  </button>
-                  {/* email_off：Cloudflare Email Obfuscation 不得改寫信箱，
-                      解碼 script 在 ClientRouter swap 後不會重跑，會殘留 [email protected] */}
-                  <Fragment set:html="<!--email_off-->" />
-                  <span class="contrib__card" id="contrib-card" hidden>
-                    {article.data.contributors.map((c) => (
-                      <a href={`mailto:${c.email}`}>
-                        {c.name}
-                        <span class="contrib__mail">{c.email}</span>
-                      </a>
-                    ))}
-                  </span>
-                  <Fragment set:html="<!--/email_off-->" />
-                </span>
-              )
-            }
-          </span>
+          <span class="article__meta">{updated} 更新</span>
         </div>
         <h1 class="article__title">{article.data.title}</h1>
       </header>
-      <div class="md">
+      <div class="md" data-cascade>
         <Content />
       </div>
     </article>
@@ -102,26 +83,6 @@ const articleLd = {
   </div>
 
   <script>
-    // 內容一口氣逐塊淡入（不等捲動），與註腳 hover 預覽；掛 astro:page-load
-    function initCascade() {
-      const blocks = document.querySelectorAll<HTMLElement>('.md > *');
-      let i = 0;
-      for (const block of blocks) {
-        if (block.classList.contains('md-cascade')) continue;
-        block.classList.add('md-cascade');
-        block.style.transitionDelay = `${Math.min(i * 35, 500)}ms`;
-        i++;
-      }
-      requestAnimationFrame(() =>
-        requestAnimationFrame(() => {
-          for (const block of blocks) block.classList.add('md-cascade--in');
-          setTimeout(() => {
-            for (const block of blocks) block.style.transitionDelay = '';
-          }, 1100);
-        }),
-      );
-    }
-
     let fnPopHide: ((delay?: number) => void) | null = null;
     function initFootnotePreview() {
       const refs = document.querySelectorAll<HTMLAnchorElement>('.md sup a[data-footnote-ref]');
@@ -179,23 +140,6 @@ const articleLd = {
       fnPop.addEventListener('pointerleave', () => hide());
     }
 
-    // document 監聽掛模組層一次、以 id 查當前元素，不隨導航累積
-    let contribCloseTimer: number | undefined;
-    function closeContrib() {
-      const card = document.getElementById('contrib-card');
-      if (!card || card.hidden) return;
-      card.classList.remove('contrib__card--open');
-      document.getElementById('contrib-btn')?.setAttribute('aria-expanded', 'false');
-      contribCloseTimer = window.setTimeout(() => (card.hidden = true), 170);
-    }
-    document.addEventListener('click', (e) => {
-      const card = document.getElementById('contrib-card');
-      if (card && !card.hidden && !card.contains(e.target as Node)) closeContrib();
-    });
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeContrib();
-    });
-
     // 捲動即隱藏註腳預覽（走 hide 淡出）：fn-pop 為 fixed 定位，參考點捲走後不會觸發 pointerleave
     window.addEventListener(
       'scroll',
@@ -205,27 +149,9 @@ const articleLd = {
       { passive: true, capture: true },
     );
 
-    function initContributors() {
-      const btn = document.getElementById('contrib-btn');
-      const card = document.getElementById('contrib-card');
-      if (!btn || !card) return;
-      const open = () => {
-        clearTimeout(contribCloseTimer);
-        card.hidden = false;
-        requestAnimationFrame(() => card.classList.add('contrib__card--open'));
-        btn.setAttribute('aria-expanded', 'true');
-      };
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        btn.getAttribute('aria-expanded') === 'true' ? closeContrib() : open();
-      });
-    }
-
     document.addEventListener('astro:page-load', () => {
       if (!document.querySelector('.article-layout')) return;
-      initCascade();
       initFootnotePreview();
-      initContributors();
     });
   </script>
 </Base>

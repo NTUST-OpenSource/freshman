@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://freshman.ntust.org/sitemap-index.xml
+Sitemap: https://rookie.ntust.org/sitemap-index.xml

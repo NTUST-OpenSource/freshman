@@ -1,0 +1,78 @@
+<!doctype html>
+<!-- 社群分享卡（1200x630），依賴 PingFang TC，建議在 macOS 上產圖
+     "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless \
+       --screenshot=public/og.png --window-size=1200,630 --hide-scrollbars \
+       file://$PWD/scripts/og.html
+-->
+<meta charset="utf-8" />
+<style>
+  :root {
+    --paper: oklch(98% 0.006 85);
+    --ink: oklch(24% 0.015 265);
+    --ink-soft: oklch(46% 0.018 265);
+    --brand: oklch(46% 0.155 22);
+    --line: oklch(88.5% 0.01 85);
+    --c-course: oklch(52% 0.115 155);
+    --c-life: oklch(51% 0.115 255);
+    --c-info: oklch(54.5% 0.125 55);
+    --c-misc: oklch(50% 0.055 60);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1200px;
+    height: 630px;
+    background: var(--paper);
+    font-family: 'PingFang TC', 'Noto Sans TC', sans-serif;
+    color: var(--ink);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 74px 84px 0;
+    overflow: hidden;
+    position: relative;
+  }
+  .brandbar { display: flex; align-items: center; gap: 18px; }
+  .brandbar img { width: 46px; height: 47px; }
+  .brandbar span {
+    font-size: 27px; font-weight: 600; letter-spacing: 0.1em; color: var(--ink-soft);
+  }
+  h1 {
+    font-size: 106px; font-weight: 800; line-height: 1.14; letter-spacing: 0.03em;
+    margin-top: 38px;
+  }
+  h1 em { font-style: normal; color: var(--brand); }
+  p {
+    font-size: 31px; line-height: 1.5; letter-spacing: 0.06em;
+    color: var(--ink-soft); margin-top: 26px;
+    white-space: nowrap;
+  }
+  /* 路線圖沿用首頁母題：四色站點對應四個內容分區。
+     viewBox 與容器同尺寸，站點座標即曲線錨點，兩者缺一就會歪掉。 */
+  .route { position: absolute; left: 0; right: 0; bottom: 0; height: 150px; }
+  .route svg { width: 100%; height: 100%; display: block; }
+  .route path { fill: none; stroke-width: 9; stroke-linecap: round; }
+  .route circle { fill: var(--paper); stroke-width: 8; }
+  .url {
+    position: absolute; right: 84px; top: 78px;
+    font-size: 26px; font-weight: 700; color: var(--brand); letter-spacing: 0.04em;
+  }
+</style>
+<div class="brandbar">
+  <img src="../public/logo.svg" alt="" />
+  <span>臺灣科技大學．新生指南</span>
+</div>
+<h1>臺科<em>新生</em><br />懶人包</h1>
+<p>選課、住宿、生活、還有更多常見的問題整理</p>
+<div class="route">
+  <svg viewBox="0 0 1200 150">
+    <path stroke="var(--line)"
+          d="M -40 96 C 60 96 80 44 180 44 C 280 44 380 96 480 96 C 580 96 680 44 780 44 C 880 44 960 96 1060 96 L 1240 96" />
+    <path stroke="var(--brand)"
+          d="M -40 96 C 60 96 80 44 180 44 C 280 44 380 96 480 96 C 580 96 680 44 780 44" />
+    <circle cx="180" cy="44" r="13" stroke="var(--c-course)" />
+    <circle cx="480" cy="96" r="13" stroke="var(--c-life)" />
+    <circle cx="780" cy="44" r="13" stroke="var(--c-info)" />
+    <circle cx="1060" cy="96" r="13" stroke="var(--c-misc)" />
+  </svg>
+</div>
+<div class="url">rookie.ntust.org</div>
