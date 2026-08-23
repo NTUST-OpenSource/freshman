@@ -23,6 +23,16 @@ async function fromApi() {
     .map((c) => ({ login: c.login, url: c.html_url }));
 }
 
+/* a failed write must not cost us the list we already hold */
+function writeCache(list) {
+  try {
+    fs.mkdirSync(path.dirname(CACHE), { recursive: true });
+    fs.writeFileSync(CACHE, `${JSON.stringify(list)}\n`);
+  } catch (err) {
+    console.warn(`[thanks] could not cache the contributor list: ${err}`);
+  }
+}
+
 /**
  * Returns null when there is no list to show at all.
  * Memoised per process: dev re-runs page frontmatter on every request, and the
@@ -31,8 +41,7 @@ async function fromApi() {
 export function getContributors() {
   pending ??= fromApi()
     .then((list) => {
-      fs.mkdirSync(path.dirname(CACHE), { recursive: true });
-      fs.writeFileSync(CACHE, `${JSON.stringify(list)}\n`);
+      writeCache(list);
       return list;
     })
     .catch((err) => {
