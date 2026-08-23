@@ -1,3 +1,5 @@
+import type { TransitionBeforeSwapEvent } from 'astro:transitions/client';
+
 function revealCurrentItem(container: HTMLElement, focus: boolean, center: boolean) {
   const current = container.querySelector<HTMLAnchorElement>('a[aria-current="page"]');
   if (!current) {
@@ -21,6 +23,7 @@ function revealCurrentItem(container: HTMLElement, focus: boolean, center: boole
 
 const desktopDirectory = matchMedia('(min-width: 1024px)');
 let desktopDirectoryOpen = true;
+let desktopDirectoryScrollTop: number | undefined;
 
 function syncDirectoryState() {
   const drawer = document.getElementById('site-nav');
@@ -32,6 +35,19 @@ function syncDirectoryState() {
 
   const expanded = onDesktop ? desktopDirectoryOpen : drawer?.matches(':popover-open') === true;
   toggle?.setAttribute('aria-expanded', String(expanded));
+}
+
+function syncDesktopCurrentItem() {
+  const directory = document.querySelector<HTMLElement>('.site-directory');
+  if (!directory) return;
+
+  for (const link of directory.querySelectorAll<HTMLAnchorElement>('a[href]')) {
+    if (link.origin === location.origin && link.pathname === location.pathname) {
+      link.setAttribute('aria-current', 'page');
+    } else {
+      link.removeAttribute('aria-current');
+    }
+  }
 }
 
 function revealDesktopCurrentItem() {
@@ -46,7 +62,21 @@ desktopDirectory.addEventListener('change', () => {
   syncDirectoryState();
   if (desktopDirectory.matches) requestAnimationFrame(revealDesktopCurrentItem);
 });
-document.addEventListener('astro:after-swap', syncDirectoryState);
+document.addEventListener('astro:before-swap', (e) => {
+  const directory = document.querySelector<HTMLElement>('.site-directory');
+  const nextDirectory = (e as TransitionBeforeSwapEvent).newDocument.querySelector('.site-directory');
+  desktopDirectoryScrollTop = directory && nextDirectory ? directory.scrollTop : undefined;
+});
+document.addEventListener('astro:after-swap', () => {
+  syncDirectoryState();
+  syncDesktopCurrentItem();
+
+  const directory = document.querySelector<HTMLElement>('.site-directory');
+  if (directory && desktopDirectoryScrollTop !== undefined) {
+    directory.scrollTop = desktopDirectoryScrollTop;
+  }
+  desktopDirectoryScrollTop = undefined;
+});
 
 export function initDirectoryPosition() {
   const toggle = document.getElementById('directory-toggle');

@@ -158,7 +158,12 @@ const navGroups = Object.entries(CATEGORIES)
     }
     {
       chrome && (
-        <aside class="site-directory" id="site-directory" aria-label="懶人包導覽">
+        <aside
+          class="site-directory"
+          id="site-directory"
+          aria-label="懶人包導覽"
+          transition:persist="site-directory"
+        >
           <SiteDirectory groups={navGroups} currentPath={Astro.url.pathname} />
         </aside>
       )
