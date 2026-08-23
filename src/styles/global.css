@@ -517,7 +517,7 @@ html.is-leaving .site-footer {
 /* the desktop directory owns a full-height rail beside the page chrome */
 @media (min-width: 1280px) {
   .has-site-directory {
-    --site-directory-width: 16rem;
+    --site-directory-width: 12rem;
   }
 
   .site-directory {
