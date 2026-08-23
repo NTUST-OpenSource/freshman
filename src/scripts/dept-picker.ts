@@ -94,13 +94,16 @@ export function initDeptHint() {
   hint.dataset.bound = '1';
   if (localStorage.getItem('dept') || localStorage.getItem('deptHintDone')) return;
 
+  const dismissal = new AbortController();
   const dismiss = () => {
+    dismissal.abort(); // one teardown for every path that closes the hint
     localStorage.setItem('deptHintDone', '1');
     hint.classList.remove('dept-hint--show');
     setTimeout(() => (hint.hidden = true), 200);
   };
-  document.getElementById('dept-hint-close')?.addEventListener('click', dismiss);
-  btn.addEventListener('click', dismiss, { once: true });
+  const { signal } = dismissal;
+  document.getElementById('dept-hint-close')?.addEventListener('click', dismiss, { signal });
+  btn.addEventListener('click', dismiss, { signal });
 
   setTimeout(() => {
     hint.hidden = false;
