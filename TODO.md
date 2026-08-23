@@ -12,8 +12,21 @@
 - [ ] contribute 頁補完貢獻流程與聯絡方式（現為佔位稿，header 直連）
 - [ ] 新移植 13 篇的年度性資料查證（停車費、YouBike 費率、學餐政策、英文修課辦法連結等），換學年時逐條核對
 - [ ] 社團清單分類為粗略歸納，待以社團系統（clubs.ntust.edu.tw）正式分類校對
-- [ ] DNS 綁定後：Cloudflare 設 `*.pages.dev` → `rookie.ntust.org` 301（`_redirects` 不支援跨網域比對，需在 dashboard 設 redirect rule）
-- [ ] 網域收斂：主網域 `rookie.ntust.org`，別名 `freshman.ntust.org`、`rookie-guide.ntust.org` 同樣可訪問，目前僅靠 canonical 指回主網域。SEO 上 301 更乾淨，若無保留別名內容的需求，改設 301
+- [ ] 網域收斂為 `rookie.ntust.org`：別名 `freshman.ntust.org`、`rookie-guide.ntust.org` 與 `*.pages.dev` 一律 301。
+      `_redirects` 來源側只比對路徑（Cloudflare 明列 domain-level redirect 不支援），需在 dashboard 設
+      Rules → Redirect Rules，主機名條件與轉址目標如下：
+
+      ```
+      # 自訂篩選運算式
+      http.host in {"freshman.ntust.org" "rookie-guide.ntust.org"} or http.host wildcard "*.pages.dev"
+
+      # 網址轉址：動態運算式
+      concat("https://rookie.ntust.org", http.request.uri.path)
+      狀態碼 301、保留查詢字串 ✅
+      ```
+
+      別名主機需在該 zone 有 proxied DNS 紀錄，規則才會在邊緣觸發；`ntust.org` zone 屬校方，可能要請對方代設。
+- [ ] GSC 驗證 `https://rookie.ntust.org/`（meta 標籤已埋於 `Base.astro`），通過後提交 `sitemap-index.xml`，並到 Bing Webmaster Tools 匯入
 - [ ] prototype 恢復 `draft: true`（現為臨時公開＋noindex，使用者指示之後取消註解）
 
 ## 明確延後（使用者指示）
