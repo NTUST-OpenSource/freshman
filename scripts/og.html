@@ -34,41 +34,45 @@
   .brandbar { display: flex; align-items: center; gap: 18px; }
   .brandbar img { width: 46px; height: 47px; }
   .brandbar span {
-    font-size: 27px; font-weight: 600; letter-spacing: 0.06em; color: var(--ink-soft);
+    font-size: 27px; font-weight: 600; letter-spacing: 0.1em; color: var(--ink-soft);
   }
   h1 {
-    font-size: 106px; font-weight: 800; line-height: 1.08; letter-spacing: -0.02em;
+    font-size: 106px; font-weight: 800; line-height: 1.14; letter-spacing: 0.03em;
     margin-top: 38px;
   }
   h1 em { font-style: normal; color: var(--brand); }
   p {
-    font-size: 31px; line-height: 1.5; color: var(--ink-soft); margin-top: 26px;
+    font-size: 31px; line-height: 1.5; letter-spacing: 0.06em;
+    color: var(--ink-soft); margin-top: 26px;
     white-space: nowrap;
   }
-  /* 路線圖沿用首頁母題：四色站點對應四個內容分區 */
-  .route { position: absolute; left: 0; right: 0; bottom: 0; height: 128px; }
+  /* 路線圖沿用首頁母題：四色站點對應四個內容分區。
+     viewBox 與容器同尺寸，站點座標即曲線錨點，兩者缺一就會歪掉。 */
+  .route { position: absolute; left: 0; right: 0; bottom: 0; height: 150px; }
   .route svg { width: 100%; height: 100%; display: block; }
+  .route path { fill: none; stroke-width: 9; stroke-linecap: round; }
+  .route circle { fill: var(--paper); stroke-width: 8; }
   .url {
     position: absolute; right: 84px; top: 78px;
-    font-size: 26px; font-weight: 700; color: var(--brand); letter-spacing: 0.02em;
+    font-size: 26px; font-weight: 700; color: var(--brand); letter-spacing: 0.04em;
   }
 </style>
 <div class="brandbar">
   <img src="../public/logo.svg" alt="" />
-  <span>臺灣科技大學．非官方新生指南</span>
+  <span>臺灣科技大學．新生指南</span>
 </div>
 <h1>臺科<em>新生</em><br />懶人包</h1>
-<p>選課、住宿、生活與校園帳號，開學前照著看完就緒</p>
+<p>選課、住宿、生活、還有更多常見問題整理</p>
 <div class="route">
-  <svg viewBox="0 0 1200 150" preserveAspectRatio="none">
-    <path d="M -20 96 C 190 96 260 40 480 40 S 840 96 1220 96"
-      fill="none" stroke="var(--line)" stroke-width="9" stroke-linecap="round" />
-    <path d="M -20 96 C 190 96 260 40 480 40 S 700 84 856 93"
-      fill="none" stroke="var(--brand)" stroke-width="9" stroke-linecap="round" />
-    <circle cx="160" cy="96" r="13" fill="var(--paper)" stroke="var(--c-course)" stroke-width="8" />
-    <circle cx="480" cy="40" r="13" fill="var(--paper)" stroke="var(--c-life)" stroke-width="8" />
-    <circle cx="700" cy="66" r="13" fill="var(--paper)" stroke="var(--c-info)" stroke-width="8" />
-    <circle cx="886" cy="94" r="13" fill="var(--paper)" stroke="var(--c-misc)" stroke-width="8" />
+  <svg viewBox="0 0 1200 150">
+    <path stroke="var(--line)"
+          d="M -40 96 C 60 96 80 44 180 44 C 280 44 380 96 480 96 C 580 96 680 44 780 44 C 880 44 960 96 1060 96 L 1240 96" />
+    <path stroke="var(--brand)"
+          d="M -40 96 C 60 96 80 44 180 44 C 280 44 380 96 480 96 C 580 96 680 44 780 44" />
+    <circle cx="180" cy="44" r="13" stroke="var(--c-course)" />
+    <circle cx="480" cy="96" r="13" stroke="var(--c-life)" />
+    <circle cx="780" cy="44" r="13" stroke="var(--c-info)" />
+    <circle cx="1060" cy="96" r="13" stroke="var(--c-misc)" />
   </svg>
 </div>
 <div class="url">rookie.ntust.org</div>
