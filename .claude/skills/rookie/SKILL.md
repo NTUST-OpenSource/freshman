@@ -11,9 +11,12 @@ GitHub 相關操作一律透過 `pr.py`（與本檔同目錄），它已處理�
 
 ```bash
 pr.py open --title T [--issue N] [--body B] [--label L]   # 建 PR 到 dev 並回報實際結果
+pr.py trigger <PR>                                        # 沒在跑才要求一次審查
 pr.py status <PR>  [--watch] [--interval 秒] [--max 次]    # 5/5 且零未解決留言才 exit 0
 pr.py threads <PR>                                        # 列出未解決留言與其 thread id
 pr.py resolve <PR> --thread ID --reply "說明"              # 回覆並標記 resolved
+
+判讀規則沿用上游 greploop skill（`~/.claude/skills/greptile/greploop/`）的契約。
 ```
 
 ## 1. 定位
@@ -99,7 +102,7 @@ npm run build
 .claude/skills/rookie/pr.py status 17 --watch
 ```
 
-以 `run_in_background` 執行，PASS 時 exit 0。`score` 為 `none` 代表這一版還沒有審查結果，push 之後出現 `none` 屬正常，等新審查落地。
+以 `run_in_background` 執行，PASS 時 exit 0。輸出的 `check` 是 head commit 上 Greptile check run 的狀態，`completed` 才會採計分數；`score` 為 `none` 代表這一版還沒審完，push 之後出現屬正常。
 
 沒過就這樣處理：
 
@@ -108,6 +111,6 @@ npm run build
 3. 改完 commit、push 到同一分支，`--watch` 會接著印新分數
 4. 修好的與判定為誤判的，都用 `pr.py resolve <PR> --thread ID --reply "說明"` 回覆並收掉
 
-審查工具安裝之前就開好的 PR 不會自動審，在 PR 留一則 `@greptileai review` 觸發。
+`check` 長時間停在 `absent`（例如審查工具是在這個 PR 開好之後才安裝的），跑 `pr.py trigger <PR>` 要求一次。
 
 最後把 Issue 與 PR 兩個網址交給使用者。

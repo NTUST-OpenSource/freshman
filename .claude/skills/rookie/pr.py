@@ -3,9 +3,15 @@
 
 Subcommands:
   open      create the pull request against dev, linked to its issue
+  trigger   ask Greptile for a review when one is not already running
   status    confidence score and open review threads for a pull request
   threads   list the open review threads with their ids
   resolve   reply to one review thread and mark it resolved
+
+Follows the review-reading contract of the upstream greploop skill: the Greptile
+check run on the head sha says whether this revision has been reviewed, and the
+score is read from whichever of the pull request body, its reviews or its
+conversation comments carries the most recent one.
 """
 
 from __future__ import annotations
@@ -30,6 +36,8 @@ STATE_Q = """
 query($owner:String!,$name:String!,$pr:Int!){
   repository(owner:$owner,name:$name){pullRequest(number:$pr){
     headRefOid
+    body
+    reviews(last:30){nodes{author{login} body submittedAt}}
     comments(last:100){nodes{author{login} body updatedAt}}
   }}}
 """
@@ -49,6 +57,12 @@ def run(cmd: list[str]) -> str:
     if done.returncode != 0:
         raise RuntimeError(done.stderr.strip() or f"{cmd[0]} failed")
     return done.stdout.strip()
+
+
+def run_lenient(cmd: list[str]) -> str:
+    # gh pr checks exits non-zero whenever a check is pending or failing, which is
+    # exactly the state worth reading, so the exit code is ignored here.
+    return subprocess.run(cmd, capture_output=True, text=True).stdout.strip()
 
 
 def gql(query: str, repo: str, pr: int, cursor: str | None = None) -> dict[str, Any]:
@@ -93,27 +107,56 @@ def summarise(thread: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def greptile_check(repo: str, sha: str) -> dict[str, Any] | None:
+    runs = json.loads(run(["gh", "api", f"repos/{repo}/commits/{sha}/check-runs"]))
+    for check in runs.get("check_runs", []):
+        if "greptile" in (check.get("name") or "").lower():
+            return check
+    return None
+
+
+def score_of(node: dict[str, Any], stamp: str, head: str) -> tuple[str, str] | None:
+    body = node.get("body") or ""
+    found = SCORE_RE.search(body)
+    if not (by_greptile(node) and found and head in body):
+        return None
+    return (node[stamp], found.group(1))
+
+
 def status(repo: str, pr: int) -> dict[str, Any]:
     state = gql(STATE_Q, repo, pr)
     head = state["headRefOid"]
 
-    # The summary comment links the commit it reviewed, so requiring the head oid
-    # in the same body that holds the score binds the two atomically. Timestamps
-    # cannot do this: the comment is edited in place, and a re-review does not
-    # always publish a review node to compare against.
-    scored: list[tuple[str, str]] = []
-    for comment in state["comments"]["nodes"]:
-        body = comment.get("body") or ""
-        found = SCORE_RE.search(body)
-        if by_greptile(comment) and found and head in body:
-            scored.append((comment["updatedAt"], found.group(1)))
-    scored.sort()
+    # The check run is the signal that this revision has been reviewed. Greptile
+    # edits its summary in place and does not publish a review for every pass, so
+    # neither one can stand in for it.
+    check = greptile_check(repo, head)
+    reviewed = (check or {}).get("status") == "completed" and (check or {}).get("conclusion") == "success"
+
+    # The check is per head, but the summary is edited asynchronously, so the body
+    # carrying the score must name this head too. Failing that pairing leaves the
+    # score at none, which stalls rather than passing unreviewed work.
+    dated = [
+        found for found in (
+            [score_of(r, "submittedAt", head) for r in state["reviews"]["nodes"]]
+            + [score_of(c, "updatedAt", head) for c in state["comments"]["nodes"]]
+        ) if found
+    ]
+    dated.sort()
+    in_body = SCORE_RE.search(state.get("body") or "")
+    score = "none"
+    if reviewed:
+        if dated:
+            score = dated[-1][1]
+        elif in_body and head in (state.get("body") or ""):
+            score = in_body.group(1)
 
     threads = open_threads(repo, pr)
     return {
-        "score": scored[-1][1] if scored else "none",
+        "score": score,
         "unresolved": len(threads),
         "head": head,
+        "check": f"{(check or {}).get('status', 'absent')}/{(check or {}).get('conclusion', 'none')}",
         "threads": [summarise(t) for t in threads],
     }
 
@@ -131,6 +174,21 @@ def cmd_status(args: argparse.Namespace) -> int:
             time.sleep(args.interval)
     print("TIMEOUT", flush=True)
     return 4
+
+
+def cmd_trigger(args: argparse.Namespace) -> int:
+    raw = run_lenient(["gh", "pr", "checks", str(args.pr), "--repo", args.repo,
+                       "--json", "name,state"])
+    state = json.loads(raw) if raw.startswith("[") else []
+    running = [c["state"] for c in state
+               if "greptile" in c["name"].lower()
+               and c["state"].upper() in ("PENDING", "IN_PROGRESS", "QUEUED")]
+    if running:
+        print(f"greptile already running: {running[0]}")
+        return 0
+    run(["gh", "pr", "comment", str(args.pr), "--repo", args.repo, "--body", "@greptile review"])
+    print("requested a review")
+    return 0
 
 
 def cmd_threads(args: argparse.Namespace) -> int:
@@ -202,6 +260,10 @@ def main() -> int:
     p.add_argument("--issue", type=int, help="issue number to link with Closes")
     p.add_argument("--label", action="append", default=[])
     p.set_defaults(fn=cmd_open)
+
+    p = sub.add_parser("trigger", help="ask Greptile for a review when idle")
+    p.add_argument("pr", type=int)
+    p.set_defaults(fn=cmd_trigger)
 
     p = sub.add_parser("status", help="confidence score and open review threads")
     p.add_argument("pr", type=int)
