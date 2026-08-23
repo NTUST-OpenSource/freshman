@@ -9,6 +9,8 @@
 [![License](https://img.shields.io/github/license/NTUST-OpenSource/freshman?style=for-the-badge)](LICENSE)
 [![Astro](https://img.shields.io/badge/Astro-7-BC52EE?style=for-the-badge&logo=astro&logoColor=white)](https://astro.build)
 
+**繁體中文** | [English](README.en.md)
+
 </div>
 
 ## 總覽
@@ -25,16 +27,16 @@
 
 ### 內容
 
-- **選課** — 志願序、加退選、加簽，從專有名詞到實戰技巧
-- **生活** — 住宿、吃飯、交通、社團、校園生活
-- **資訊** — 校園帳號、繳費、好用工具、系學會與社群
-- **其他** — 新生常見問題、臺科冷知識、Q&A、國外交換
+- **選課** — 從專有名詞認識到實戰技巧
+- **生活** — 住宿、吃飯、交通、社團
+- **資訊** — 校園帳號、繳費、好用工具、社群
+- **其他** — 新生常見問題、臺科冷知識
 
 ### 特色
 
 - **系別專屬內容** — 了解直屬學長姐們的建議
 - **學年行事曆** — 取自[臺科行事曆](https://www.academic.ntust.edu.tw/p/404-1048-78935.php)
-- **人人可改** — 一篇文章就是一個 Markdown 檔，錯字在 GitHub 網頁上就能修
+- **人人可改** — Markdown 友善編輯
 
 <br clear="right"/>
 
@@ -42,9 +44,9 @@
 
 | 項目 | 選用 |
 |---|---|
-| 框架 | Astro 7（純靜態產生，SSG） |
+| 框架 | Astro 7（SSG） |
 | 內容 | Markdown ＋ content collections（zod strict schema） |
-| 語法擴充 | remark-directive ＋ 自寫 serializer（`src/plugins/`） |
+| 語法擴充 | remark-directive ＋ serializer（`src/plugins/`） |
 | 導航 | View Transitions（ClientRouter） |
 | 部署 | Cloudflare Pages |
 
@@ -53,7 +55,7 @@
 ### 需求
 
 - Node 22.12 以上（`.nvmrc` 指定 24）
-- Python 3（只有要重新轉換行事曆 ics 時需要）
+- Python 3（可選，首頁轉換 ics 時需要）
 
 ### 本機開發
 
@@ -116,7 +118,7 @@ freshman/
 歡迎回報錯誤、補充內容。
 
 - 發現問題但不確定正確答案，或不方便自己動手改，開一則 [Issue](https://github.com/NTUST-OpenSource/freshman/issues)
-- 已經知道怎麼修（錯字、失效連結、過期金額），開一則 [Issue](https://github.com/NTUST-OpenSource/freshman/issues) 然後發 Pull Request 關聯到此 Issue 
+- 已經知道怎麼修（錯字、失效連結、過期金額），開一則 [Issue](https://github.com/NTUST-OpenSource/freshman/issues) 然後發 Pull Request 關聯到此 Issue
 
 PR 送出前請確認
 
