@@ -674,6 +674,12 @@ html.is-leaving .site-footer {
   padding: 0;
 }
 
+.navdrawer__utility {
+  margin-top: 1.05rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--line);
+}
+
 .navdrawer__list a {
   display: block;
   padding: 0.42rem 0.6rem;

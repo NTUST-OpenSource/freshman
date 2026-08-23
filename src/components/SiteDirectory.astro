@@ -41,4 +41,15 @@ const { groups, currentPath } = Astro.props;
       </div>
     ))
   }
+  <ul class="navdrawer__list navdrawer__utility">
+    <li>
+      <a
+        href="/thanks/"
+        data-astro-prefetch="hover"
+        aria-current={currentPath === '/thanks/' ? 'page' : undefined}
+      >
+        銘謝
+      </a>
+    </li>
+  </ul>
 </nav>
