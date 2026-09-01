@@ -19,12 +19,14 @@
   --c-info: oklch(54.5% 0.125 55);
   --c-misc: oklch(50% 0.055 60);
 
-  /* 北捷路線色（文內路線圖）：四條與分類色同源，紅線另行校準到相同明度 */
+  /* 北捷路線色（文內路線圖）：四條與分類色同源，紅、黃另行校準到相同明度。
+     環狀線原色過亮，壓到 4.5:1 後偏橄欖金，可讀性優先於還原度 */
   --mrt-bl: var(--c-life);
   --mrt-r: oklch(52% 0.18 27);
   --mrt-g: var(--c-course);
   --mrt-o: var(--c-info);
   --mrt-br: var(--c-misc);
+  --mrt-y: oklch(52.5% 0.11 108);
 
   /* 語意色（callout） */
   --clr-tip: var(--c-course);

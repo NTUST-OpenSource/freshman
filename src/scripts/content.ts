@@ -68,6 +68,7 @@ const MRT_LINES: Record<string, string> = {
   松山新店線: '--mrt-g',
   中和新蘆線: '--mrt-o',
   文湖線: '--mrt-br',
+  環狀線: '--mrt-y',
 };
 
 // mermaid rules are scoped by svg id and outrank any stylesheet, so the palette rides in
