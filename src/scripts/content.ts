@@ -61,13 +61,62 @@ export function initYt() {
   }
 }
 
+// Taipei metro line colors live in tokens.css; the edge label text is the line name
+const MRT_LINES: Record<string, string> = {
+  板南線: '--mrt-bl',
+  淡水信義線: '--mrt-r',
+  松山新店線: '--mrt-g',
+  中和新蘆線: '--mrt-o',
+  文湖線: '--mrt-br',
+};
+
+// mermaid rules are scoped by svg id and outrank any stylesheet, so the palette rides in
+// through themeCSS, which lands inside that scope; themeVariables would reject oklch() tokens
+const MERMAID_CSS = `
+  .node rect, .node path, .node polygon, .node circle { fill: var(--paper); stroke: var(--line-strong); stroke-width: 2px; }
+  .node rect { rx: 8px; ry: 8px; }
+  .node .nodeLabel { color: var(--ink); font-weight: 650; }
+  .flowchart-link { stroke: var(--line-strong); }
+  .marker { fill: var(--line-strong); stroke: var(--line-strong); }
+  .edgeLabel, .edgeLabel p, .labelBkg { background: var(--surface); }
+  .edgeLabel p { font-size: var(--text-tiny); font-weight: 700; letter-spacing: 0.03em; }
+  .dest rect, .dest path { fill: var(--ink); stroke: var(--ink); }
+  .dest .nodeLabel { color: var(--paper); font-weight: 750; }
+`;
+
 export async function initMermaid() {
   if (!document.querySelector('pre.mermaid')) return;
   try {
     const { default: mermaid } = await import('mermaid');
-    mermaid.initialize({ startOnLoad: false, theme: 'neutral', fontFamily: 'inherit' });
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: 'neutral',
+      fontFamily: 'inherit',
+      themeCSS: MERMAID_CSS,
+      flowchart: { curve: 'basis', nodeSpacing: 34, rankSpacing: 92, padding: 12 },
+    });
     await mermaid.run({ querySelector: 'pre.mermaid', suppressErrors: false });
+    paintMrtLines();
   } catch (err) {
     console.error('[mermaid] render failed:', err);
+  }
+}
+
+function paintMrtLines() {
+  for (const svg of document.querySelectorAll('pre.mermaid svg')) {
+    // one label group per edge in edge order, empty ones included, so index pairs the two;
+    // a count mismatch means mermaid changed that and the pairing would color the wrong edge
+    const paths = svg.querySelectorAll<SVGPathElement>('.edgePaths > path');
+    const labels = svg.querySelectorAll<SVGGElement>('.edgeLabels > g');
+    if (paths.length !== labels.length) continue;
+    paths.forEach((path, i) => {
+      const varName = MRT_LINES[labels[i].textContent?.trim() ?? ''];
+      if (!varName) return;
+      const color = `var(${varName})`;
+      path.style.stroke = color; // inline: the color varies per edge, themeCSS above is static
+      path.style.strokeWidth = '5px';
+      const chip = labels[i].querySelector<HTMLElement>('p');
+      if (chip) chip.style.color = color;
+    });
   }
 }

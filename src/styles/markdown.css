@@ -818,12 +818,26 @@ html:not([data-dept='csie']) [data-dept-only='csie'] {
 /* ---- Mermaid ---- */
 pre.mermaid {
   display: flex;
-  justify-content: center;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  padding: 1.2rem;
+  padding: 1.5rem 1.2rem;
   overflow-x: auto;
+}
+
+/* 窄螢幕寧可橫向捲動，等比縮到手機寬度會讓站名小到看不清；
+   置中用 auto margin，justify-content 會把溢出的左半邊裁掉且捲不回來 */
+pre.mermaid svg {
+  min-width: 26rem;
+  margin-inline: auto;
+}
+
+/* 渲染前先佔位，不閃出原始碼；無 JS 的瀏覽器仍看得到原始碼 */
+@media (scripting: enabled) {
+  pre.mermaid:not([data-processed]) {
+    min-height: 10rem;
+    color: transparent;
+  }
 }
 
 /* ---- 註腳 ---- */

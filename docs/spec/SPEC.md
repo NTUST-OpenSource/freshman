@@ -235,6 +235,9 @@ graph LR;
 - `showLineNumbers` 顯示行號（預設隱藏）：`​```python title="x.py" showLineNumbers {3}`。
 - mermaid 於 **client 端動態載入渲染**（動態 import，只有含 mermaid 的頁面才載入；
   build 時轉 SVG 為長期方向，內容大量撰寫前評估）。
+- 圖表配色一律由 `src/scripts/content.ts` 依 tokens 套用，圖內不寫顏色。兩條約定：
+  邊標籤寫**捷運線名**（板南線、淡水信義線、松山新店線、中和新蘆線、文湖線）該段自動上該線色；
+  `class 站名 dest` 把該站標成終點（深色實心）。
 
 ---
 
