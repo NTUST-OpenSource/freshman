@@ -99,6 +99,11 @@ export async function initMermaid() {
     paintMrtLines();
   } catch (err) {
     console.error('[mermaid] render failed:', err);
+    // the placeholder hides the source until mermaid swaps in the svg, so hand it back
+    // here: without this the block stays an empty box whenever rendering falls over
+    for (const pre of document.querySelectorAll('pre.mermaid:not([data-processed])')) {
+      pre.setAttribute('data-mermaid-failed', '');
+    }
   }
 }
 
