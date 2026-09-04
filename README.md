@@ -13,6 +13,12 @@
 
 ## 總覽
 
+<a href="https://rookie.ntust.org/">
+
+<img align="right" width="420" alt="臺科新生懶人包首頁" src=".github/assets/hero.png" />
+
+</a>
+
 臺科新生懶人包是一份由學生共同維護的新生指南
 
 把選課、住宿、生活這些新生最容易卡住的事情整理在一起，以開源方式維護，任何人都能補上自己知道的那一塊
@@ -28,7 +34,7 @@
 - **學年行事曆** — 取自[臺科行事曆](https://www.academic.ntust.edu.tw/p/404-1048-78935.php)，113 至 115 學年
 - **人人可改** — 一篇文章就是一個 Markdown 檔，錯字在 GitHub 網頁上就能修
 
-<br/>
+<br clear="right"/>
 
 ## 快速開始
 

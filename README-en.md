@@ -13,6 +13,12 @@
 
 ## Overview
 
+<a href="https://rookie.ntust.org/">
+
+<img align="right" width="420" alt="NTUST Freshman Guide homepage" src=".github/assets/hero.png" />
+
+</a>
+
 NTUST Freshman Guide (臺科新生懶人包) is a freshman guide maintained by students
 
 It gathers course selection, housing and campus life — the things freshmen usually get stuck on — into one place, kept open source so anyone can fill in the part they know
@@ -30,7 +36,7 @@ The site itself is written in Traditional Chinese.
 - **Academic calendar** — taken from the [NTUST academic calendar](https://www.academic.ntust.edu.tw/p/404-1048-78935.php), academic years 113 to 115
 - **Anyone can edit** — one article is one Markdown file; typos can be fixed straight from the GitHub web UI
 
-<br/>
+<br clear="right"/>
 
 ## Quick start
 
