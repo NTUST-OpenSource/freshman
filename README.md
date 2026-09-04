@@ -21,18 +21,18 @@
 
 臺科新生懶人包是一份由學生共同維護的新生指南
 
-把選課、住宿、生活這些新生最容易卡住的事情整理在一起，以開源方式維護，任何人都能補上自己知道的那一塊
+把選課、住宿、生活這些新生最容易出現的問題整理在一起，以開源方式維護，任何人都能夠做出貢獻
 
 ### **內容**
-- **選課** — 從專有名詞認識到實戰技巧
+- **選課** — 從專有名詞認識到實戰
 - **生活** — 住宿、吃飯、交通、社團
 - **資訊** — 校園帳號、繳費、好用工具、社群
 - **其他** — 新生常見問題、臺科冷知識
 
 ### **特色**
-- **系別專屬內容** — 同一篇文章依系別顯示直屬學長姐的建議
-- **學年行事曆** — 取自[臺科行事曆](https://www.academic.ntust.edu.tw/p/404-1048-78935.php)，113 至 115 學年
-- **人人可改** — 一篇文章就是一個 Markdown 檔，錯字在 GitHub 網頁上就能修
+- **系別專屬內容** — 依系別顯示直屬學長姐的建議
+- **學年行事曆** — 取自 [臺科行事曆](https://www.academic.ntust.edu.tw/p/404-1048-78935.php)
+- **人人可改** — 文章純 Markdown 文字檔案，可直接在 GitHub 網頁中修正
 
 <br clear="right"/>
 
@@ -58,17 +58,15 @@ npm run preview  # 預覽 build 產物
 開啟 <http://localhost:4321>。
 
 > [!IMPORTANT]
-> 改過 `astro.config.mjs`、`src/plugins/` 或 `src/content.config.ts` 之後，必須停掉 dev server、清除快取再重啟
+> 若修改 `astro.config.mjs`、`src/plugins/` 或 `src/content.config.ts` 檔案，需清除快取再重啟
 >
 > ```bash
 > rm -rf .astro node_modules/.astro node_modules/.vite
 > ```
->
-> content layer 以內容 digest 快取渲染結果，快取實體在 `node_modules/.astro`。漏清它的話連 `npm run build` 都會吃到舊的 serializer 輸出。只改文章內容則不需要清。
 
 ### 行事曆
 
-校方 ics 轉 JSON 由 `scripts/parse_ics.py` 完成，規則的真相源是它的 docstring。轉換流程與驗證步驟見 `.claude/skills/calendar-sync`。
+校方 ics 轉 JSON 由 `scripts/parse_ics.py` 完成。轉換流程與驗證步驟見 `.claude/skills/calendar-sync`。
 
 <br/>
 
@@ -95,9 +93,9 @@ src/scripts/              client script，掛 astro:page-load
 src/styles/               tokens / global / markdown / article
 src/lib/                  depts（系別清單）、contributors（build 時抓 GitHub）
 src/data/                 calendar-113~115.json、credits.json
-public/icons/             全站 SVG 圖示，以 CSS mask 上色
+public/icons/             SVG 圖示，以 CSS mask 上色
 public/images/<slug>/     文章圖片，一律自託管
-scripts/parse_ics.py      校方行事曆 ics 轉 JSON
+scripts/parse_ics.py      行事曆 ics 轉 JSON
 docs/                     語法規格書、行事曆正本、內容涵蓋狀態
 ```
 
@@ -128,7 +126,7 @@ PR 送出前請確認
 2. commit 遵循 [Conventional Commits](https://www.conventionalcommits.org/zh-hant/v1.0.0/)
 3. 以 `feat/your-feature` 或 `fix/your-fix` 命名分支
 4. 內容改動請附上來源或親身經驗，年度性資料（金額、費率、辦法連結）標明查證日期
-5. 不使用 emoji
+5. 不使用 Emoji
 
 <br/>
 

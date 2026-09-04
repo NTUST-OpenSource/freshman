@@ -21,20 +21,20 @@
 
 NTUST Freshman Guide (臺科新生懶人包) is a freshman guide maintained by students
 
-It gathers course selection, housing and campus life — the things freshmen usually get stuck on — into one place, kept open source so anyone can fill in the part they know
+It gathers the problems freshmen most often run into — course selection, housing, campus life — into one place, kept open source so anyone can contribute
 
 The site itself is written in Traditional Chinese.
 
 ### **Contents**
-- **Course selection** — from the jargon to the tactics that actually work
+- **Course selection** — from the jargon to the real thing
 - **Life** — housing, food, transport, clubs
 - **Info** — campus accounts, payments, useful tools, communities
 - **Misc** — freshman FAQ, NTUST trivia
 
 ### **Highlights**
-- **Department-specific content** — one article shows the advice from the seniors in your own department
-- **Academic calendar** — taken from the [NTUST academic calendar](https://www.academic.ntust.edu.tw/p/404-1048-78935.php), academic years 113 to 115
-- **Anyone can edit** — one article is one Markdown file; typos can be fixed straight from the GitHub web UI
+- **Department-specific content** — shows the advice from the seniors in your own department
+- **Academic calendar** — taken from the [NTUST academic calendar](https://www.academic.ntust.edu.tw/p/404-1048-78935.php)
+- **Anyone can edit** — articles are plain Markdown text files, editable straight from the GitHub web UI
 
 <br clear="right"/>
 
@@ -60,17 +60,15 @@ npm run preview  # preview the build output
 Open <http://localhost:4321>.
 
 > [!IMPORTANT]
-> After changing `astro.config.mjs`, `src/plugins/` or `src/content.config.ts`, you must stop the dev server, clear the caches, and restart
+> After changing `astro.config.mjs`, `src/plugins/` or `src/content.config.ts`, clear the caches and restart
 >
 > ```bash
 > rm -rf .astro node_modules/.astro node_modules/.vite
 > ```
->
-> The content layer caches rendered output by content digest, and the cache lives in `node_modules/.astro`. Skip this and even `npm run build` will serve stale serializer output. Editing article content alone does not need it.
 
 ### Calendar
 
-`scripts/parse_ics.py` converts the official ics into JSON, and its docstring is the source of truth for the rules. The conversion and verification flow lives in `.claude/skills/calendar-sync`.
+`scripts/parse_ics.py` converts the official ics into JSON. The conversion and verification flow lives in `.claude/skills/calendar-sync`.
 
 <br/>
 
@@ -97,9 +95,9 @@ src/scripts/              client scripts, bound to astro:page-load
 src/styles/               tokens / global / markdown / article
 src/lib/                  depts (department list), contributors (fetched from GitHub at build time)
 src/data/                 calendar-113~115.json, credits.json
-public/icons/             site-wide SVG icons, colored via CSS mask
+public/icons/             SVG icons, colored via CSS mask
 public/images/<slug>/     article images, always self-hosted
-scripts/parse_ics.py      converts the official academic calendar ics to JSON
+scripts/parse_ics.py      converts the academic calendar ics to JSON
 docs/                     syntax spec, calendar source of truth, content coverage status
 ```
 
@@ -132,7 +130,7 @@ Before submitting a PR
 2. Commits follow [Conventional Commits](https://www.conventionalcommits.org/)
 3. Name branches `feat/your-feature` or `fix/your-fix`
 4. Content changes need a source or first-hand experience; for yearly data (amounts, rates, regulation links) note the date you verified it
-5. No emoji
+5. No Emoji
 
 <br/>
 
