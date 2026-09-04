@@ -141,6 +141,17 @@ html.is-leaving .site-footer {
   animation: vt-header-in 0.4s var(--ease) both;
 }
 
+/* keep the desktop directory still when both pages render the same navigation rail */
+::view-transition-old(site-directory):not(:only-child),
+::view-transition-new(site-directory):not(:only-child) {
+  animation: none !important;
+}
+
+/* only the new snapshot remains visible while the active article marker updates */
+::view-transition-old(site-directory):not(:only-child) {
+  opacity: 0;
+}
+
 @keyframes vt-header-out {
   to {
     opacity: 0;
@@ -160,7 +171,9 @@ html.is-leaving .site-footer {
   ::view-transition-old(root),
   ::view-transition-new(root),
   ::view-transition-old(site-header),
-  ::view-transition-new(site-header) {
+  ::view-transition-new(site-header),
+  ::view-transition-old(site-directory),
+  ::view-transition-new(site-directory) {
     animation: none !important; /* VT 偽元素不吃 * 選擇器，header 滑動需獨立停用 */
   }
 }
@@ -237,13 +250,20 @@ html.is-leaving .site-footer {
   -webkit-mask: url('/icons/github.svg') no-repeat center / contain;
 }
 
-.navdrawer__btn {
-  margin-right: -0.35rem; /* 視覺上貼齊 logo，點擊區維持 44px 目標 */
+.directory-toggle {
+  font: inherit;
+  font-size: var(--text-small);
+  margin-right: -0.35rem; /* keep the toggle visually grouped with the brand */
+  background: none;
+  cursor: pointer;
 }
 
-.navdrawer__btn-icon {
-  mask: url('/icons/menu.svg') no-repeat center / contain;
-  -webkit-mask: url('/icons/menu.svg') no-repeat center / contain;
+@media (max-width: 1023px) {
+  .directory-toggle[aria-expanded='true'] {
+    border-color: var(--brand);
+    color: var(--brand);
+    background: color-mix(in oklab, var(--brand) 12%, var(--paper));
+  }
 }
 
 .brand {
@@ -475,6 +495,10 @@ html.is-leaving .site-footer {
 }
 
 /* ---- 全站目錄抽屜（原生 popover，top-layer） ---- */
+.site-directory {
+  display: none;
+}
+
 .navdrawer {
   position: fixed;
   inset: 0 auto 0 0;
@@ -495,6 +519,53 @@ html.is-leaving .site-footer {
   /* allow-discrete：display/overlay 為離散屬性，不宣告就沒有關閉動畫 */
   transition: translate var(--dur) var(--ease), opacity var(--dur) var(--ease),
     display var(--dur) allow-discrete, overlay var(--dur) allow-discrete;
+}
+
+/* the desktop directory owns a full-height rail beside the page chrome */
+@media (min-width: 1024px) {
+  .has-site-directory {
+    --site-directory-width: 12rem;
+  }
+
+  .site-directory {
+    display: block;
+    view-transition-name: site-directory;
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 41;
+    width: var(--site-directory-width);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 1.15rem 1.1rem 2.4rem;
+    background: var(--paper);
+    border-right: 1px solid var(--line);
+  }
+
+  .has-site-directory .site-header,
+  .has-site-directory main,
+  .has-site-directory .site-footer {
+    margin-left: var(--site-directory-width);
+  }
+
+  .navdrawer {
+    display: none !important;
+  }
+
+  .has-site-directory:not(.directory-collapsed) .directory-toggle {
+    border-color: var(--brand);
+    color: var(--brand);
+    background: color-mix(in oklab, var(--brand) 12%, var(--paper));
+  }
+
+  .has-site-directory.directory-collapsed .site-directory {
+    display: none;
+  }
+
+  .has-site-directory.directory-collapsed .site-header,
+  .has-site-directory.directory-collapsed main,
+  .has-site-directory.directory-collapsed .site-footer {
+    margin-left: 0;
+  }
 }
 
 .navdrawer:popover-open {
@@ -603,6 +674,12 @@ html.is-leaving .site-footer {
   padding: 0;
 }
 
+.navdrawer__utility {
+  margin-top: 1.05rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--line);
+}
+
 .navdrawer__list a {
   display: block;
   padding: 0.42rem 0.6rem;
@@ -650,6 +727,10 @@ html.is-leaving .site-footer {
 
 /* 窄螢幕：只留 logo 與導覽控制 */
 @media (max-width: 520px) {
+  .nav-pill--contribute {
+    display: none !important;
+  }
+
   .brand__text {
     display: none;
   }
@@ -1109,6 +1190,7 @@ main {
   .site-header,
   .site-footer,
   .toc,
+  .site-directory,
   .navdrawer,
   .cal__today-btn,
   .code-copy {
