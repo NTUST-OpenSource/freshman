@@ -27,7 +27,7 @@ updated: 2026-07-27
 | | 電機系 | [NTUST EESA 電機系學會](https://www.facebook.com/ntusteesa) | [@ntustee](https://www.instagram.com/ntustee/) |
 | | 資工系 | [資訊工程系系學會](https://www.facebook.com/ntust.csie.so/) | [@ntustcsie](https://www.instagram.com/ntustcsie/) |
 | | 電資學士班（電資不分） | [國立臺灣科技大學電資學士班](https://www.facebook.com/ntustceec)（久未更新） | [@ntust_cec](https://www.instagram.com/ntust_cec/) |
-| | 國際資通學程 | — | — |
+| | 資通國際學程 | — | [@ntust_iict](https://www.instagram.com/ntust_iict/) |
 | 管理學院 | 工管系 | [IM the Best 工管系系學會](https://www.facebook.com/TAIWANTECHIM/) | [@ntust_im](https://www.instagram.com/ntust_im/) |
 | | 企管系 | [企管系系學會](https://www.facebook.com/NTUSTBA.tw/) | [@ntust_ba](https://www.instagram.com/ntust_ba/) |
 | | 資管系 | [資管系系學會](https://www.facebook.com/profile.php?id=100064531972761)（久未更新） | [@ntust_mis](https://www.instagram.com/ntust_mis/) |
