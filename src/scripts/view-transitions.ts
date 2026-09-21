@@ -41,7 +41,7 @@ let lastMouseX = -1;
 let lastMouseY = -1;
 function mirrorHeaderHover() {
   const targets = document.querySelectorAll<HTMLElement>(
-    '.site-header a.nav-pill, .site-header .brand, .dept-picker__btn, .site-header .icon-btn',
+    '.site-header .nav-pill, .site-header .brand, .dept-picker__btn, .site-header .icon-btn',
   );
   let overAny = false;
   for (const el of targets) {
