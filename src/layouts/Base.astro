@@ -5,6 +5,7 @@ import '../styles/tokens.css';
 import '../styles/global.css';
 import '../styles/markdown.css';
 import '../styles/article.css';
+import SiteDirectory from '../components/SiteDirectory.astro';
 import { DEPTS } from '../lib/depts.mjs';
 import { CATEGORIES } from '../content.config';
 
@@ -88,27 +89,33 @@ const navGroups = Object.entries(CATEGORIES)
       document.documentElement.dataset.dept = localStorage.getItem('dept') || 'all';
     </script>
   </head>
-  <body>
+  <body class:list={{ 'has-site-directory': chrome }}>
     <a class="skip-link" href="#main">跳到主要內容</a>
     {
       chrome && (
         <header class="site-header" transition:persist="site-header">
           <nav class="site-header__inner" aria-label="主選單">
             <button
-              class="icon-btn navdrawer__btn"
+              class="nav-pill directory-toggle"
+              id="directory-toggle"
               type="button"
-              popovertarget="site-nav"
-              aria-label="開啟目錄"
+              aria-controls="site-directory site-nav"
+              aria-expanded="false"
             >
-              <span class="icon-btn__icon navdrawer__btn-icon" aria-hidden="true" />
+              目錄
             </button>
             <a class="brand" href="/" data-astro-prefetch="viewport">
               <img class="brand__logo" src="/logo.svg" alt="" width="30" height="31" />
               <span class="brand__text">臺科新生懶人包</span>
             </a>
             <div class="site-header__links">
-              <a class="nav-pill" href="/article/start/#%E7%9B%AE%E9%8C%84" data-astro-prefetch="viewport">目錄</a>
-              <a class="nav-pill" href="/article/contribute/" data-astro-prefetch="viewport">貢獻</a>
+              <a
+                class="nav-pill nav-pill--contribute"
+                href="/article/contribute/"
+                data-astro-prefetch="viewport"
+              >
+                貢獻
+              </a>
               <div class="dept-picker" id="dept-picker">
                 <button
                   class="dept-picker__btn"
@@ -150,6 +157,18 @@ const navGroups = Object.entries(CATEGORIES)
     }
     {
       chrome && (
+        <aside
+          class="site-directory"
+          id="site-directory"
+          aria-label="懶人包導覽"
+          transition:persist="site-directory"
+        >
+          <SiteDirectory groups={navGroups} currentPath={Astro.url.pathname} />
+        </aside>
+      )
+    }
+    {
+      chrome && (
         <div class="navdrawer" id="site-nav" popover>
           <div class="navdrawer__head">
             <p class="navdrawer__title">目錄</p>
@@ -163,26 +182,7 @@ const navGroups = Object.entries(CATEGORIES)
               <span class="navdrawer__close-icon" aria-hidden="true" />
             </button>
           </div>
-          <nav aria-label="文章目錄">
-            {navGroups.map((group) => (
-              <div class={`navdrawer__group cat-${group.key}`}>
-                <p class="navdrawer__group-label">{group.label}</p>
-                <ul class="navdrawer__list">
-                  {group.items.map((a) => (
-                    <li>
-                      <a
-                        href={`/article/${a.data.slug}/`}
-                        data-astro-prefetch="hover"
-                        aria-current={Astro.url.pathname === `/article/${a.data.slug}/` ? 'page' : undefined}
-                      >
-                        {a.data.title}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </nav>
+          <SiteDirectory groups={navGroups} currentPath={Astro.url.pathname} />
         </div>
       )
     }
@@ -201,10 +201,12 @@ const navGroups = Object.entries(CATEGORIES)
       import '../scripts/view-transitions';
       import { initDeptPicker, initDeptHint } from '../scripts/dept-picker';
       import { initCascade, initCodeCopy, initYt, initMermaid } from '../scripts/content';
+      import { initDirectoryPosition } from '../scripts/directory';
 
       document.addEventListener('astro:page-load', () => {
         initDeptPicker();
         initDeptHint();
+        initDirectoryPosition();
         initCascade();
         initCodeCopy();
         initYt();
